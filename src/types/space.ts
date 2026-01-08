@@ -27,7 +27,6 @@ export interface ICoworkingSpace {
   address: string
   googleMapsUrl: string
   coordinates: ICoordinates
-  verified: boolean
 
   // Standardized fields for filtering
   noiseLevel: NoiseLevel
@@ -49,6 +48,9 @@ export interface ICoworkingSpace {
   drinkNotes: string // notes about drinks (foodAndDrinkAvailability)
   seatingNotes: string // description of the seating and layout (seatingType)
   outletNotes: string // notes about outlets (hasOutlets)
+
+  // Verification status
+  verified: boolean // has this space been personally visited and verified?
 }
 
 export interface IFilterState {
@@ -145,5 +147,10 @@ export const AC_DESCRIPTIONS: Record<HasAC, string> = {
   unknown: 'Climate control has not been checked yet',
   yes: 'Air conditioning available – stays cool in summer',
   no: 'No air conditioning – may be warm on hot days',
+}
+
+export const VERIFIED_DESCRIPTIONS = {
+  verified: 'This space has been personally visited and verified – details are accurate',
+  unverified: 'This space hasn\'t been verified yet – details may be incomplete or outdated. Help verify it!',
 }
 
