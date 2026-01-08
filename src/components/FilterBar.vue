@@ -4,7 +4,7 @@ import {
   NOISE_LEVELS,
   WIFI_SPEEDS,
   AC_OPTIONS,
-  FOOD_OPTIONS,
+  FOOD_AND_DRINK_OPTIONS,
   SEATING_TYPES,
   OUTLET_OPTIONS,
   NOISE_LEVEL_LABELS,
@@ -145,7 +145,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           @change="updateFilter('foodAvailability', ($event.target as HTMLSelectElement).value as IFilterState['foodAvailability'])"
         >
           <option value="all">Any</option>
-          <option v-for="opt in FOOD_OPTIONS" :key="opt" :value="opt">
+          <option v-for="opt in FOOD_AND_DRINK_OPTIONS" :key="opt" :value="opt">
             {{ FOOD_LABELS[opt] }}
           </option>
         </select>
