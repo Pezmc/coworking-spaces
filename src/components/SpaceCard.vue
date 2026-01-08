@@ -13,6 +13,7 @@ import {
   SEATING_DESCRIPTIONS,
   OUTLET_DESCRIPTIONS,
   AC_DESCRIPTIONS,
+  VERIFIED_DESCRIPTIONS,
 } from '../types/space'
 import { slugify } from '../utils/slug'
 
@@ -64,23 +65,30 @@ function getNoiseColor(level: string): string {
           <h3 class="font-display text-xl font-bold text-[#1a365d] m-0 mb-1" :id="slugify(space.name)">
             {{ space.name }}
           </h3>
-          <p class="text-sm text-[#718096] m-0">{{ space.address }}</p>
+          <p class="text-sm text-[#718096] m-0">{{ space.address.split(',')[0] }}</p>
         </div>
         <div class="flex flex-col gap-2 items-end">
           <a
             :href="space.googleMapsUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex-shrink-0 px-3 py-1.5 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline"
+            class="flex-shrink-0 px-3 py-1 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline whitespace-nowrap"
           >
-            📍 Google Maps
+            📍 Navigate
           </a>
           <span
             v-if="!space.verified"
-            class="text-xs text-[#ed8936] font-medium"
-            title="This space hasn't been verified yet"
+            class="text-xs text-[#ed8936] font-medium cursor-help"
+            :title="VERIFIED_DESCRIPTIONS.unverified"
           >
             ⚠️ Unverified
+          </span>
+          <span
+            v-else
+            class="text-xs text-green-600 font-medium cursor-help"
+            :title="VERIFIED_DESCRIPTIONS.verified"
+          >
+            ✓ Verified
           </span>
         </div>
       </div>
