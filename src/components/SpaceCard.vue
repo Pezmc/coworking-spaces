@@ -4,7 +4,6 @@ import {
   type ICoworkingSpace,
   NOISE_LEVEL_LABELS,
   WIFI_SPEED_LABELS,
-  AC_LABELS,
   FOOD_LABELS,
   SEATING_LABELS,
   OUTLET_LABELS,
