@@ -39,7 +39,7 @@ When filling out a space entry, use the following guidelines to pick the right c
 | `medium` | Café ambiance – background chatter and music at moderate volume |
 | `loud` | Lively environment – loud music, busy conversations, energetic vibe |
 
-### Food Availability
+### Food & Drink Availability
 
 | Value | Description |
 |-------|-------------|
@@ -76,41 +76,42 @@ When filling out a space entry, use the following guidelines to pick the right c
 
 ```json
 {
-  "id": "cafe-example",
   "name": "Example Café",
-  "address": "123 Main Street, City",
+  "address": "Naamsestraat",
   "googleMapsUrl": "https://maps.google.com/?q=Example+Cafe+City",
+  "coordinates": { "lat": 50.8798, "lng": 4.7005 },
   "noiseLevel": "medium",
   "wifiSpeed": "fast",
   "hasAC": "yes",
-  "foodAvailability": "light",
+  "foodAndDrinkAvailability": "light",
   "seatingType": "mixed",
   "hasOutlets": "some",
-  "atmosphere": "Bright and airy with good natural light",
-  "spaceDescription": "Mix of 2-person and 4-person tables, one long communal table",
-  "wifiDetails": "150 Mbps down, 50 Mbps up",
-  "noiseNotes": "Chill music, gets busier around lunch",
-  "climateNotes": "Good AC, can get chilly near the vents",
-  "drinks": "Specialty coffee, tea, fresh juices",
-  "foodNotes": "Pastries, sandwiches until 2pm",
+  "description": "Staff are laptop-friendly, no time limits",
   "openingHours": "Mon-Fri 8am-6pm, Sat-Sun 9am-5pm",
-  "notes": "Staff are laptop-friendly, no time limits"
+  "atmosphereNotes": "Bright and airy with good natural light. Chill music, gets busier around lunch",
+  "wifiNotes": "150 Mbps down, 50 Mbps up",
+  "climateNotes": "Good AC, can get chilly near the vents",
+  "foodNotes": "Pastries, sandwiches until 2pm",
+  "drinkNotes": "Specialty coffee, tea, fresh juices",
+  "seatingNotes": "Mix of 2-person and 4-person tables, one long communal table",
+  "outletNotes": "Outlets at most tables, some near the windows"
 }
 ```
 
 ## Field Descriptions
 
-- **id**: Unique identifier (lowercase, hyphens, e.g., `cafe-name`)
-- **name**: The venue's name
-- **address**: Street address or general location
-- **googleMapsUrl**: Direct link to Google Maps
-- **atmosphere**: Brief description of the vibe/feeling
-- **spaceDescription**: Physical layout, table arrangements
-- **wifiDetails**: Actual speed test results if available
-- **noiseNotes**: Details about music, conversation levels
+- **name**: The venue's name (required, used to generate unique ID)
+- **address**: Street name or area (required, e.g., "Tiensestraat", "Station")
+- **googleMapsUrl**: Direct link to Google Maps (required)
+- **coordinates**: GPS coordinates `{ "lat": number, "lng": number }` (required)
+- **atmosphereNotes**: Description of the vibe/feeling/noise level
+- **wifiNotes**: Actual speed test results if available
 - **climateNotes**: AC quality, temperature notes
-- **drinks**: What beverages are available
 - **foodNotes**: What food is available and when
-- **openingHours**: Operating hours
-- **notes**: Any other useful information for remote workers
+- **drinkNotes**: What beverages are available
+- **seatingNotes**: Physical layout, table arrangements
+- **outletNotes**: Details about power outlet locations and availability
+- **openingHours**: Operating hours (optional)
+- **description**: General description of the space (shows on card preview, optional)
+- **atmosphereNotes**: Details about vibe/feeling/noise (shown in expandable details)
 

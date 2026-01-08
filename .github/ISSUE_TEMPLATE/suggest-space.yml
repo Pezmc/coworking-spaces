@@ -21,8 +21,8 @@ body:
     id: address
     attributes:
       label: Address
-      description: Street address or location description
-      placeholder: e.g., Naamsestraat 42, Leuven
+      description: Street name or area (just the street name, e.g., "Tiensestraat", "Naamsestraat")
+      placeholder: e.g., Naamsestraat
     validations:
       required: true
 
@@ -30,8 +30,17 @@ body:
     id: google-maps
     attributes:
       label: Google Maps Link
-      description: Link to the location on Google Maps (optional)
+      description: Link to the location on Google Maps (required - we'll extract coordinates from this)
       placeholder: https://maps.google.com/?q=...
+    validations:
+      required: true
+
+  - type: input
+    id: coordinates
+    attributes:
+      label: Coordinates (optional)
+      description: If you have them, provide GPS coordinates as "lat, lng" (e.g., 50.8798, 4.7005). Otherwise we'll look them up from the Google Maps link.
+      placeholder: e.g., 50.8798, 4.7005
 
   - type: dropdown
     id: noise-level
@@ -74,8 +83,8 @@ body:
   - type: dropdown
     id: food-availability
     attributes:
-      label: Food Availability
-      description: What food options are available?
+      label: Food & Drink Availability
+      description: What food and drink options are available?
       options:
         - Full menu
         - Light food/snacks
@@ -111,46 +120,25 @@ body:
       required: true
 
   - type: textarea
-    id: atmosphere
+    id: atmosphere-notes
     attributes:
-      label: Atmosphere
-      description: Describe the vibe/atmosphere
-      placeholder: e.g., Cozy and quiet, great for focused work
-
-  - type: textarea
-    id: space-description
-    attributes:
-      label: Space Description
-      description: Describe the seating and layout
-      placeholder: e.g., 10 person communal table near the window, plus smaller 2-person tables
+      label: Atmosphere Notes
+      description: Describe the vibe/feeling/noise level
+      placeholder: e.g., Cozy and quiet, great for focused work. Background jazz music, can get busy at lunch
 
   - type: input
-    id: wifi-details
+    id: wifi-notes
     attributes:
-      label: WiFi Details
+      label: WiFi Notes
       description: Specific speed test results if you have them
       placeholder: e.g., 150 Mbps down, 50 Mbps up
-
-  - type: textarea
-    id: noise-notes
-    attributes:
-      label: Noise Notes
-      description: More details about noise levels
-      placeholder: e.g., Background jazz music, can get busy at lunch
 
   - type: input
     id: climate-notes
     attributes:
       label: Climate Notes
-      description: Notes about heating/cooling
+      description: Notes about heating/cooling/AC
       placeholder: e.g., Good AC in summer, can be cold near the door
-
-  - type: input
-    id: drinks
-    attributes:
-      label: Drinks Available
-      description: What drinks do they serve?
-      placeholder: e.g., Coffee, tea, fresh juices
 
   - type: input
     id: food-notes
@@ -160,6 +148,27 @@ body:
       placeholder: e.g., Great pastries, lunch served 11am-3pm
 
   - type: input
+    id: drink-notes
+    attributes:
+      label: Drink Notes
+      description: What drinks do they serve?
+      placeholder: e.g., Coffee, tea, fresh juices
+
+  - type: textarea
+    id: seating-notes
+    attributes:
+      label: Seating Notes
+      description: Describe the seating and layout
+      placeholder: e.g., 10 person communal table near the window, plus smaller 2-person tables
+
+  - type: input
+    id: outlet-notes
+    attributes:
+      label: Outlet Notes
+      description: Details about power outlet locations and availability
+      placeholder: e.g., Outlets at most tables, some near the windows
+
+  - type: input
     id: opening-hours
     attributes:
       label: Opening Hours
@@ -167,9 +176,9 @@ body:
       placeholder: e.g., Mon-Fri 8am-6pm, Sat 9am-5pm
 
   - type: textarea
-    id: additional-notes
+    id: description
     attributes:
-      label: Additional Notes
-      description: Anything else worth mentioning?
-      placeholder: e.g., Ask for the WiFi password at the counter, best seats are upstairs
+      label: Description
+      description: General description of the space (shows on card preview)
+      placeholder: e.g., Staff are laptop-friendly, no time limits. Great natural light.
 
