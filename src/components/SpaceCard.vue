@@ -86,8 +86,8 @@ const expanded = ref(false)
             Outlets
           </h4>
           <p
+            v-tippy="OUTLET_DESCRIPTIONS[space.hasOutlets]"
             class="m-0 text-[#4a5568] cursor-help inline-block"
-            :title="OUTLET_DESCRIPTIONS[space.hasOutlets]"
           >
             {{ OUTLET_LABELS[space.hasOutlets] }}
           </p>

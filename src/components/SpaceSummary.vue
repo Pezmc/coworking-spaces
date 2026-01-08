@@ -93,15 +93,15 @@ function getNoiseStyle(level: string) {
       <div class="flex flex-col gap-2 items-end flex-shrink-0">
         <span
           v-if="!space.verified"
+          v-tippy="VERIFIED_DESCRIPTIONS.unverified"
           class="text-xs text-[#ed8936] font-medium cursor-help"
-          :title="VERIFIED_DESCRIPTIONS.unverified"
         >
           ⚠️ Unverified
         </span>
         <span
           v-else-if="!compact"
+          v-tippy="VERIFIED_DESCRIPTIONS.verified"
           class="text-xs text-green-600 font-medium cursor-help"
-          :title="VERIFIED_DESCRIPTIONS.verified"
         >
           ✓ Verified
         </span>
@@ -127,53 +127,53 @@ function getNoiseStyle(level: string) {
     <!-- Quick Tags -->
     <div :class="compact ? 'flex flex-wrap gap-1.5 mt-3 mb-3' : 'flex flex-wrap gap-2 mt-4'">
       <span
+        v-tippy="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
         :class="[
           'px-2 text-xs font-medium rounded cursor-help',
           compact ? 'py-0.5' : 'py-1 border',
           !compact && getWifiClasses(space.wifiSpeed)
         ]"
         :style="getWifiStyle(space.wifiSpeed)"
-        :title="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
       >
         📶 {{ WIFI_SPEED_LABELS[space.wifiSpeed] }}
       </span>
       <span
+        v-tippy="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
         :class="[
           'px-2 text-xs font-medium rounded cursor-help',
           compact ? 'py-0.5' : 'py-1 border',
           !compact && getNoiseClasses(space.noiseLevel)
         ]"
         :style="getNoiseStyle(space.noiseLevel)"
-        :title="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
       >
         🔊 {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
       </span>
       <span
+        v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
         :class="[
           'px-2 text-xs font-medium rounded bg-[#f5f0e6] text-[#1a365d] cursor-help',
           compact ? 'py-0.5' : 'py-1 border border-[#e2d9c8]'
         ]"
-        :title="SEATING_DESCRIPTIONS[space.seatingType]"
       >
         🪑 {{ SEATING_LABELS[space.seatingType] }}
       </span>
       <span
         v-if="space.hasAC === 'yes'"
+        v-tippy="AC_DESCRIPTIONS[space.hasAC]"
         :class="[
           'px-2 text-xs font-medium rounded cursor-help',
           compact ? 'py-0.5 bg-blue-100 text-blue-700' : 'py-1 border bg-blue-100 text-blue-800 border-blue-300'
         ]"
-        :title="AC_DESCRIPTIONS[space.hasAC]"
       >
         ❄️ AC
       </span>
       <span
         v-if="space.foodAndDrinkAvailability !== 'none'"
+        v-tippy="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
         :class="[
           'px-2 text-xs font-medium rounded cursor-help',
           compact ? 'py-0.5 bg-orange-100 text-orange-700' : 'py-1 border bg-orange-100 text-orange-800 border-orange-300'
         ]"
-        :title="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
       >
         🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
       </span>
@@ -189,8 +189,8 @@ function getNoiseStyle(level: string) {
     <!-- Unverified notice -->
     <div
       v-if="!space.verified && compact"
+      v-tippy="VERIFIED_DESCRIPTIONS.unverified"
       class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800 cursor-help"
-      :title="VERIFIED_DESCRIPTIONS.unverified"
     >
       ⚠️ Unverified
       <a
