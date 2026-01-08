@@ -32,8 +32,7 @@ const filteredSpaces = computed(() => {
     if (filters.value.noiseLevel !== 'all' && space.noiseLevel !== filters.value.noiseLevel) return false
     if (filters.value.wifiSpeed !== 'all' && space.wifiSpeed !== filters.value.wifiSpeed) return false
     if (filters.value.hasAC !== 'all' && space.hasAC !== filters.value.hasAC) return false
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (filters.value.foodAvailability !== 'all' && (space as any).foodAvailability !== filters.value.foodAvailability) return false
+    if (filters.value.foodAvailability !== 'all' && space.foodAndDrinkAvailability !== filters.value.foodAvailability) return false
     if (filters.value.seatingType !== 'all' && space.seatingType !== filters.value.seatingType) return false
     if (filters.value.hasOutlets !== 'all' && space.hasOutlets !== filters.value.hasOutlets) return false
     return true

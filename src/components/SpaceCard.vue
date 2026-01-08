@@ -14,6 +14,7 @@ import {
   OUTLET_DESCRIPTIONS,
   AC_DESCRIPTIONS,
 } from '../types/space'
+import { slugify } from '../utils/slug'
 
 interface Props {
   space: ICoworkingSpace
@@ -58,7 +59,7 @@ function getNoiseColor(level: string): string {
     <div class="p-5 border-b border-[#e2d9c8]">
       <div class="flex justify-between items-start gap-4">
         <div>
-          <h3 class="font-display text-xl font-bold text-[#1a365d] m-0 mb-1">
+          <h3 class="font-display text-xl font-bold text-[#1a365d] m-0 mb-1" :id="slugify(space.name)">
             {{ space.name }}
           </h3>
           <p class="text-sm text-[#718096] m-0">{{ space.address }}</p>
@@ -69,7 +70,7 @@ function getNoiseColor(level: string): string {
           rel="noopener noreferrer"
           class="flex-shrink-0 px-3 py-1.5 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline"
         >
-          📍 Map
+          📍 Google Maps
         </a>
       </div>
 
@@ -103,19 +104,19 @@ function getNoiseColor(level: string): string {
           ❄️ AC
         </span>
         <span
-          v-if="space.foodAvailability !== 'none'"
+          v-if="space.foodAndDrinkAvailability !== 'none'"
           class="px-2 py-1 text-xs font-medium rounded border bg-orange-100 text-orange-800 border-orange-300 cursor-help"
-          :title="FOOD_DESCRIPTIONS[space.foodAvailability]"
+          :title="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
         >
-          🍽️ {{ FOOD_LABELS[space.foodAvailability] }}
+          🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
         </span>
       </div>
     </div>
 
-    <!-- Atmosphere Preview -->
-    <div v-if="space.atmosphere" class="px-5 py-3 bg-[#faf5eb]">
+    <!-- Description Preview -->
+    <div v-if="space.description" class="px-5 py-3 bg-[#faf5eb]">
       <p class="text-sm text-[#4a5568] m-0 italic">
-        "{{ space.atmosphere }}"
+        "{{ space.description }}"
       </p>
     </div>
 
@@ -135,28 +136,28 @@ function getNoiseColor(level: string): string {
         v-show="expanded"
         class="mt-4 space-y-3 text-sm"
       >
-        <!-- Space Description -->
-        <div v-if="space.spaceDescription">
+        <!-- Atmosphere -->
+        <div v-if="space.atmosphereNotes">
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
-            Space
+            Atmosphere
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.spaceDescription }}</p>
+          <p class="m-0 text-[#4a5568]">{{ space.atmosphereNotes }}</p>
         </div>
 
-        <!-- WiFi Details -->
-        <div v-if="space.wifiDetails">
+        <!-- Seating -->
+        <div v-if="space.seatingNotes">
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
-            WiFi Details
+            Seating
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.wifiDetails }}</p>
+          <p class="m-0 text-[#4a5568]">{{ space.seatingNotes }}</p>
         </div>
 
-        <!-- Noise -->
-        <div v-if="space.noiseNotes">
+        <!-- WiFi Notes -->
+        <div v-if="space.wifiNotes">
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
-            Noise
+            WiFi
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.noiseNotes }}</p>
+          <p class="m-0 text-[#4a5568]">{{ space.wifiNotes }}</p>
         </div>
 
         <!-- Climate -->
@@ -178,14 +179,17 @@ function getNoiseColor(level: string): string {
           >
             {{ OUTLET_LABELS[space.hasOutlets] }}
           </p>
+          <p v-if="space.outletNotes" class="m-0 text-[#4a5568] text-xs mt-1">
+            {{ space.outletNotes }}
+          </p>
         </div>
 
         <!-- Drinks -->
-        <div v-if="space.drinks">
+        <div v-if="space.drinkNotes">
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
             Drinks
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.drinks }}</p>
+          <p class="m-0 text-[#4a5568]">{{ space.drinkNotes }}</p>
         </div>
 
         <!-- Food -->
@@ -205,11 +209,11 @@ function getNoiseColor(level: string): string {
         </div>
 
         <!-- Notes -->
-        <div v-if="space.notes">
+        <div v-if="space.description && !expanded">
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
-            Notes
+            Description
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.notes }}</p>
+          <p class="m-0 text-[#4a5568]">{{ space.description }}</p>
         </div>
       </div>
     </div>

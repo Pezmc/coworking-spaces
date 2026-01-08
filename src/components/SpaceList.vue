@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
 import SpaceCard from './SpaceCard.vue'
+import { slugify } from '../utils/slug'
 
 interface Props {
   spaces: ICoworkingSpace[]
@@ -28,7 +29,7 @@ const filteredAndSortedSpaces = computed(() => {
     result = result.filter((s) => s.hasAC === props.filters.hasAC)
   }
   if (props.filters.foodAvailability !== 'all') {
-    result = result.filter((s) => s.foodAvailability === props.filters.foodAvailability)
+    result = result.filter((s) => s.foodAndDrinkAvailability === props.filters.foodAvailability)
   }
   if (props.filters.seatingType !== 'all') {
     result = result.filter((s) => s.seatingType === props.filters.seatingType)
@@ -82,7 +83,7 @@ const filteredAndSortedSpaces = computed(() => {
     >
       <SpaceCard
         v-for="space in filteredAndSortedSpaces"
-        :key="space.id"
+        :key="slugify(space.name)"
         :space="space"
       />
     </div>

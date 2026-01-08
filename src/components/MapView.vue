@@ -9,6 +9,7 @@ import {
   FOOD_LABELS,
   SEATING_LABELS,
 } from '../types/space'
+import { slugify } from '../utils/slug'
 
 interface Props {
   spaces: ICoworkingSpace[] // Filtered spaces to show as markers
@@ -91,14 +92,14 @@ onMounted(async () => {
     >
       <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
         layer-type="base"
         name="OpenStreetMap"
       />
       
       <LMarker
         v-for="space in spaces.filter(s => s.coordinates)"
-        :key="space.id"
+        :key="slugify(space.name)"
         :lat-lng="[space.coordinates!.lat, space.coordinates!.lng]"
       >
         <LPopup :options="{ maxWidth: 300, minWidth: 250 }">
@@ -134,17 +135,16 @@ onMounted(async () => {
                 ❄️ AC
               </span>
               <span
-                v-if="(space as any).foodAvailability !== 'none'"
+                v-if="space.foodAndDrinkAvailability !== 'none'"
                 class="px-2 py-0.5 text-xs font-medium rounded bg-orange-100 text-orange-700"
               >
-                🍽️ {{ FOOD_LABELS[(space as any).foodAvailability as keyof typeof FOOD_LABELS] }}
+                🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
               </span>
             </div>
             
-            <!-- Atmosphere -->
-            <!-- @ts-ignore - using old field name until data migration -->
-            <p v-if="(space as any).atmosphere" class="text-sm text-[#4a5568] m-0 mb-3 italic">
-              "{{ (space as any).atmosphere }}"
+            <!-- Description -->
+            <p v-if="space.description" class="text-sm text-[#4a5568] m-0 mb-3 italic">
+              "{{ space.description }}"
             </p>
             
             <!-- Actions -->
