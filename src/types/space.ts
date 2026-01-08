@@ -98,3 +98,42 @@ export const OUTLET_LABELS: Record<OutletAvailability, string> = {
   unknown: 'Unknown',
 }
 
+// Category descriptions for tooltips and documentation
+export const WIFI_SPEED_DESCRIPTIONS: Record<WifiSpeed, string> = {
+  unknown: 'WiFi speed has not been tested yet',
+  slow: 'Under 25 Mbps – suitable for browsing and email',
+  medium: '25–100 Mbps – good for video calls and general work',
+  fast: 'Over 100 Mbps – great for large uploads and multiple devices',
+}
+
+export const NOISE_LEVEL_DESCRIPTIONS: Record<NoiseLevel, string> = {
+  quiet: 'Library-like atmosphere – minimal background noise, whispered conversations',
+  medium: 'Café ambiance – background chatter and music at moderate volume',
+  loud: 'Lively environment – loud music, busy conversations, energetic vibe',
+}
+
+export const FOOD_DESCRIPTIONS: Record<FoodAvailability, string> = {
+  none: 'No food available – drinks only',
+  light: 'Snacks and light bites – pastries, sandwiches, simple items',
+  full: 'Full menu – hot meals, substantial food options',
+}
+
+export const SEATING_DESCRIPTIONS: Record<SeatingType, string> = {
+  individual: 'Mostly 1–2 person tables – best for solo work',
+  mixed: 'Variety of table sizes – options for both solo and group work',
+  group: 'Primarily large tables (4+ people) – communal seating',
+}
+
+export const OUTLET_DESCRIPTIONS: Record<OutletAvailability, string> = {
+  unknown: 'Outlet availability has not been checked yet',
+  few: '1–2 outlets in the space – arrive early to claim one',
+  some: 'Several outlets available – most seats have access',
+  many: 'Outlets at every table or seat – no worries about power',
+}
+
+export const AC_DESCRIPTIONS: Record<HasAC, string> = {
+  unknown: 'Climate control has not been checked yet',
+  yes: 'Air conditioning available – stays cool in summer',
+  no: 'No air conditioning – may be warm on hot days',
+}
+

@@ -7,6 +7,12 @@ import {
   FOOD_LABELS,
   SEATING_LABELS,
   OUTLET_LABELS,
+  NOISE_LEVEL_DESCRIPTIONS,
+  WIFI_SPEED_DESCRIPTIONS,
+  FOOD_DESCRIPTIONS,
+  SEATING_DESCRIPTIONS,
+  OUTLET_DESCRIPTIONS,
+  AC_DESCRIPTIONS,
 } from '../types/space'
 
 interface Props {
@@ -70,31 +76,36 @@ function getNoiseColor(level: string): string {
       <!-- Quick Tags -->
       <div class="flex flex-wrap gap-2 mt-4">
         <span
-          class="px-2 py-1 text-xs font-medium rounded border"
+          class="px-2 py-1 text-xs font-medium rounded border cursor-help"
           :class="getWifiColor(space.wifiSpeed)"
+          :title="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
         >
           📶 {{ WIFI_SPEED_LABELS[space.wifiSpeed] }}
         </span>
         <span
-          class="px-2 py-1 text-xs font-medium rounded border"
+          class="px-2 py-1 text-xs font-medium rounded border cursor-help"
           :class="getNoiseColor(space.noiseLevel)"
+          :title="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
         >
           🔊 {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
         </span>
         <span
-          class="px-2 py-1 text-xs font-medium rounded border bg-[#f5f0e6] text-[#1a365d] border-[#e2d9c8]"
+          class="px-2 py-1 text-xs font-medium rounded border bg-[#f5f0e6] text-[#1a365d] border-[#e2d9c8] cursor-help"
+          :title="SEATING_DESCRIPTIONS[space.seatingType]"
         >
           🪑 {{ SEATING_LABELS[space.seatingType] }}
         </span>
         <span
           v-if="space.hasAC === 'yes'"
-          class="px-2 py-1 text-xs font-medium rounded border bg-blue-100 text-blue-800 border-blue-300"
+          class="px-2 py-1 text-xs font-medium rounded border bg-blue-100 text-blue-800 border-blue-300 cursor-help"
+          :title="AC_DESCRIPTIONS[space.hasAC]"
         >
           ❄️ AC
         </span>
         <span
           v-if="space.foodAvailability !== 'none'"
-          class="px-2 py-1 text-xs font-medium rounded border bg-orange-100 text-orange-800 border-orange-300"
+          class="px-2 py-1 text-xs font-medium rounded border bg-orange-100 text-orange-800 border-orange-300 cursor-help"
+          :title="FOOD_DESCRIPTIONS[space.foodAvailability]"
         >
           🍽️ {{ FOOD_LABELS[space.foodAvailability] }}
         </span>
@@ -161,7 +172,12 @@ function getNoiseColor(level: string): string {
           <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
             Outlets
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ OUTLET_LABELS[space.hasOutlets] }}</p>
+          <p
+            class="m-0 text-[#4a5568] cursor-help inline-block"
+            :title="OUTLET_DESCRIPTIONS[space.hasOutlets]"
+          >
+            {{ OUTLET_LABELS[space.hasOutlets] }}
+          </p>
         </div>
 
         <!-- Drinks -->
