@@ -2,16 +2,21 @@
 export const NOISE_LEVELS = ['quiet', 'medium', 'loud'] as const
 export const WIFI_SPEEDS = ['unknown', 'slow', 'medium', 'fast'] as const
 export const AC_OPTIONS = ['yes', 'no', 'unknown'] as const
-export const FOOD_OPTIONS = ['none', 'light', 'full'] as const
+export const FOOD_AND_DRINK_OPTIONS = ['none', 'light', 'full'] as const
 export const SEATING_TYPES = ['individual', 'mixed', 'group'] as const
 export const OUTLET_OPTIONS = ['few', 'some', 'many', 'unknown'] as const
 
 export type NoiseLevel = typeof NOISE_LEVELS[number]
 export type WifiSpeed = typeof WIFI_SPEEDS[number]
 export type HasAC = typeof AC_OPTIONS[number]
-export type FoodAvailability = typeof FOOD_OPTIONS[number]
+export type FoodAndDrinkAvailability = typeof FOOD_AND_DRINK_OPTIONS[number]
 export type SeatingType = typeof SEATING_TYPES[number]
 export type OutletAvailability = typeof OUTLET_OPTIONS[number]
+
+export interface ICoordinates {
+  lat: number
+  lng: number
+}
 
 export interface ICoworkingSpace {
   // Unique identifier
@@ -21,32 +26,35 @@ export interface ICoworkingSpace {
   name: string
   address: string
   googleMapsUrl: string
+  coordinates: ICoordinates
 
   // Standardized fields for filtering
   noiseLevel: NoiseLevel
   wifiSpeed: WifiSpeed
   hasAC: HasAC
-  foodAvailability: FoodAvailability
+  foodAndDrinkAvailability: FoodAndDrinkAvailability
   seatingType: SeatingType
   hasOutlets: OutletAvailability
 
-  // Free-form descriptive fields
-  atmosphere: string
-  spaceDescription: string
-  wifiDetails: string
-  noiseNotes: string
-  climateNotes: string
-  drinks: string
-  foodNotes: string
-  openingHours: string
-  notes: string
+  // Free-form detail fields
+  notes: string // general notes about the space
+  openingHours: string // when open
+
+  // Descriptive fields for standardised options
+  atmosphereNotes: string // detail on the vibe/feeling/noise (noiseLevel)
+  wifiNotes: string // speed test results if available (wifiSpeed)
+  climateNotes: string // heating/cooling info (hasAC)
+  foodNotes: string // notes about food (foodAndDrinkAvailability)
+  drinkNotes: string // notes about drinks (foodAndDrinkAvailability)
+  seatingNotes: string // description of the seating and layout (seatingType)
+  outletNotes: string // notes about outlets (hasOutlets)
 }
 
 export interface IFilterState {
   noiseLevel: NoiseLevel | 'all'
   wifiSpeed: WifiSpeed | 'all'
   hasAC: HasAC | 'all'
-  foodAvailability: FoodAvailability | 'all'
+  foodAvailability: FoodAndDrinkAvailability | 'all'
   seatingType: SeatingType | 'all'
   hasOutlets: OutletAvailability | 'all'
 }
@@ -79,7 +87,7 @@ export const AC_LABELS: Record<HasAC, string> = {
   unknown: 'Unknown',
 }
 
-export const FOOD_LABELS: Record<FoodAvailability, string> = {
+export const FOOD_LABELS: Record<FoodAndDrinkAvailability, string> = {
   none: 'No Food',
   light: 'Light Food',
   full: 'Full Menu',
@@ -112,7 +120,7 @@ export const NOISE_LEVEL_DESCRIPTIONS: Record<NoiseLevel, string> = {
   loud: 'Lively environment – loud music, busy conversations, energetic vibe',
 }
 
-export const FOOD_DESCRIPTIONS: Record<FoodAvailability, string> = {
+export const FOOD_DESCRIPTIONS: Record<FoodAndDrinkAvailability, string> = {
   none: 'No food available – drinks only',
   light: 'Snacks and light bites – pastries, sandwiches, simple items',
   full: 'Full menu – hot meals, substantial food options',
