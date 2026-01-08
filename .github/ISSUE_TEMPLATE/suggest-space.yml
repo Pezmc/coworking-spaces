@@ -8,6 +8,7 @@ body:
       value: |
         Thanks for suggesting a new coworking space! Please fill in as much detail as you can.
 
+  # Basic Info
   - type: input
     id: name
     attributes:
@@ -21,8 +22,8 @@ body:
     id: address
     attributes:
       label: Address
-      description: Street name or area (just the street name, e.g., "Tiensestraat", "Naamsestraat")
-      placeholder: e.g., Naamsestraat
+      description: Full address (e.g., "Tiensestraat 38, 3000 Leuven")
+      placeholder: e.g., Naamsestraat 49, 3000 Leuven
     validations:
       required: true
 
@@ -35,13 +36,21 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: coordinates
+  - type: textarea
+    id: description
     attributes:
-      label: Coordinates (optional)
-      description: If you have them, provide GPS coordinates as "lat, lng" (e.g., 50.8798, 4.7005). Otherwise we'll look them up from the Google Maps link.
-      placeholder: e.g., 50.8798, 4.7005
+      label: Description
+      description: General description of the space
+      placeholder: e.g., Staff are laptop-friendly, no time limits. Great natural light.
 
+  - type: input
+    id: opening-hours
+    attributes:
+      label: Opening Hours
+      description: When is it open?
+      placeholder: e.g., Mon-Fri 08:30-18:00, Sat 09:00-17:00
+
+  # Noise & Atmosphere
   - type: dropdown
     id: noise-level
     attributes:
@@ -55,6 +64,14 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: atmosphere-notes
+    attributes:
+      label: Atmosphere Notes
+      description: Describe the vibe/feeling/noise level in more detail
+      placeholder: e.g., Cozy and quiet, great for focused work. Background jazz music, can get busy at lunch
+
+  # WiFi
   - type: dropdown
     id: wifi-speed
     attributes:
@@ -68,6 +85,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: wifi-notes
+    attributes:
+      label: WiFi Notes
+      description: Specific speed test results if you have them
+      placeholder: e.g., 150 Mbps down, 50 Mbps up
+
+  # Climate
   - type: dropdown
     id: has-ac
     attributes:
@@ -80,6 +105,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: climate-notes
+    attributes:
+      label: Climate Notes
+      description: Notes about heating/cooling/AC
+      placeholder: e.g., Good AC in summer, can be cold near the door
+
+  # Food & Drinks
   - type: dropdown
     id: food-availability
     attributes:
@@ -92,53 +125,6 @@ body:
         - Not sure
     validations:
       required: true
-
-  - type: dropdown
-    id: seating-type
-    attributes:
-      label: Seating Type
-      description: What kind of seating is available?
-      options:
-        - Individual tables (small, 1-2 person)
-        - Mixed (various table sizes)
-        - Group tables (large shared tables)
-        - Not sure
-    validations:
-      required: true
-
-  - type: dropdown
-    id: outlets
-    attributes:
-      label: Power Outlets
-      description: How many power outlets are available?
-      options:
-        - Many outlets
-        - Some outlets
-        - Few outlets
-        - Not sure
-    validations:
-      required: true
-
-  - type: textarea
-    id: atmosphere-notes
-    attributes:
-      label: Atmosphere Notes
-      description: Describe the vibe/feeling/noise level
-      placeholder: e.g., Cozy and quiet, great for focused work. Background jazz music, can get busy at lunch
-
-  - type: input
-    id: wifi-notes
-    attributes:
-      label: WiFi Notes
-      description: Specific speed test results if you have them
-      placeholder: e.g., 150 Mbps down, 50 Mbps up
-
-  - type: input
-    id: climate-notes
-    attributes:
-      label: Climate Notes
-      description: Notes about heating/cooling/AC
-      placeholder: e.g., Good AC in summer, can be cold near the door
 
   - type: input
     id: food-notes
@@ -154,12 +140,40 @@ body:
       description: What drinks do they serve?
       placeholder: e.g., Coffee, tea, fresh juices
 
-  - type: textarea
+  # Seating
+  - type: dropdown
+    id: seating-type
+    attributes:
+      label: Seating Type
+      description: What kind of seating is available?
+      options:
+        - Individual tables (small, 1-2 person)
+        - Mixed (various table sizes)
+        - Group tables (large shared tables)
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
     id: seating-notes
     attributes:
       label: Seating Notes
       description: Describe the seating and layout
       placeholder: e.g., 10 person communal table near the window, plus smaller 2-person tables
+
+  # Power Outlets
+  - type: dropdown
+    id: outlets
+    attributes:
+      label: Power Outlets
+      description: How many power outlets are available?
+      options:
+        - Many outlets
+        - Some outlets
+        - Few outlets
+        - Not sure
+    validations:
+      required: true
 
   - type: input
     id: outlet-notes
@@ -167,18 +181,3 @@ body:
       label: Outlet Notes
       description: Details about power outlet locations and availability
       placeholder: e.g., Outlets at most tables, some near the windows
-
-  - type: input
-    id: opening-hours
-    attributes:
-      label: Opening Hours
-      description: When is it open?
-      placeholder: e.g., Mon-Fri 8am-6pm, Sat 9am-5pm
-
-  - type: textarea
-    id: description
-    attributes:
-      label: Description
-      description: General description of the space (shows on card preview)
-      placeholder: e.g., Staff are laptop-friendly, no time limits. Great natural light.
-
