@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1a365d;
+  --color-secondary: #2d3748;
+  --color-accent: #ed8936;
+  --color-surface: #fffaf0;
+  --color-surface-dark: #faf5eb;
+  --color-text: #1a202c;
+  --color-text-muted: #718096;
+}
+
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
