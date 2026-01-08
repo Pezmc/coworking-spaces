@@ -5,6 +5,7 @@ export const AC_OPTIONS = ['yes', 'no', 'unknown'] as const
 export const FOOD_AND_DRINK_OPTIONS = ['none', 'light', 'full'] as const
 export const SEATING_TYPES = ['individual', 'mixed', 'group'] as const
 export const OUTLET_OPTIONS = ['few', 'some', 'many', 'unknown'] as const
+export const VERIFIED_OPTIONS = ['all', 'verified', 'unverified'] as const
 
 export type NoiseLevel = typeof NOISE_LEVELS[number]
 export type WifiSpeed = typeof WIFI_SPEEDS[number]
@@ -18,12 +19,15 @@ export interface ICoordinates {
   lng: number
 }
 
+export type VerifiedFilter = typeof VERIFIED_OPTIONS[number]
+
 export interface ICoworkingSpace {
   // Basic info
   name: string
   address: string
   googleMapsUrl: string
   coordinates: ICoordinates
+  verified: boolean
 
   // Standardized fields for filtering
   noiseLevel: NoiseLevel
@@ -54,6 +58,7 @@ export interface IFilterState {
   foodAvailability: FoodAndDrinkAvailability | 'all'
   seatingType: SeatingType | 'all'
   hasOutlets: OutletAvailability | 'all'
+  verified: VerifiedFilter
 }
 
 export type SortField = 'name' | 'wifiSpeed' | 'noiseLevel'
