@@ -1,0 +1,175 @@
+name: Suggest a Coworking Space
+description: Suggest a new coworking spot in Leuven
+title: "[New Space]: "
+labels: ["new-space"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new coworking space! Please fill in as much detail as you can.
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: The name of the place
+      placeholder: e.g., Coffee & Code
+    validations:
+      required: true
+
+  - type: input
+    id: address
+    attributes:
+      label: Address
+      description: Street address or location description
+      placeholder: e.g., Naamsestraat 42, Leuven
+    validations:
+      required: true
+
+  - type: input
+    id: google-maps
+    attributes:
+      label: Google Maps Link
+      description: Link to the location on Google Maps (optional)
+      placeholder: https://maps.google.com/?q=...
+
+  - type: dropdown
+    id: noise-level
+    attributes:
+      label: Noise Level
+      description: How noisy is it typically?
+      options:
+        - Quiet
+        - Medium
+        - Loud
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: wifi-speed
+    attributes:
+      label: WiFi Speed
+      description: How fast is the WiFi?
+      options:
+        - Fast (100+ Mbps)
+        - Medium (20-100 Mbps)
+        - Slow (< 20 Mbps)
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: has-ac
+    attributes:
+      label: Air Conditioning
+      description: Does it have AC?
+      options:
+        - "Yes"
+        - "No"
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: food-availability
+    attributes:
+      label: Food Availability
+      description: What food options are available?
+      options:
+        - Full menu
+        - Light food/snacks
+        - No food
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: seating-type
+    attributes:
+      label: Seating Type
+      description: What kind of seating is available?
+      options:
+        - Individual tables (small, 1-2 person)
+        - Mixed (various table sizes)
+        - Group tables (large shared tables)
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outlets
+    attributes:
+      label: Power Outlets
+      description: How many power outlets are available?
+      options:
+        - Many outlets
+        - Some outlets
+        - Few outlets
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: atmosphere
+    attributes:
+      label: Atmosphere
+      description: Describe the vibe/atmosphere
+      placeholder: e.g., Cozy and quiet, great for focused work
+
+  - type: textarea
+    id: space-description
+    attributes:
+      label: Space Description
+      description: Describe the seating and layout
+      placeholder: e.g., 10 person communal table near the window, plus smaller 2-person tables
+
+  - type: input
+    id: wifi-details
+    attributes:
+      label: WiFi Details
+      description: Specific speed test results if you have them
+      placeholder: e.g., 150 Mbps down, 50 Mbps up
+
+  - type: textarea
+    id: noise-notes
+    attributes:
+      label: Noise Notes
+      description: More details about noise levels
+      placeholder: e.g., Background jazz music, can get busy at lunch
+
+  - type: input
+    id: climate-notes
+    attributes:
+      label: Climate Notes
+      description: Notes about heating/cooling
+      placeholder: e.g., Good AC in summer, can be cold near the door
+
+  - type: input
+    id: drinks
+    attributes:
+      label: Drinks Available
+      description: What drinks do they serve?
+      placeholder: e.g., Coffee, tea, fresh juices
+
+  - type: input
+    id: food-notes
+    attributes:
+      label: Food Notes
+      description: More details about food options
+      placeholder: e.g., Great pastries, lunch served 11am-3pm
+
+  - type: input
+    id: opening-hours
+    attributes:
+      label: Opening Hours
+      description: When is it open?
+      placeholder: e.g., Mon-Fri 8am-6pm, Sat 9am-5pm
+
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Additional Notes
+      description: Anything else worth mentioning?
+      placeholder: e.g., Ask for the WiFi password at the counter, best seats are upstairs
+
