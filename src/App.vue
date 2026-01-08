@@ -4,6 +4,7 @@ import type { ICoworkingSpace, IFilterState, ISortState } from './types/space'
 import FilterBar from './components/FilterBar.vue'
 import SpaceList from './components/SpaceList.vue'
 import MapView from './components/MapView.vue'
+import VisitProgress from './components/VisitProgress.vue'
 import spacesData from './data/spaces.json'
 
 // TODO: Update data to match new ICoworkingSpace shape
@@ -53,7 +54,7 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
     <header class="bg-[#1a365d] text-white py-8 px-6">
       <div class="max-w-6xl mx-auto">
         <h1 class="font-display text-4xl md:text-5xl font-bold m-0 mb-2">
-          Leuven Coworking Spaces
+          Leuven Coworking Cafes
         </h1>
         <p class="text-[#cbd5e0] text-lg m-0">
           Find your perfect spot to work in Leuven
@@ -113,7 +114,7 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#f5f0e6] border-t-2 border-[#e2d9c8] py-8 px-6 mt-12">
+    <footer class="bg-[#f5f0e6] border-t-2 border-[#e2d9c8] py-8 px-6 mt-12 pb-24">
       <div class="max-w-6xl mx-auto text-center">
         <div class="bg-[#1a365d] text-white rounded-lg p-6 mb-6 inline-block">
           <p class="text-lg font-medium m-0 mb-3">
@@ -146,5 +147,8 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
         </p>
       </div>
     </footer>
+
+    <!-- Visit Progress Bar -->
+    <VisitProgress :total-spaces="spaces.length" />
   </div>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import {
   type ICoworkingSpace,
   NOISE_LEVEL_LABELS,
@@ -12,6 +13,7 @@ import {
   AC_DESCRIPTIONS,
   VERIFIED_DESCRIPTIONS,
 } from '../types/space'
+import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 
 interface Props {
   space: ICoworkingSpace
@@ -20,6 +22,21 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+// Visited state
+const { isVisited, toggleVisited } = useVisitedSpaces()
+const visited = computed(() => isVisited(props.space.name))
+const justChecked = ref(false)
+
+function handleToggleVisited() {
+  const nowVisited = toggleVisited(props.space.name)
+  if (nowVisited) {
+    justChecked.value = true
+    setTimeout(() => {
+      justChecked.value = false
+    }, 600)
+  }
+}
 
 // Color utilities - return hex colors for use in both Tailwind and inline styles
 function getWifiColorHex(speed: string): string {
@@ -78,9 +95,12 @@ function getNoiseStyle(level: string) {
     <div class="flex justify-between items-start gap-3">
       <div class="min-w-0 flex-1">
         <h3 
-          :class="compact 
-            ? 'font-bold text-lg text-[#1a365d] m-0 mb-1' 
-            : 'font-display text-xl font-bold text-[#1a365d] m-0 mb-1'"
+          :class="[
+            compact 
+              ? 'font-bold text-lg text-[#1a365d] m-0 mb-1' 
+              : 'font-display text-xl font-bold text-[#1a365d] m-0 mb-1',
+            visited && 'line-through opacity-70'
+          ]"
         >
           <slot name="title">{{ space.name }}</slot>
         </h3>
@@ -91,6 +111,23 @@ function getNoiseStyle(level: string) {
           {{ space.address.split(',')[0] }}</a>
       </div>
       <div class="flex flex-col gap-2 items-end flex-shrink-0">
+        <!-- Visited checkbox -->
+        <button
+          @click="handleToggleVisited"
+          v-tippy="visited ? 'Click to unmark' : 'Check off once you\'ve visited!'"
+          class="flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200 cursor-pointer"
+          :class="visited 
+            ? 'bg-green-500 border-green-500 text-white' 
+            : 'bg-white border-[#cbd5e0] hover:border-[#ed8936] text-transparent hover:text-[#ed8936]'"
+        >
+          <span 
+            class="text-sm transition-transform duration-200"
+            :class="{ 'scale-125': justChecked }"
+          >
+            {{ visited ? '✓' : '○' }}
+          </span>
+        </button>
+        
         <span
           v-if="!space.verified"
           v-tippy="VERIFIED_DESCRIPTIONS.unverified"
