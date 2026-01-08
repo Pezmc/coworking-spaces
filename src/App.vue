@@ -16,6 +16,7 @@ const filters = ref<IFilterState>({
   foodAvailability: 'all',
   seatingType: 'all',
   hasOutlets: 'all',
+  verified: 'all',
 })
 
 const sort = ref<ISortState>({
@@ -35,12 +36,15 @@ const filteredSpaces = computed(() => {
     if (filters.value.foodAvailability !== 'all' && space.foodAndDrinkAvailability !== filters.value.foodAvailability) return false
     if (filters.value.seatingType !== 'all' && space.seatingType !== filters.value.seatingType) return false
     if (filters.value.hasOutlets !== 'all' && space.hasOutlets !== filters.value.hasOutlets) return false
+    if (filters.value.verified === 'verified' && !space.verified) return false
+    if (filters.value.verified === 'unverified' && space.verified) return false
     return true
   })
 })
 
 const GITHUB_REPO = 'Pezmc/coworking-spaces'
 const NEW_ISSUE_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=suggest-space.yml`
+const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=suggest-space.yml&title=Verify+Space`
 </script>
 
 <template>
@@ -96,6 +100,7 @@ const NEW_ISSUE_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sug
         :spaces="spaces"
         :filters="filters"
         :sort="sort"
+        :verify-url="VERIFY_URL"
       />
 
       <!-- Map View -->
@@ -103,6 +108,7 @@ const NEW_ISSUE_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sug
         v-else
         :spaces="filteredSpaces"
         :all-spaces="spaces"
+        :verify-url="VERIFY_URL"
       />
     </main>
 
