@@ -19,9 +19,6 @@ export interface ICoordinates {
 }
 
 export interface ICoworkingSpace {
-  // Unique identifier
-  id: string
-
   // Basic info
   name: string
   address: string
@@ -37,7 +34,7 @@ export interface ICoworkingSpace {
   hasOutlets: OutletAvailability
 
   // Free-form detail fields
-  notes: string // general notes about the space
+  description: string // general description of the space, shows on card
   openingHours: string // when open
 
   // Descriptive fields for standardised options
