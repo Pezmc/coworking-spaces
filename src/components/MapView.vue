@@ -9,6 +9,7 @@ import {
   WIFI_SPEED_LABELS,
   FOOD_LABELS,
   SEATING_LABELS,
+  VERIFIED_DESCRIPTIONS,
 } from '../types/space'
 import { slugify } from '../utils/slug'
 
@@ -142,7 +143,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
               {{ space.name }}
             </h3>
             <p class="text-sm text-[#718096] m-0 mb-3">
-              {{ space.address }}
+              {{ space.address.split(',')[0] }}
             </p>
             
             <!-- Quick tags -->
@@ -184,7 +185,8 @@ function getMarkerIcon(space: ICoworkingSpace) {
             <!-- Unverified notice -->
             <div
               v-if="!space.verified"
-              class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800"
+              class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800 cursor-help"
+              :title="VERIFIED_DESCRIPTIONS.unverified"
             >
               ⚠️ Unverified
               <a
