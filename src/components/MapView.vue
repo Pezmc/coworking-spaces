@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type L from 'leaflet'
 import { LMap, LTileLayer, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import {
@@ -14,6 +15,7 @@ import { slugify } from '../utils/slug'
 interface Props {
   spaces: ICoworkingSpace[] // Filtered spaces to show as markers
   allSpaces: ICoworkingSpace[] // All spaces for calculating bounds
+  verifyUrl: string
 }
 
 const props = defineProps<Props>()
@@ -69,7 +71,11 @@ function getNoiseColor(level: string): string {
   }
 }
 
-// Fix Leaflet default icon issue
+// Create custom icons for verified/unverified markers
+const verifiedIcon = ref<L.Icon | null>(null)
+const unverifiedIcon = ref<L.Icon | null>(null)
+
+// Fix Leaflet default icon issue and create custom icons
 onMounted(async () => {
   const L = await import('leaflet')
   delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -78,7 +84,34 @@ onMounted(async () => {
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
   })
+  
+  // Create verified (default) icon
+  verifiedIcon.value = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  })
+  
+  // Unverified icon uses a grey marker (via filter)
+  unverifiedIcon.value = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    className: 'unverified-marker',
+  })
 })
+
+function getMarkerIcon(space: ICoworkingSpace) {
+  return space.verified ? verifiedIcon.value : unverifiedIcon.value
+}
 </script>
 
 <template>
@@ -101,6 +134,7 @@ onMounted(async () => {
         v-for="space in spaces.filter(s => s.coordinates)"
         :key="slugify(space.name)"
         :lat-lng="[space.coordinates!.lat, space.coordinates!.lng]"
+        :options="getMarkerIcon(space) ? { icon: getMarkerIcon(space) } : {}"
       >
         <LPopup :options="{ maxWidth: 300, minWidth: 250 }">
           <div class="space-popup">
@@ -146,6 +180,22 @@ onMounted(async () => {
             <p v-if="space.description" class="text-sm text-[#4a5568] m-0 mb-3 italic">
               "{{ space.description }}"
             </p>
+            
+            <!-- Unverified notice -->
+            <div
+              v-if="!space.verified"
+              class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800"
+            >
+              ⚠️ Unverified
+              <a
+                :href="verifyUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-semibold text-[#ed8936] hover:underline ml-1"
+              >
+                Help verify →
+              </a>
+            </div>
             
             <!-- Actions -->
             <a
@@ -194,6 +244,12 @@ onMounted(async () => {
 
 .space-popup {
   font-family: inherit;
+}
+
+/* Unverified marker styling - more transparent/faded */
+:deep(.unverified-marker) {
+  opacity: 0.5;
+  filter: grayscale(50%);
 }
 </style>
 
