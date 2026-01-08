@@ -7,6 +7,7 @@ import {
   FOOD_AND_DRINK_OPTIONS,
   SEATING_TYPES,
   OUTLET_OPTIONS,
+  VERIFIED_OPTIONS,
   NOISE_LEVEL_LABELS,
   WIFI_SPEED_LABELS,
   AC_LABELS,
@@ -16,7 +17,14 @@ import {
   type IFilterState,
   type ISortState,
   type SortField,
+  type VerifiedFilter,
 } from '../types/space'
+
+const VERIFIED_LABELS: Record<VerifiedFilter, string> = {
+  all: 'All Spaces',
+  verified: 'Verified Only',
+  unverified: 'Unverified Only',
+}
 
 interface Props {
   filters: IFilterState
@@ -53,6 +61,7 @@ function resetFilters() {
     foodAvailability: 'all',
     seatingType: 'all',
     hasOutlets: 'all',
+    verified: 'all',
   })
 }
 
@@ -82,7 +91,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </button>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
       <!-- Noise Level -->
       <div class="flex flex-col gap-1">
         <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
@@ -181,6 +190,22 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option value="all">Any</option>
           <option v-for="opt in OUTLET_OPTIONS" :key="opt" :value="opt">
             {{ OUTLET_LABELS[opt] }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Verified -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
+          Status
+        </label>
+        <select
+          :value="filters.verified"
+          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="updateFilter('verified', ($event.target as HTMLSelectElement).value as IFilterState['verified'])"
+        >
+          <option v-for="opt in VERIFIED_OPTIONS" :key="opt" :value="opt">
+            {{ VERIFIED_LABELS[opt] }}
           </option>
         </select>
       </div>
