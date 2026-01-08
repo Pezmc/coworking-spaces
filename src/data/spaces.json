@@ -1,7 +1,6 @@
 [
   {
     "name": "MadMum Tiensestraat",
-    "verified": true,
     "address": "Tiensestraat 38, 3000 Leuven",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=madmum%20Tiensestraat%2038%2C%203000%20Leuven",
     "coordinates": { "lat": 50.87803, "lng": 4.70373 },
@@ -19,13 +18,13 @@
     "foodNotes": "Full food 12-2pm",
     "drinkNotes": "Coffee, tea, mate",
     "seatingNotes": "8 person co-working table and three 4 person booths",
-    "outletNotes": ""
+    "outletNotes": "",
+    "verified": true
   },
   {
     "name": "Bar Madrid",
     "address": "Joris Helleputteplein 1, 3000 Leuven",
     "googleMapsUrl": "https://maps.app.goo.gl/f2bPbK3DJzimULZ26",
-    "verified": true,
     "coordinates": { "lat": 50.878084, "lng": 4.69765 },
     "noiseLevel": "medium",
     "wifiSpeed": "fast",
@@ -41,14 +40,14 @@
     "foodNotes": "Croques and lighter food",
     "drinkNotes": "Coffee, smoothies",
     "seatingNotes": "Many smaller tables for 2 or 4 people throughout the room",
-    "outletNotes": "Visit Leuven notes plenty of power outlets for everyone."
+    "outletNotes": "Visit Leuven notes plenty of power outlets for everyone.",
+    "verified": true
   },
   {
     "name": "MadMum Train Station",
     "address": "Martelarenplein 16, 3000 Leuven",
     "googleMapsUrl": "https://maps.app.goo.gl/B3XArfEe3VA77Rob7",
     "coordinates": { "lat": 50.88135, "lng": 4.71565 },
-    "verified": true,
     "noiseLevel": "medium",
     "wifiSpeed": "unknown",
     "hasAC": "unknown",
@@ -63,7 +62,8 @@
     "foodNotes": "",
     "drinkNotes": "",
     "seatingNotes": "Limited group seating",
-    "outletNotes": "Only a couple of outlets"
+    "outletNotes": "Only a couple of outlets",
+    "verified": true
   },
   {
     "name": "MadMum Erasmushuis",
@@ -84,14 +84,14 @@
     "foodNotes": "",
     "drinkNotes": "",
     "seatingNotes": "1 big group table",
-    "outletNotes": ""
+    "outletNotes": "",
+    "verified": true
   },
   {
     "name": "Bar Berlin",
     "address": "Brusselsestraat 115, Leuven",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bar%20Berlin%20Brusselsestraat%20115%2C%20Leuven",
     "coordinates": { "lat": 50.880666, "lng": 4.692622 },
-    "verified": true,
     "noiseLevel": "quiet",
     "wifiSpeed": "fast",
     "hasAC": "yes",
@@ -106,11 +106,11 @@
     "foodNotes": "Breakfast 9–11 am, lunch 11–3 pm",
     "drinkNotes": "Coffee, tea, lemonade, alcoholic drinks",
     "seatingNotes": "One large table and a few smaller ones",
-    "outletNotes": "Four outlets on the big table and some on smaller tables"
+    "outletNotes": "Four outlets on the big table and some on smaller tables",
+    "verified": true
   },
   {
     "name": "Noir Coffeebar",
-    "verified": true,
     "address": "Naamsestraat 49, 3000 Leuven",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Noir%20Coffeebar%20Naamsestraat%2049%2C%203000%20Leuven",
     "coordinates": { "lat": 50.876664, "lng": 4.700779 },
@@ -128,11 +128,11 @@
     "foodNotes": "Freshly baked desserts",
     "drinkNotes": "Coffee",
     "seatingNotes": "Smaller tables. Plus terrace seating",
-    "outletNotes": "Some outlets inside, but not many"
+    "outletNotes": "Some outlets inside, but not many",
+    "verified": true
   },
   {
     "name": "Blanco Coffeebar",
-    "verified": true,
     "address": "Leopold Vanderkelenstraat 27, 3000 Leuven",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Blanco%20Coffeebar%20Leopold%20Vanderkelenstraat%2027%2C%203000%20Leuven",
     "coordinates": { "lat": 50.879839, "lng": 4.702827 },
@@ -150,6 +150,7 @@
     "foodNotes": "Cakes",
     "drinkNotes": "All drinks, cakes",
     "seatingNotes": "8 person table",
-    "outletNotes": "3 outlets"
+    "outletNotes": "3 outlets",
+    "verified": true
   }
 ]
