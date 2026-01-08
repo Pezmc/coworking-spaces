@@ -18,6 +18,7 @@ import { slugify } from '../utils/slug'
 
 interface Props {
   space: ICoworkingSpace
+  verifyUrl: string
 }
 
 defineProps<Props>()
@@ -54,6 +55,7 @@ function getNoiseColor(level: string): string {
 <template>
   <article
     class="bg-white border-2 border-[#e2d9c8] rounded-lg overflow-hidden transition-all duration-200 hover:border-[#ed8936] hover:shadow-lg"
+    :class="{ 'opacity-70': !space.verified }"
   >
     <!-- Header -->
     <div class="p-5 border-b border-[#e2d9c8]">
@@ -64,13 +66,38 @@ function getNoiseColor(level: string): string {
           </h3>
           <p class="text-sm text-[#718096] m-0">{{ space.address }}</p>
         </div>
+        <div class="flex flex-col gap-2 items-end">
+          <a
+            :href="space.googleMapsUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex-shrink-0 px-3 py-1.5 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline"
+          >
+            📍 Google Maps
+          </a>
+          <span
+            v-if="!space.verified"
+            class="text-xs text-[#ed8936] font-medium"
+            title="This space hasn't been verified yet"
+          >
+            ⚠️ Unverified
+          </span>
+        </div>
+      </div>
+
+      <!-- Unverified banner -->
+      <div
+        v-if="!space.verified"
+        class="mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800"
+      >
+        <span>📋 This space hasn't been verified yet. </span>
         <a
-          :href="space.googleMapsUrl"
+          :href="verifyUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex-shrink-0 px-3 py-1.5 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline"
+          class="font-semibold text-[#ed8936] hover:underline"
         >
-          📍 Google Maps
+          Help verify it →
         </a>
       </div>
 
