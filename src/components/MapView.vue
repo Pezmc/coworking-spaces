@@ -3,15 +3,9 @@ import { ref, computed, onMounted } from 'vue'
 import type L from 'leaflet'
 import { LMap, LTileLayer, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
-import {
-  type ICoworkingSpace,
-  NOISE_LEVEL_LABELS,
-  WIFI_SPEED_LABELS,
-  FOOD_LABELS,
-  SEATING_LABELS,
-  VERIFIED_DESCRIPTIONS,
-} from '../types/space'
+import { type ICoworkingSpace } from '../types/space'
 import { slugify } from '../utils/slug'
+import SpaceSummary from './SpaceSummary.vue'
 
 interface Props {
   spaces: ICoworkingSpace[] // Filtered spaces to show as markers
@@ -53,24 +47,6 @@ onMounted(() => {
     }
   }, 100)
 })
-
-function getWifiColor(speed: string): string {
-  switch (speed) {
-    case 'fast': return '#22c55e'
-    case 'medium': return '#eab308'
-    case 'slow': return '#ef4444'
-    default: return '#9ca3af'
-  }
-}
-
-function getNoiseColor(level: string): string {
-  switch (level) {
-    case 'quiet': return '#22c55e'
-    case 'medium': return '#eab308'
-    case 'loud': return '#ef4444'
-    default: return '#9ca3af'
-  }
-}
 
 // Create custom icons for verified/unverified markers
 const verifiedIcon = ref<L.Icon | null>(null)
@@ -139,75 +115,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
       >
         <LPopup :options="{ maxWidth: 300, minWidth: 250 }">
           <div class="space-popup">
-            <h3 class="font-bold text-lg text-[#1a365d] m-0 mb-1">
-              {{ space.name }}
-            </h3>
-            <p class="text-sm text-[#718096] m-0 mb-3">
-              {{ space.address.split(',')[0] }}
-            </p>
-            
-            <!-- Quick tags -->
-            <div class="flex flex-wrap gap-1.5 mb-3">
-              <span
-                class="px-2 py-0.5 text-xs font-medium rounded"
-                :style="{ backgroundColor: getWifiColor(space.wifiSpeed) + '20', color: getWifiColor(space.wifiSpeed) }"
-              >
-                📶 {{ WIFI_SPEED_LABELS[space.wifiSpeed] }}
-              </span>
-              <span
-                class="px-2 py-0.5 text-xs font-medium rounded"
-                :style="{ backgroundColor: getNoiseColor(space.noiseLevel) + '20', color: getNoiseColor(space.noiseLevel) }"
-              >
-                🔊 {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
-              </span>
-              <span class="px-2 py-0.5 text-xs font-medium rounded bg-[#f5f0e6] text-[#1a365d]">
-                🪑 {{ SEATING_LABELS[space.seatingType] }}
-              </span>
-              <span
-                v-if="space.hasAC === 'yes'"
-                class="px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-700"
-              >
-                ❄️ AC
-              </span>
-              <span
-                v-if="space.foodAndDrinkAvailability !== 'none'"
-                class="px-2 py-0.5 text-xs font-medium rounded bg-orange-100 text-orange-700"
-              >
-                🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
-              </span>
-            </div>
-            
-            <!-- Description -->
-            <p v-if="space.description" class="text-sm text-[#4a5568] m-0 mb-3 italic">
-              "{{ space.description }}"
-            </p>
-            
-            <!-- Unverified notice -->
-            <div
-              v-if="!space.verified"
-              class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800 cursor-help"
-              :title="VERIFIED_DESCRIPTIONS.unverified"
-            >
-              ⚠️ Unverified
-              <a
-                :href="verifyUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-semibold text-[#ed8936] hover:underline ml-1"
-              >
-                Help verify →
-              </a>
-            </div>
-            
-            <!-- Actions -->
-            <a
-              :href="space.googleMapsUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-block px-3 py-1.5 text-xs font-semibold text-white bg-[#1a365d] rounded hover:bg-[#2d4a7c] transition-colors no-underline"
-            >
-              📍 Open in Google Maps
-            </a>
+            <SpaceSummary :space="space" :verify-url="verifyUrl" compact />
           </div>
         </LPopup>
       </LMarker>
@@ -254,4 +162,3 @@ function getMarkerIcon(space: ICoworkingSpace) {
   filter: grayscale(50%);
 }
 </style>
-

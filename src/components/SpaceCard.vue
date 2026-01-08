@@ -2,20 +2,11 @@
 import { ref } from 'vue'
 import {
   type ICoworkingSpace,
-  NOISE_LEVEL_LABELS,
-  WIFI_SPEED_LABELS,
-  FOOD_LABELS,
-  SEATING_LABELS,
   OUTLET_LABELS,
-  NOISE_LEVEL_DESCRIPTIONS,
-  WIFI_SPEED_DESCRIPTIONS,
-  FOOD_DESCRIPTIONS,
-  SEATING_DESCRIPTIONS,
   OUTLET_DESCRIPTIONS,
-  AC_DESCRIPTIONS,
-  VERIFIED_DESCRIPTIONS,
 } from '../types/space'
 import { slugify } from '../utils/slug'
+import SpaceSummary from './SpaceSummary.vue'
 
 interface Props {
   space: ICoworkingSpace
@@ -25,32 +16,6 @@ interface Props {
 defineProps<Props>()
 
 const expanded = ref(false)
-
-function getWifiColor(speed: string): string {
-  switch (speed) {
-    case 'fast':
-      return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'slow':
-      return 'bg-red-100 text-red-800 border-red-300'
-    default:
-      return 'bg-gray-100 text-gray-600 border-gray-300'
-  }
-}
-
-function getNoiseColor(level: string): string {
-  switch (level) {
-    case 'quiet':
-      return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'loud':
-      return 'bg-red-100 text-red-800 border-red-300'
-    default:
-      return 'bg-gray-100 text-gray-600 border-gray-300'
-  }
-}
 </script>
 
 <template>
@@ -58,101 +23,13 @@ function getNoiseColor(level: string): string {
     class="bg-white border-2 border-[#e2d9c8] rounded-lg overflow-hidden transition-all duration-200 hover:border-[#ed8936] hover:shadow-lg"
     :class="{ 'opacity-70': !space.verified }"
   >
-    <!-- Header -->
+    <!-- Header with Summary -->
     <div class="p-5 border-b border-[#e2d9c8]">
-      <div class="flex justify-between items-start gap-4">
-        <div>
-          <h3 class="font-display text-xl font-bold text-[#1a365d] m-0 mb-1" :id="slugify(space.name)">
-            {{ space.name }}
-          </h3>
-          <p class="text-sm text-[#718096] m-0">{{ space.address.split(',')[0] }}</p>
-        </div>
-        <div class="flex flex-col gap-2 items-end">
-          <a
-            :href="space.googleMapsUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex-shrink-0 px-3 py-1 text-xs font-semibold text-[#1a365d] bg-[#f5f0e6] rounded border border-[#cbd5e0] hover:bg-[#ed8936] hover:text-white hover:border-[#ed8936] transition-colors no-underline whitespace-nowrap"
-          >
-            📍 Navigate
-          </a>
-          <span
-            v-if="!space.verified"
-            class="text-xs text-[#ed8936] font-medium cursor-help"
-            :title="VERIFIED_DESCRIPTIONS.unverified"
-          >
-            ⚠️ Unverified
-          </span>
-          <span
-            v-else
-            class="text-xs text-green-600 font-medium cursor-help"
-            :title="VERIFIED_DESCRIPTIONS.verified"
-          >
-            ✓ Verified
-          </span>
-        </div>
-      </div>
-
-      <!-- Unverified banner -->
-      <div
-        v-if="!space.verified"
-        class="mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800"
-      >
-        <span>📋 This space hasn't been verified yet. </span>
-        <a
-          :href="verifyUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-semibold text-[#ed8936] hover:underline"
-        >
-          Help verify it →
-        </a>
-      </div>
-
-      <!-- Quick Tags -->
-      <div class="flex flex-wrap gap-2 mt-4">
-        <span
-          class="px-2 py-1 text-xs font-medium rounded border cursor-help"
-          :class="getWifiColor(space.wifiSpeed)"
-          :title="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
-        >
-          📶 {{ WIFI_SPEED_LABELS[space.wifiSpeed] }}
-        </span>
-        <span
-          class="px-2 py-1 text-xs font-medium rounded border cursor-help"
-          :class="getNoiseColor(space.noiseLevel)"
-          :title="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
-        >
-          🔊 {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
-        </span>
-        <span
-          class="px-2 py-1 text-xs font-medium rounded border bg-[#f5f0e6] text-[#1a365d] border-[#e2d9c8] cursor-help"
-          :title="SEATING_DESCRIPTIONS[space.seatingType]"
-        >
-          🪑 {{ SEATING_LABELS[space.seatingType] }}
-        </span>
-        <span
-          v-if="space.hasAC === 'yes'"
-          class="px-2 py-1 text-xs font-medium rounded border bg-blue-100 text-blue-800 border-blue-300 cursor-help"
-          :title="AC_DESCRIPTIONS[space.hasAC]"
-        >
-          ❄️ AC
-        </span>
-        <span
-          v-if="space.foodAndDrinkAvailability !== 'none'"
-          class="px-2 py-1 text-xs font-medium rounded border bg-orange-100 text-orange-800 border-orange-300 cursor-help"
-          :title="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
-        >
-          🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Description Preview -->
-    <div v-if="space.description" class="px-5 py-3 bg-[#faf5eb]">
-      <p class="text-sm text-[#4a5568] m-0 italic">
-        "{{ space.description }}"
-      </p>
+      <SpaceSummary :space="space" :verify-url="verifyUrl">
+        <template #title>
+          <span :id="slugify(space.name)">{{ space.name }}</span>
+        </template>
+      </SpaceSummary>
     </div>
 
     <!-- Expandable Details -->
@@ -242,16 +119,7 @@ function getNoiseColor(level: string): string {
           </h4>
           <p class="m-0 text-[#4a5568]">{{ space.openingHours }}</p>
         </div>
-
-        <!-- Notes -->
-        <div v-if="space.description && !expanded">
-          <h4 class="text-xs font-semibold text-[#718096] uppercase tracking-wide m-0 mb-1">
-            Description
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.description }}</p>
-        </div>
       </div>
     </div>
   </article>
 </template>
-
