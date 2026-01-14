@@ -23,8 +23,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Computed URL for updating/verifying this space
-const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
+// Computed URL for verifying this space (unverified spaces only)
+const verifyUrl = computed(() => buildUpdateSpaceUrl(props.space, 'verify'))
 
 // Visited state
 const { isVisited, toggleVisited } = useVisitedSpaces()
@@ -155,7 +155,7 @@ function getNoiseStyle(level: string) {
     >
       <span>📋 Not verified yet. </span>
       <a
-        :href="updateUrl"
+        :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
         class="font-semibold text-[#ed8936] hover:underline"
@@ -234,7 +234,7 @@ function getNoiseStyle(level: string) {
     >
       ⚠️ Unverified
       <a
-        :href="updateUrl"
+        :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
         class="font-semibold text-[#ed8936] hover:underline ml-1"

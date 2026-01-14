@@ -4,15 +4,18 @@ const GITHUB_REPO = 'Pezmc/coworking-spaces'
 
 export const NEW_SPACE_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=suggest-space.yml`
 
+type IssueAction = 'verify' | 'update'
+
 /**
  * Builds a GitHub issue URL for updating/verifying a space with pre-populated fields
  */
-export function buildUpdateSpaceUrl(space: ICoworkingSpace): string {
+export function buildUpdateSpaceUrl(space: ICoworkingSpace, action: IssueAction = 'update'): string {
   const baseUrl = `https://github.com/${GITHUB_REPO}/issues/new`
+  const titlePrefix = action === 'verify' ? '[Verify]' : '[Update]'
 
   const params = new URLSearchParams({
     template: 'update-space.yml',
-    title: `[Update]: ${space.name}`,
+    title: `${titlePrefix}: ${space.name}`,
     name: space.name,
     address: space.address,
     'google-maps': space.googleMapsUrl,
