@@ -7,8 +7,7 @@ import MapView from './components/MapView.vue'
 import VisitProgress from './components/VisitProgress.vue'
 import spacesData from './data/spaces.json'
 
-// TODO: Update data to match new ICoworkingSpace shape
-const spaces = spacesData as unknown as ICoworkingSpace[]
+const spaces = spacesData as ICoworkingSpace[]
 
 const filters = ref<IFilterState>({
   noiseLevel: 'all',
@@ -49,14 +48,21 @@ import { NEW_SPACE_URL } from './utils/issueUrl'
 <template>
   <div class="min-h-screen bg-[#fffaf0]">
     <!-- Header -->
-    <header class="bg-[#1a365d] text-white py-8 px-6">
-      <div class="max-w-6xl mx-auto">
-        <h1 class="font-display text-4xl md:text-5xl font-bold m-0 mb-2">
-          Leuven Coworking Cafes
-        </h1>
-        <p class="text-[#cbd5e0] text-lg m-0">
-          Find your perfect spot to work in Leuven
-        </p>
+    <header class="bg-[#1a365d] text-white py-6 px-4 sm:py-8 sm:px-6">
+      <div class="max-w-6xl mx-auto flex items-center gap-4 sm:gap-6">
+        <img
+          src="/favicon.svg"
+          alt="Leuven Coworking Cafes logo"
+          class="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 flex-shrink-0 bg-white rounded-full p-1.5"
+        />
+        <div>
+          <h1 class="font-display text-2xl sm:text-4xl md:text-5xl font-bold m-0 mb-1 sm:mb-2">
+            Leuven Coworking Cafes
+          </h1>
+          <p class="text-[#cbd5e0] text-sm sm:text-lg m-0">
+            Find your perfect spot to work in Leuven
+          </p>
+        </div>
       </div>
     </header>
 
