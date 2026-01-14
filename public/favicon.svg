@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" xmlns:bx="https://boxy-svg.com">
   <!-- Background circle -->
   <circle cx="16" cy="16" r="15" fill="#1a365d"/>
-  
-  <!-- Coffee cup body -->
-  <rect x="8" y="12" width="12" height="10" rx="2" fill="#f5f0e6"/>
-  
-  <!-- Coffee cup handle -->
-  <path d="M20 14 h3 a2 2 0 0 1 0 4 h-3" fill="none" stroke="#f5f0e6" stroke-width="2"/>
-  
-  <!-- Steam lines -->
-  <path d="M11 10 q1 -2 0 -4" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M14 9 q1 -2 0 -4" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M17 10 q1 -2 0 -4" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <!-- WiFi symbol on cup -->
-  <path d="M12 18 a4 4 0 0 1 4 0" fill="none" stroke="#1a365d" stroke-width="1" stroke-linecap="round"/>
-  <path d="M13 20 a2 2 0 0 1 2 0" fill="none" stroke="#1a365d" stroke-width="1" stroke-linecap="round"/>
-  <circle cx="14" cy="21" r="0.8" fill="#1a365d"/>
-</svg>
 
+  <!-- Coffee cup body -->
+  <rect x="9.482" y="13.808" width="12" height="10" rx="0.994" fill="#f5f0e6" ry="0.994"/>
+
+  <!-- Coffee cup handle -->
+  <path d="M 21.458 16.186 L 24.458 16.186 C 25.997 16.186 26.96 17.853 26.19 19.186 C 25.833 19.805 25.172 20.186 24.458 20.186 L 21.458 20.186" fill="none" stroke="#f5f0e6" stroke-width="2"/>
+
+  <!-- Steam lines -->
+  <path d="M 12.482 11.808 C 13.148 10.475 13.148 9.142 12.482 7.808" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 15.482 10.808 C 16.148 9.475 16.148 8.142 15.482 6.808" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M 18.482 11.808 C 19.148 10.475 19.148 9.142 18.482 7.808" fill="none" stroke="#ed8936" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- WiFi symbol on cup -->
+  <path d="M 13.394 17.285 C 14.631 16.571 16.156 16.571 17.394 17.285" fill="none" stroke="#1a365d" stroke-width="1" stroke-linecap="round"/>
+  <path d="M 14.377 19.044 C 14.996 18.687 15.758 18.687 16.377 19.044" fill="none" stroke="#1a365d" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="15.362" cy="21.096" r="0.8" fill="#1a365d"/>
+</svg>
