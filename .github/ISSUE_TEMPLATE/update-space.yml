@@ -1,0 +1,203 @@
+name: Update Space Information
+description: Verify or update details for an existing coworking spot
+title: "[Update]: "
+labels: ["update-space"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep our coworking space info accurate! 
+        
+        Use this form to verify unverified spaces or report updates to existing ones.
+
+  # Space Identification
+  - type: input
+    id: name
+    attributes:
+      label: Space Name
+      description: The name of the space you're updating
+      placeholder: e.g., Bar Madrid
+    validations:
+      required: true
+
+  - type: input
+    id: address
+    attributes:
+      label: Address
+      description: Full address (update if incorrect)
+      placeholder: e.g., Naamsestraat 49, 3000 Leuven
+    validations:
+      required: true
+
+  - type: input
+    id: google-maps
+    attributes:
+      label: Google Maps Link
+      description: Link to the location on Google Maps
+      placeholder: https://maps.google.com/?q=...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: visited
+    attributes:
+      label: Verification
+      options:
+        - label: I have personally visited this space and can confirm the details below
+
+  # What Changed
+  - type: textarea
+    id: changes
+    attributes:
+      label: What's Changed?
+      description: Briefly describe what information you're updating or verifying
+      placeholder: |
+        e.g., 
+        - Verified WiFi speed
+        - Opening hours have changed
+        - They now have AC
+    validations:
+      required: true
+
+  # General Info
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: General description of the space
+      placeholder: e.g., Staff are laptop-friendly, no time limits. Great natural light.
+
+  - type: input
+    id: opening-hours
+    attributes:
+      label: Opening Hours
+      description: When is it open?
+      placeholder: e.g., Mon-Fri 08:30-18:00, Sat 09:00-17:00
+
+  # Noise & Atmosphere
+  - type: dropdown
+    id: noise-level
+    attributes:
+      label: Noise Level
+      description: How noisy is it typically?
+      options:
+        - Not sure / no change
+        - Quiet
+        - Medium
+        - Loud
+
+  - type: textarea
+    id: atmosphere-notes
+    attributes:
+      label: Atmosphere Notes
+      description: Describe the vibe/feeling/noise level in more detail
+      placeholder: e.g., Cozy and quiet, great for focused work. Background jazz music.
+
+  # WiFi
+  - type: dropdown
+    id: wifi-speed
+    attributes:
+      label: WiFi Speed
+      description: How fast is the WiFi?
+      options:
+        - Not sure / no change
+        - Fast (100+ Mbps)
+        - Medium (20-100 Mbps)
+        - Slow (< 20 Mbps)
+
+  - type: input
+    id: wifi-notes
+    attributes:
+      label: WiFi Notes
+      description: Specific speed test results if you have them
+      placeholder: e.g., 150 Mbps down, 50 Mbps up
+
+  # Climate
+  - type: dropdown
+    id: has-ac
+    attributes:
+      label: Air Conditioning
+      description: Does it have AC?
+      options:
+        - Not sure / no change
+        - "Yes"
+        - "No"
+
+  - type: input
+    id: climate-notes
+    attributes:
+      label: Climate Notes
+      description: Notes about heating/cooling/AC
+      placeholder: e.g., Good AC in summer, can be cold near the door
+
+  # Food & Drinks
+  - type: dropdown
+    id: food-availability
+    attributes:
+      label: Food & Drink Availability
+      description: What food and drink options are available?
+      options:
+        - Not sure / no change
+        - Full menu
+        - Light food/snacks
+        - No food
+
+  - type: input
+    id: food-notes
+    attributes:
+      label: Food Notes
+      description: More details about food options
+      placeholder: e.g., Great pastries, lunch served 11am-3pm
+
+  - type: input
+    id: drink-notes
+    attributes:
+      label: Drink Notes
+      description: What drinks do they serve?
+      placeholder: e.g., Coffee, tea, fresh juices
+
+  # Seating
+  - type: dropdown
+    id: seating-type
+    attributes:
+      label: Seating Type
+      description: What kind of seating is available?
+      options:
+        - Not sure / no change
+        - Individual tables (small, 1-2 person)
+        - Mixed (various table sizes)
+        - Group tables (large shared tables)
+
+  - type: input
+    id: seating-notes
+    attributes:
+      label: Seating Notes
+      description: Describe the seating and layout
+      placeholder: e.g., 10 person communal table near the window, plus smaller 2-person tables
+
+  # Power Outlets
+  - type: dropdown
+    id: outlets
+    attributes:
+      label: Power Outlets
+      description: How many power outlets are available?
+      options:
+        - Not sure / no change
+        - Many outlets
+        - Some outlets
+        - Few outlets
+
+  - type: input
+    id: outlet-notes
+    attributes:
+      label: Outlet Notes
+      description: Details about power outlet locations and availability
+      placeholder: e.g., Outlets at most tables, some near the windows
+
+  # Additional Info
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Additional Notes
+      description: Anything else we should know?
+      placeholder: e.g., Closed for renovation in August, new menu coming soon

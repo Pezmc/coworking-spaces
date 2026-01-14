@@ -10,7 +10,6 @@ import SpaceSummary from './SpaceSummary.vue'
 interface Props {
   spaces: ICoworkingSpace[] // Filtered spaces to show as markers
   allSpaces: ICoworkingSpace[] // All spaces for calculating bounds
-  verifyUrl: string
 }
 
 const props = defineProps<Props>()
@@ -115,7 +114,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
       >
         <LPopup :options="{ maxWidth: 300, minWidth: 250 }">
           <div class="space-popup">
-            <SpaceSummary :space="space" :verify-url="verifyUrl" compact />
+            <SpaceSummary :space="space" compact />
           </div>
         </LPopup>
       </LMarker>

@@ -14,14 +14,17 @@ import {
   VERIFIED_DESCRIPTIONS,
 } from '../types/space'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
+import { buildUpdateSpaceUrl } from '../utils/issueUrl'
 
 interface Props {
   space: ICoworkingSpace
-  verifyUrl: string
   compact?: boolean // For map popup (smaller styling)
 }
 
 const props = defineProps<Props>()
+
+// Computed URL for updating/verifying this space
+const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
 
 // Visited state
 const { isVisited, toggleVisited } = useVisitedSpaces()
@@ -152,7 +155,7 @@ function getNoiseStyle(level: string) {
     >
       <span>📋 Not verified yet. </span>
       <a
-        :href="verifyUrl"
+        :href="updateUrl"
         target="_blank"
         rel="noopener noreferrer"
         class="font-semibold text-[#ed8936] hover:underline"
@@ -231,7 +234,7 @@ function getNoiseStyle(level: string) {
     >
       ⚠️ Unverified
       <a
-        :href="verifyUrl"
+        :href="updateUrl"
         target="_blank"
         rel="noopener noreferrer"
         class="font-semibold text-[#ed8936] hover:underline ml-1"

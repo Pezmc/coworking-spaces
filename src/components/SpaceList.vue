@@ -8,7 +8,6 @@ interface Props {
   spaces: ICoworkingSpace[]
   filters: IFilterState
   sort: ISortState
-  verifyUrl: string
 }
 
 const props = defineProps<Props>()
@@ -92,7 +91,6 @@ const filteredAndSortedSpaces = computed(() => {
         v-for="space in filteredAndSortedSpaces"
         :key="slugify(space.name)"
         :space="space"
-        :verify-url="verifyUrl"
       />
     </div>
   </div>

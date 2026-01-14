@@ -43,9 +43,7 @@ const filteredSpaces = computed(() => {
   })
 })
 
-const GITHUB_REPO = 'Pezmc/coworking-spaces'
-const NEW_ISSUE_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=suggest-space.yml`
-const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=suggest-space.yml&title=Verify+Space`
+import { NEW_SPACE_URL } from './utils/issueUrl'
 </script>
 
 <template>
@@ -101,7 +99,6 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
         :spaces="spaces"
         :filters="filters"
         :sort="sort"
-        :verify-url="VERIFY_URL"
       />
 
       <!-- Map View -->
@@ -109,7 +106,6 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
         v-else
         :spaces="filteredSpaces"
         :all-spaces="spaces"
-        :verify-url="VERIFY_URL"
       />
     </main>
 
@@ -125,7 +121,7 @@ const VERIFY_URL = `https://github.com/${GITHUB_REPO}/issues/new?template=sugges
           </p>
           <div class="flex flex-wrap justify-center gap-3">
             <a
-              :href="NEW_ISSUE_URL"
+              :href="NEW_SPACE_URL"
               target="_blank"
               rel="noopener noreferrer"
               class="px-4 py-2 bg-[#ed8936] text-white font-semibold rounded hover:bg-[#dd7826] transition-colors no-underline text-sm"

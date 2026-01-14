@@ -153,4 +153,3 @@ export const VERIFIED_DESCRIPTIONS = {
   verified: 'This space has been personally visited and verified – details are accurate',
   unverified: 'This space hasn\'t been verified yet – details may be incomplete or outdated. Help verify it!',
 }
-

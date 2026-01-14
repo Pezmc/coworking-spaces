@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import {
   type ICoworkingSpace,
   OUTLET_LABELS,
   OUTLET_DESCRIPTIONS,
 } from '../types/space'
 import { slugify } from '../utils/slug'
+import { buildUpdateSpaceUrl } from '../utils/issueUrl'
 import SpaceSummary from './SpaceSummary.vue'
 
 interface Props {
   space: ICoworkingSpace
-  verifyUrl: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const expanded = ref(false)
+const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const expanded = ref(false)
   >
     <!-- Header with Summary -->
     <div class="p-5 border-b border-[#e2d9c8]">
-      <SpaceSummary :space="space" :verify-url="verifyUrl">
+      <SpaceSummary :space="space">
         <template #title>
           <span :id="slugify(space.name)">{{ space.name }}</span>
         </template>
@@ -118,6 +119,18 @@ const expanded = ref(false)
             Hours
           </h4>
           <p class="m-0 text-[#4a5568]">{{ space.openingHours }}</p>
+        </div>
+
+        <!-- Update link for verified spaces -->
+        <div v-if="space.verified" class="pt-3 mt-3 border-t border-[#e2d9c8]">
+          <a
+            :href="updateUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-xs text-[#718096] hover:text-[#ed8936] hover:underline"
+          >
+            Something wrong? Update this space →
+          </a>
         </div>
       </div>
     </div>
