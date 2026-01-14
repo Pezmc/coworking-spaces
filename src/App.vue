@@ -145,7 +145,15 @@ import { NEW_SPACE_URL } from './utils/issueUrl'
           </div>
         </div>
         <p class="text-sm text-[#718096] m-0">
-          Made with ☕ in Leuven
+          Made with ☕ in Leuven ·
+          <a
+            href="https://github.com/Pezmc/coworking-spaces"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[#718096] hover:text-[#ed8936] underline"
+          >
+            Open Source
+          </a>
         </p>
       </div>
     </footer>
