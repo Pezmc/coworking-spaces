@@ -15,7 +15,7 @@ const warnings: IValidationWarning[] = []
 for (const space of spaces) {
   const spaceId = space.name ? slugify(space.name) : 'unnamed'
   const name = space.name || '[unnamed]'
-  
+
   // Check for missing or invalid coordinates
   if (!space.coordinates) {
     warnings.push({
@@ -81,4 +81,3 @@ if (warnings.length > 0) {
 }
 
 process.exit(0)
-

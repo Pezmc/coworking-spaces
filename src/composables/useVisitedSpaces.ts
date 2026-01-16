@@ -3,7 +3,6 @@ import { slugify } from '../utils/slug'
 
 const STORAGE_KEY = 'coworking-visited-spaces'
 
-// Load initial state from localStorage
 function loadVisitedSpaces(): Set<string> {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -16,17 +15,19 @@ function loadVisitedSpaces(): Set<string> {
   return new Set()
 }
 
-// Reactive set of visited space slugs
 const visitedSlugs = ref<Set<string>>(loadVisitedSpaces())
 
-// Save to localStorage whenever it changes
-watch(visitedSlugs, (newValue) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...newValue]))
-  } catch (e) {
-    console.warn('Failed to save visited spaces to localStorage', e)
-  }
-}, { deep: true })
+watch(
+  visitedSlugs,
+  (newValue) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...newValue]))
+    } catch (e) {
+      console.warn('Failed to save visited spaces to localStorage', e)
+    }
+  },
+  { deep: true },
+)
 
 export function useVisitedSpaces() {
   const visitedCount = computed(() => visitedSlugs.value.size)
@@ -38,7 +39,7 @@ export function useVisitedSpaces() {
   function toggleVisited(spaceName: string): boolean {
     const slug = slugify(spaceName)
     const newSet = new Set(visitedSlugs.value)
-    
+
     if (newSet.has(slug)) {
       newSet.delete(slug)
       visitedSlugs.value = newSet
@@ -76,4 +77,3 @@ export function useVisitedSpaces() {
     markUnvisited,
   }
 }
-

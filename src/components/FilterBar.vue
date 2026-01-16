@@ -77,30 +77,31 @@ const sortOptions: { field: SortField; label: string }[] = [
 </script>
 
 <template>
-  <div class="bg-[#f5f0e6] border-2 border-[#1a365d] rounded-lg p-5 mb-8">
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-      <h2 class="font-display text-xl font-bold text-[#1a365d] m-0">
-        Filter Spaces
-      </h2>
+  <div class="mb-8 rounded-lg border-2 border-[#1a365d] bg-[#f5f0e6] p-5">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
+      <h2 class="font-display m-0 text-xl font-bold text-[#1a365d]">Filter Spaces</h2>
       <button
         v-if="hasActiveFilters"
-        class="text-sm text-[#ed8936] hover:text-[#dd7826] underline cursor-pointer bg-transparent border-0"
+        class="cursor-pointer border-0 bg-transparent text-sm text-[#ed8936] underline hover:text-[#dd7826]"
         @click="resetFilters"
       >
         Clear all filters
       </button>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
+    <div class="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
       <!-- Noise Level -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
-          Noise
-        </label>
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Noise </label>
         <select
           :value="filters.noiseLevel"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('noiseLevel', ($event.target as HTMLSelectElement).value as IFilterState['noiseLevel'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'noiseLevel',
+              ($event.target as HTMLSelectElement).value as IFilterState['noiseLevel'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="level in NOISE_LEVELS" :key="level" :value="level">
@@ -111,13 +112,16 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- WiFi Speed -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
-          WiFi
-        </label>
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> WiFi </label>
         <select
           :value="filters.wifiSpeed"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('wifiSpeed', ($event.target as HTMLSelectElement).value as IFilterState['wifiSpeed'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'wifiSpeed',
+              ($event.target as HTMLSelectElement).value as IFilterState['wifiSpeed'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="speed in WIFI_SPEEDS" :key="speed" :value="speed">
@@ -128,13 +132,18 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- AC -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
           Climate
         </label>
         <select
           :value="filters.hasAC"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('hasAC', ($event.target as HTMLSelectElement).value as IFilterState['hasAC'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'hasAC',
+              ($event.target as HTMLSelectElement).value as IFilterState['hasAC'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="opt in AC_OPTIONS" :key="opt" :value="opt">
@@ -145,13 +154,16 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Food -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
-          Food
-        </label>
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Food </label>
         <select
           :value="filters.foodAvailability"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('foodAvailability', ($event.target as HTMLSelectElement).value as IFilterState['foodAvailability'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'foodAvailability',
+              ($event.target as HTMLSelectElement).value as IFilterState['foodAvailability'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="opt in FOOD_AND_DRINK_OPTIONS" :key="opt" :value="opt">
@@ -162,13 +174,18 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Seating -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
           Seating
         </label>
         <select
           :value="filters.seatingType"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('seatingType', ($event.target as HTMLSelectElement).value as IFilterState['seatingType'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'seatingType',
+              ($event.target as HTMLSelectElement).value as IFilterState['seatingType'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="opt in SEATING_TYPES" :key="opt" :value="opt">
@@ -179,13 +196,18 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Outlets -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
           Outlets
         </label>
         <select
           :value="filters.hasOutlets"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('hasOutlets', ($event.target as HTMLSelectElement).value as IFilterState['hasOutlets'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'hasOutlets',
+              ($event.target as HTMLSelectElement).value as IFilterState['hasOutlets'],
+            )
+          "
         >
           <option value="all">Any</option>
           <option v-for="opt in OUTLET_OPTIONS" :key="opt" :value="opt">
@@ -196,13 +218,16 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Verified -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
-          Status
-        </label>
+        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Status </label>
         <select
           :value="filters.verified"
-          class="px-3 py-2 border-2 border-[#cbd5e0] rounded bg-white text-[#1a202c] text-sm cursor-pointer transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
-          @change="updateFilter('verified', ($event.target as HTMLSelectElement).value as IFilterState['verified'])"
+          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          @change="
+            updateFilter(
+              'verified',
+              ($event.target as HTMLSelectElement).value as IFilterState['verified'],
+            )
+          "
         >
           <option v-for="opt in VERIFIED_OPTIONS" :key="opt" :value="opt">
             {{ VERIFIED_LABELS[opt] }}
@@ -212,19 +237,17 @@ const sortOptions: { field: SortField; label: string }[] = [
     </div>
 
     <!-- Sort -->
-    <div class="flex items-center gap-3 pt-4 border-t border-[#cbd5e0]">
-      <span class="text-xs font-semibold text-[#718096] uppercase tracking-wide">
-        Sort by:
-      </span>
+    <div class="flex items-center gap-3 border-t border-[#cbd5e0] pt-4">
+      <span class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Sort by: </span>
       <div class="flex gap-2">
         <button
           v-for="option in sortOptions"
           :key="option.field"
-          class="px-3 py-1.5 text-sm rounded border-2 cursor-pointer transition-all"
+          class="cursor-pointer rounded border-2 px-3 py-1.5 text-sm transition-all"
           :class="
             sort.field === option.field
-              ? 'bg-[#1a365d] text-white border-[#1a365d]'
-              : 'bg-white text-[#1a365d] border-[#cbd5e0] hover:border-[#1a365d]'
+              ? 'border-[#1a365d] bg-[#1a365d] text-white'
+              : 'border-[#cbd5e0] bg-white text-[#1a365d] hover:border-[#1a365d]'
           "
           @click="updateSort(option.field)"
         >
@@ -237,4 +260,3 @@ const sortOptions: { field: SortField; label: string }[] = [
     </div>
   </div>
 </template>
-

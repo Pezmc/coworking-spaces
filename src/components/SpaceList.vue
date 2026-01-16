@@ -69,19 +69,14 @@ const filteredAndSortedSpaces = computed(() => {
     <!-- Empty state -->
     <div
       v-if="filteredAndSortedSpaces.length === 0"
-      class="text-center py-12 px-6 bg-[#f5f0e6] rounded-lg border-2 border-dashed border-[#cbd5e0]"
+      class="rounded-lg border-2 border-dashed border-[#cbd5e0] bg-[#f5f0e6] px-6 py-12 text-center"
     >
-      <p class="text-lg text-[#718096] m-0 mb-2">No spaces match your filters</p>
-      <p class="text-sm text-[#a0aec0] m-0">
-        Try adjusting your filter criteria
-      </p>
+      <p class="m-0 mb-2 text-lg text-[#718096]">No spaces match your filters</p>
+      <p class="m-0 text-sm text-[#a0aec0]">Try adjusting your filter criteria</p>
     </div>
 
     <!-- Space grid -->
-    <div
-      v-else
-      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-    >
+    <div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
       <SpaceCard
         v-for="space in filteredAndSortedSpaces"
         :key="slugify(space.name)"
@@ -90,4 +85,3 @@ const filteredAndSortedSpaces = computed(() => {
     </div>
   </div>
 </template>
-

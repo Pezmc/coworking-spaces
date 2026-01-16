@@ -23,10 +23,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Computed URL for verifying this space (unverified spaces only)
 const verifyUrl = computed(() => buildUpdateSpaceUrl(props.space, 'verify'))
 
-// Visited state
 const { isVisited, toggleVisited } = useVisitedSpaces()
 const visited = computed(() => isVisited(props.space.name))
 const justChecked = ref(false)
@@ -41,40 +39,55 @@ function handleToggleVisited() {
   }
 }
 
-// Color utilities - return hex colors for use in both Tailwind and inline styles
 function getWifiColorHex(speed: string): string {
   switch (speed) {
-    case 'fast': return '#22c55e'
-    case 'medium': return '#eab308'
-    case 'slow': return '#ef4444'
-    default: return '#9ca3af'
+    case 'fast':
+      return '#22c55e'
+    case 'medium':
+      return '#eab308'
+    case 'slow':
+      return '#ef4444'
+    default:
+      return '#9ca3af'
   }
 }
 
 function getNoiseColorHex(level: string): string {
   switch (level) {
-    case 'quiet': return '#22c55e'
-    case 'medium': return '#eab308'
-    case 'loud': return '#ef4444'
-    default: return '#9ca3af'
+    case 'quiet':
+      return '#22c55e'
+    case 'medium':
+      return '#eab308'
+    case 'loud':
+      return '#ef4444'
+    default:
+      return '#9ca3af'
   }
 }
 
 function getWifiClasses(speed: string): string {
   switch (speed) {
-    case 'fast': return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'slow': return 'bg-red-100 text-red-800 border-red-300'
-    default: return 'bg-gray-100 text-gray-600 border-gray-300'
+    case 'fast':
+      return 'bg-green-100 text-green-800 border-green-300'
+    case 'medium':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+    case 'slow':
+      return 'bg-red-100 text-red-800 border-red-300'
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300'
   }
 }
 
 function getNoiseClasses(level: string): string {
   switch (level) {
-    case 'quiet': return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'loud': return 'bg-red-100 text-red-800 border-red-300'
-    default: return 'bg-gray-100 text-gray-600 border-gray-300'
+    case 'quiet':
+      return 'bg-green-100 text-green-800 border-green-300'
+    case 'medium':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+    case 'loud':
+      return 'bg-red-100 text-red-800 border-red-300'
+    default:
+      return 'bg-gray-100 text-gray-600 border-gray-300'
   }
 }
 
@@ -95,53 +108,59 @@ function getNoiseStyle(level: string) {
 <template>
   <div>
     <!-- Header -->
-    <div class="flex justify-between items-start gap-3">
+    <div class="flex items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
-        <h3 
+        <h3
           :class="[
-            compact 
-              ? 'font-bold text-lg text-[#1a365d] m-0 mb-1' 
-              : 'font-display text-xl font-bold text-[#1a365d] m-0 mb-1',
-            visited && 'line-through opacity-70'
+            compact
+              ? 'm-0 mb-1 text-lg font-bold text-[#1a365d]'
+              : 'font-display m-0 mb-1 text-xl font-bold text-[#1a365d]',
+            visited && 'line-through opacity-70',
           ]"
         >
           <slot name="title">{{ space.name }}</slot>
         </h3>
-        
-        <a :href="space.googleMapsUrl"
+
+        <a
+          :href="space.googleMapsUrl"
           target="_blank"
-          rel="noopener noreferrer" class="text-sm text-[#718096] m-0 hover:text-[#ed8936] hover:underline">
-          {{ space.address.split(',')[0] }}</a>
+          rel="noopener noreferrer"
+          class="m-0 text-sm text-[#718096] hover:text-[#ed8936] hover:underline"
+        >
+          {{ space.address.split(',')[0] }}</a
+        >
       </div>
-      <div class="flex flex-col gap-2 items-end flex-shrink-0">
+      <div class="flex flex-shrink-0 flex-col items-end gap-2">
         <!-- Visited checkbox -->
         <button
           @click="handleToggleVisited"
           v-tippy="visited ? 'Click to unmark' : 'Check off once you\'ve visited!'"
-          class="flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200 cursor-pointer"
-          :class="visited 
-            ? 'bg-green-500 border-green-500 text-white' 
-            : 'bg-white border-[#cbd5e0] hover:border-[#ed8936] text-transparent hover:text-[#ed8936]'"
+          class="flex h-7 w-7 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-200"
+          :class="
+            visited
+              ? 'border-green-500 bg-green-500 text-white'
+              : 'border-[#cbd5e0] bg-white text-transparent hover:border-[#ed8936] hover:text-[#ed8936]'
+          "
         >
-          <span 
+          <span
             class="text-sm transition-transform duration-200"
             :class="{ 'scale-125': justChecked }"
           >
             {{ visited ? '✓' : '○' }}
           </span>
         </button>
-        
+
         <span
           v-if="!space.verified"
           v-tippy="VERIFIED_DESCRIPTIONS.unverified"
-          class="text-xs text-[#ed8936] font-medium cursor-help"
+          class="cursor-help text-xs font-medium text-[#ed8936]"
         >
           ⚠️ Unverified
         </span>
         <span
           v-else-if="!compact"
           v-tippy="VERIFIED_DESCRIPTIONS.verified"
-          class="text-xs text-green-600 font-medium cursor-help"
+          class="cursor-help text-xs font-medium text-green-600"
         >
           ✓ Verified
         </span>
@@ -151,7 +170,7 @@ function getNoiseStyle(level: string) {
     <!-- Unverified banner -->
     <div
       v-if="!space.verified && !compact"
-      class="mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800"
+      class="mt-3 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
     >
       <span>📋 Not verified yet. </span>
       <a
@@ -165,13 +184,13 @@ function getNoiseStyle(level: string) {
     </div>
 
     <!-- Quick Tags -->
-    <div :class="compact ? 'flex flex-wrap gap-1.5 mt-3 mb-3' : 'flex flex-wrap gap-2 mt-4'">
+    <div :class="compact ? 'mt-3 mb-3 flex flex-wrap gap-1.5' : 'mt-4 flex flex-wrap gap-2'">
       <span
         v-tippy="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
         :class="[
-          'px-2 text-xs font-medium rounded cursor-help',
-          compact ? 'py-0.5' : 'py-1 border',
-          !compact && getWifiClasses(space.wifiSpeed)
+          'cursor-help rounded px-2 text-xs font-medium',
+          compact ? 'py-0.5' : 'border py-1',
+          !compact && getWifiClasses(space.wifiSpeed),
         ]"
         :style="getWifiStyle(space.wifiSpeed)"
       >
@@ -180,9 +199,9 @@ function getNoiseStyle(level: string) {
       <span
         v-tippy="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
         :class="[
-          'px-2 text-xs font-medium rounded cursor-help',
-          compact ? 'py-0.5' : 'py-1 border',
-          !compact && getNoiseClasses(space.noiseLevel)
+          'cursor-help rounded px-2 text-xs font-medium',
+          compact ? 'py-0.5' : 'border py-1',
+          !compact && getNoiseClasses(space.noiseLevel),
         ]"
         :style="getNoiseStyle(space.noiseLevel)"
       >
@@ -191,8 +210,8 @@ function getNoiseStyle(level: string) {
       <span
         v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
         :class="[
-          'px-2 text-xs font-medium rounded bg-[#f5f0e6] text-[#1a365d] cursor-help',
-          compact ? 'py-0.5' : 'py-1 border border-[#e2d9c8]'
+          'cursor-help rounded bg-[#f5f0e6] px-2 text-xs font-medium text-[#1a365d]',
+          compact ? 'py-0.5' : 'border border-[#e2d9c8] py-1',
         ]"
       >
         🪑 {{ SEATING_LABELS[space.seatingType] }}
@@ -201,8 +220,10 @@ function getNoiseStyle(level: string) {
         v-if="space.hasAC === 'yes'"
         v-tippy="AC_DESCRIPTIONS[space.hasAC]"
         :class="[
-          'px-2 text-xs font-medium rounded cursor-help',
-          compact ? 'py-0.5 bg-blue-100 text-blue-700' : 'py-1 border bg-blue-100 text-blue-800 border-blue-300'
+          'cursor-help rounded px-2 text-xs font-medium',
+          compact
+            ? 'bg-blue-100 py-0.5 text-blue-700'
+            : 'border border-blue-300 bg-blue-100 py-1 text-blue-800',
         ]"
       >
         ❄️ AC
@@ -211,8 +232,10 @@ function getNoiseStyle(level: string) {
         v-if="space.foodAndDrinkAvailability !== 'none'"
         v-tippy="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
         :class="[
-          'px-2 text-xs font-medium rounded cursor-help',
-          compact ? 'py-0.5 bg-orange-100 text-orange-700' : 'py-1 border bg-orange-100 text-orange-800 border-orange-300'
+          'cursor-help rounded px-2 text-xs font-medium',
+          compact
+            ? 'bg-orange-100 py-0.5 text-orange-700'
+            : 'border border-orange-300 bg-orange-100 py-1 text-orange-800',
         ]"
       >
         🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
@@ -220,24 +243,22 @@ function getNoiseStyle(level: string) {
     </div>
 
     <!-- Description -->
-    <div v-if="space.description" class="mt-3 px-3 py-2 bg-[#faf5eb] rounded">
-      <p class="text-sm text-[#4a5568] m-0 italic">
-        "{{ space.description }}"
-      </p>
+    <div v-if="space.description" class="mt-3 rounded bg-[#faf5eb] px-3 py-2">
+      <p class="m-0 text-sm text-[#4a5568] italic">"{{ space.description }}"</p>
     </div>
 
     <!-- Unverified notice -->
     <div
       v-if="!space.verified && compact"
       v-tippy="VERIFIED_DESCRIPTIONS.unverified"
-      class="mb-3 px-2 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800 cursor-help"
+      class="mb-3 cursor-help rounded border border-amber-200 bg-amber-50 px-2 py-1.5 text-xs text-amber-800"
     >
       ⚠️ Unverified
       <a
         :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="font-semibold text-[#ed8936] hover:underline ml-1"
+        class="ml-1 font-semibold text-[#ed8936] hover:underline"
       >
         Help verify →
       </a>

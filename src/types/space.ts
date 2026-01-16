@@ -7,19 +7,19 @@ export const SEATING_TYPES = ['individual', 'mixed', 'group'] as const
 export const OUTLET_OPTIONS = ['few', 'some', 'many', 'unknown'] as const
 export const VERIFIED_OPTIONS = ['all', 'verified', 'unverified'] as const
 
-export type NoiseLevel = typeof NOISE_LEVELS[number]
-export type WifiSpeed = typeof WIFI_SPEEDS[number]
-export type HasAC = typeof AC_OPTIONS[number]
-export type FoodAndDrinkAvailability = typeof FOOD_AND_DRINK_OPTIONS[number]
-export type SeatingType = typeof SEATING_TYPES[number]
-export type OutletAvailability = typeof OUTLET_OPTIONS[number]
+export type NoiseLevel = (typeof NOISE_LEVELS)[number]
+export type WifiSpeed = (typeof WIFI_SPEEDS)[number]
+export type HasAC = (typeof AC_OPTIONS)[number]
+export type FoodAndDrinkAvailability = (typeof FOOD_AND_DRINK_OPTIONS)[number]
+export type SeatingType = (typeof SEATING_TYPES)[number]
+export type OutletAvailability = (typeof OUTLET_OPTIONS)[number]
 
 export interface ICoordinates {
   lat: number
   lng: number
 }
 
-export type VerifiedFilter = typeof VERIFIED_OPTIONS[number]
+export type VerifiedFilter = (typeof VERIFIED_OPTIONS)[number]
 
 export interface ICoworkingSpace {
   // Basic info
@@ -71,7 +71,6 @@ export interface ISortState {
   direction: SortDirection
 }
 
-// Helper labels for display
 export const NOISE_LEVEL_LABELS: Record<NoiseLevel, string> = {
   quiet: 'Quiet',
   medium: 'Medium',
@@ -110,7 +109,6 @@ export const OUTLET_LABELS: Record<OutletAvailability, string> = {
   unknown: 'Unknown',
 }
 
-// Category descriptions for tooltips and documentation
 export const WIFI_SPEED_DESCRIPTIONS: Record<WifiSpeed, string> = {
   unknown: 'WiFi speed has not been tested yet',
   slow: 'Under 25 Mbps – suitable for browsing and email',
@@ -151,5 +149,6 @@ export const AC_DESCRIPTIONS: Record<HasAC, string> = {
 
 export const VERIFIED_DESCRIPTIONS = {
   verified: 'This space has been personally visited and verified – details are accurate',
-  unverified: 'This space hasn\'t been verified yet – details may be incomplete or outdated. Help verify it!',
+  unverified:
+    "This space hasn't been verified yet – details may be incomplete or outdated. Help verify it!",
 }
