@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const { visitedCount } = useVisitedSpaces()
+const { visitedCount, getShareableUrl } = useVisitedSpaces()
 
 const percentage = computed(() => {
   if (props.totalSpaces === 0) return 0
@@ -23,6 +23,23 @@ const message = computed(() => {
   if (percentage.value >= 25) return 'Great progress! So many spots to discover! 📍'
   return "Keep exploring Leuven's coworking scene! 🗺️"
 })
+
+const copyStatus = ref<'idle' | 'copied'>('idle')
+
+async function copyShareLink() {
+  try {
+    const url = getShareableUrl()
+    await navigator.clipboard.writeText(url)
+    copyStatus.value = 'copied'
+    setTimeout(() => {
+      copyStatus.value = 'idle'
+    }, 2000)
+  } catch {
+    // Fallback for browsers without clipboard API
+    const url = getShareableUrl()
+    prompt('Copy this link to save your progress:', url)
+  }
+}
 </script>
 
 <template>
@@ -33,27 +50,35 @@ const message = computed(() => {
     >
       <div class="mx-auto max-w-6xl px-6 py-3">
         <div class="flex items-center justify-between gap-4">
-          <div class="flex min-w-0 items-center gap-3">
+          <div class="flex flex-shrink-0 items-center gap-3">
             <span class="text-2xl">{{ percentage === 100 ? '🏆' : '✅' }}</span>
-            <div class="min-w-0">
-              <p class="m-0 truncate text-sm font-medium">
+            <div class="min-w-[280px] sm:min-w-[340px]">
+              <p class="m-0 text-sm font-medium">
                 {{ message }}
               </p>
               <p class="m-0 text-xs text-[#cbd5e0]">
-                {{ visitedCount }} of {{ totalSpaces }} spaces visited
+                {{ visitedCount }} of {{ totalSpaces }} spaces visited ·
+                <button
+                  v-tippy="'Bookmark this link to restore your progress'"
+                  class="cursor-pointer border-0 bg-transparent p-0 text-[#cbd5e0] underline transition-colors hover:text-white"
+                  :class="{ 'text-green-400 hover:text-green-400': copyStatus === 'copied' }"
+                  @click="copyShareLink"
+                >
+                  {{ copyStatus === 'copied' ? 'copied link to clipboard!' : 'copy my progress link' }}
+                </button>
               </p>
             </div>
           </div>
 
           <!-- Progress bar -->
-          <div class="w-32 flex-shrink-0 md:w-48">
-            <div class="h-2 overflow-hidden rounded-full bg-[#2d4a7c]">
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <div class="h-3 flex-1 overflow-hidden rounded-full bg-[#2d4a7c]">
               <div
                 class="h-full rounded-full bg-[#ed8936] transition-all duration-500 ease-out"
                 :style="{ width: `${percentage}%` }"
               />
             </div>
-            <p class="m-0 mt-1 text-right text-xs text-[#cbd5e0]">{{ percentage }}%</p>
+            <span class="flex-shrink-0 text-xs text-[#cbd5e0]">{{ percentage }}%</span>
           </div>
         </div>
       </div>
