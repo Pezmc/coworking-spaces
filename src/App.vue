@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 import type { ICoworkingSpace, IFilterState, ISortState } from './types/space'
 import FilterBar from './components/FilterBar.vue'
 import SpaceList from './components/SpaceList.vue'
@@ -9,7 +10,7 @@ import spacesData from './data/spaces.json'
 
 const spaces = spacesData as ICoworkingSpace[]
 
-const filters = ref<IFilterState>({
+const DEFAULT_FILTERS: IFilterState = {
   noiseLevel: 'all',
   wifiSpeed: 'all',
   hasAC: 'all',
@@ -17,7 +18,33 @@ const filters = ref<IFilterState>({
   seatingType: 'all',
   hasOutlets: 'all',
   verified: 'all',
+}
+
+// URL params for filter state
+const urlParams = useUrlSearchParams<Record<string, string>>('history')
+
+// Initialize filters from URL or defaults
+const filters = ref<IFilterState>({
+  noiseLevel: (urlParams.noiseLevel as IFilterState['noiseLevel']) || DEFAULT_FILTERS.noiseLevel,
+  wifiSpeed: (urlParams.wifiSpeed as IFilterState['wifiSpeed']) || DEFAULT_FILTERS.wifiSpeed,
+  hasAC: (urlParams.hasAC as IFilterState['hasAC']) || DEFAULT_FILTERS.hasAC,
+  foodAvailability: (urlParams.foodAvailability as IFilterState['foodAvailability']) || DEFAULT_FILTERS.foodAvailability,
+  seatingType: (urlParams.seatingType as IFilterState['seatingType']) || DEFAULT_FILTERS.seatingType,
+  hasOutlets: (urlParams.hasOutlets as IFilterState['hasOutlets']) || DEFAULT_FILTERS.hasOutlets,
+  verified: (urlParams.verified as IFilterState['verified']) || DEFAULT_FILTERS.verified,
 })
+
+// Sync filters to URL (only non-default)
+watch(filters, (newFilters) => {
+  const filterKeys = Object.keys(DEFAULT_FILTERS) as (keyof IFilterState)[]
+  for (const key of filterKeys) {
+    if (newFilters[key] !== 'all') {
+      urlParams[key] = newFilters[key]
+    } else {
+      delete urlParams[key]
+    }
+  }
+}, { deep: true })
 
 const sort = ref<ISortState>({
   field: 'name',
