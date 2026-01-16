@@ -27,6 +27,12 @@ const sort = ref<ISortState>({
 type ViewMode = 'list' | 'map'
 const viewMode = ref<ViewMode>('list')
 
+const showFilters = ref(false)
+
+const activeFilterCount = computed(() => {
+  return Object.values(filters.value).filter((v) => v !== 'all').length
+})
+
 // Filter spaces based on current filters
 const filteredSpaces = computed(() => {
   return spaces.filter((space) => {
@@ -68,36 +74,63 @@ import { NEW_SPACE_URL } from './utils/issueUrl'
 
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6 py-8">
+      <!-- Toolbar: Space count, Filter toggle, View mode -->
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-sm text-[#718096] m-0">
+          Showing {{ filteredSpaces.length }} of {{ spaces.length }} spaces
+        </p>
+
+        <div class="flex items-center gap-3">
+          <!-- Filter Toggle -->
+          <button
+            class="px-3 py-2 text-sm font-medium rounded-lg border-2 transition-colors flex items-center gap-2"
+            :class="showFilters
+              ? 'bg-[#1a365d] text-white border-[#1a365d]'
+              : 'bg-white text-[#1a365d] border-[#1a365d] hover:bg-[#f5f0e6]'"
+            @click="showFilters = !showFilters"
+          >
+            🎛️ Filters
+            <span
+              v-if="activeFilterCount > 0"
+              class="px-1.5 py-0.5 text-xs font-bold rounded-full"
+              :class="showFilters ? 'bg-[#ed8936] text-white' : 'bg-[#ed8936] text-white'"
+            >
+              {{ activeFilterCount }}
+            </span>
+          </button>
+
+          <!-- View Mode Toggle -->
+          <div class="inline-flex rounded-lg border-2 border-[#1a365d] overflow-hidden">
+            <button
+              class="px-4 py-2 text-sm font-medium transition-colors"
+              :class="viewMode === 'list'
+                ? 'bg-[#1a365d] text-white'
+                : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'"
+              @click="viewMode = 'list'"
+            >
+              📋 List
+            </button>
+            <button
+              class="px-4 py-2 text-sm font-medium transition-colors border-l-2 border-[#1a365d]"
+              :class="viewMode === 'map'
+                ? 'bg-[#1a365d] text-white'
+                : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'"
+              @click="viewMode = 'map'"
+            >
+              🗺️ Map
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsible Filters -->
       <FilterBar
+        v-show="showFilters"
         :filters="filters"
         :sort="sort"
         @update:filters="filters = $event"
         @update:sort="sort = $event"
       />
-
-      <!-- View Mode Toggle -->
-      <div class="flex justify-end mb-4">
-        <div class="inline-flex rounded-lg border-2 border-[#1a365d] overflow-hidden">
-          <button
-            class="px-4 py-2 text-sm font-medium transition-colors"
-            :class="viewMode === 'list'
-              ? 'bg-[#1a365d] text-white'
-              : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'"
-            @click="viewMode = 'list'"
-          >
-            📋 List
-          </button>
-          <button
-            class="px-4 py-2 text-sm font-medium transition-colors border-l-2 border-[#1a365d]"
-            :class="viewMode === 'map'
-              ? 'bg-[#1a365d] text-white'
-              : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'"
-            @click="viewMode = 'map'"
-          >
-            🗺️ Map
-          </button>
-        </div>
-      </div>
 
       <!-- List View -->
       <SpaceList
@@ -117,35 +150,56 @@ import { NEW_SPACE_URL } from './utils/issueUrl'
 
     <!-- Footer -->
     <footer class="bg-[#f5f0e6] border-t-2 border-[#e2d9c8] py-8 px-6 mt-12 pb-24">
-      <div class="max-w-6xl mx-auto text-center">
-        <div class="bg-[#1a365d] text-white rounded-lg p-6 mb-6 inline-block">
-          <p class="text-lg font-medium m-0 mb-3">
-            🏢 Know a great coworking spot?
-          </p>
-          <p class="text-[#cbd5e0] text-sm m-0 mb-4">
-            Help fellow remote workers find new places!
-          </p>
-          <div class="flex flex-wrap justify-center gap-3">
+      <div class="max-w-6xl mx-auto text-center space-y-6">
+        <div class="flex flex-col sm:flex-row gap-2 justify-center">
+          <div class="bg-[#1a365d] text-white rounded-lg p-6 w-full sm:w-auto sm:flex-1 sm:max-w-md">
+            <p class="text-lg font-medium m-0 mb-3">
+              🏢 Know a great coworking spot?
+            </p>
+            <p class="text-[#cbd5e0] text-sm m-0 mb-4">
+              Help fellow remote workers find new places!
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+              <a
+                :href="NEW_SPACE_URL"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-4 py-2 bg-[#ed8936] text-white font-semibold rounded hover:bg-[#dd7826] transition-colors no-underline text-sm"
+              >
+                ✨ Suggest via GitHub
+              </a>
+              <a
+                href="https://pezcuckow.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-4 py-2 bg-white text-[#1a365d] font-semibold rounded hover:bg-[#f5f0e6] transition-colors no-underline text-sm"
+              >
+                ✉️ Email me
+              </a>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg p-6 border-2 border-[#ed8936] w-full sm:w-auto sm:flex-1 sm:max-w-md">
+            <p class="text-lg font-medium text-[#1a365d] m-0 mb-2">
+              👋 Looking for people to co-work with?
+            </p>
+            <p class="text-sm text-[#718096] m-0 mb-4">
+              <strong>Join</strong> the Leuven Social Groups co-working group!
+            </p>
             <a
-              :href="NEW_SPACE_URL"
+              href="https://labs.pez.io/leuven-social-groups/"
               target="_blank"
               rel="noopener noreferrer"
-              class="px-4 py-2 bg-[#ed8936] text-white font-semibold rounded hover:bg-[#dd7826] transition-colors no-underline text-sm"
+              class="px-4 py-2 bg-[#ed8936] text-white font-semibold rounded hover:bg-[#dd7826] transition-colors no-underline text-sm inline-block"
             >
-              ✨ Suggest via GitHub
-            </a>
-            <a
-              href="https://pezcuckow.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-4 py-2 bg-white text-[#1a365d] font-semibold rounded hover:bg-[#f5f0e6] transition-colors no-underline text-sm"
-            >
-              ✉️ Email me
+              Learn more →
             </a>
           </div>
         </div>
         <p class="text-sm text-[#718096] m-0">
-          Made with ☕ in Leuven ·
+          Made with ☕ in Leuven by
+          <a href="https://pezcuckow.com" target="_blank" rel="noopener noreferrer" class="text-[#718096] hover:text-[#ed8936] underline">
+            Pez
+          </a> ·
           <a
             href="https://github.com/Pezmc/coworking-spaces"
             target="_blank"

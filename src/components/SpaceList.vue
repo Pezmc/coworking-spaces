@@ -66,11 +66,6 @@ const filteredAndSortedSpaces = computed(() => {
 
 <template>
   <div>
-    <!-- Results count -->
-    <p class="text-sm text-[#718096] mb-4">
-      Showing {{ filteredAndSortedSpaces.length }} of {{ spaces.length }} spaces
-    </p>
-
     <!-- Empty state -->
     <div
       v-if="filteredAndSortedSpaces.length === 0"
