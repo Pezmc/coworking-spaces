@@ -161,7 +161,7 @@
     "noiseLevel": "unknown",
     "wifiSpeed": "unknown",
     "hasAC": "unknown",
-    "foodAndDrinkAvailability": "unknown",
+    "foodAndDrinkAvailability": "light",
     "seatingType": "unknown",
     "hasOutlets": "unknown",
     "description": "Coffee roastery and coffee shop in the centre, with a terrace.",
@@ -195,7 +195,7 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Koffie en Staal",
@@ -217,7 +217,7 @@
     "drinkNotes": "Coffee and tea.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Barbóék",
@@ -227,10 +227,10 @@
     "noiseLevel": "unknown",
     "wifiSpeed": "unknown",
     "hasAC": "unknown",
-    "foodAndDrinkAvailability": "unknown",
+    "foodAndDrinkAvailability": "light",
     "seatingType": "unknown",
     "hasOutlets": "unknown",
-    "description": "Bookshop café on Schrijnmakersstraat.",
+    "description": "Bookshop café on Schrijnmakersstraat. Small tables, semi laptop-friendly.",
     "openingHours": "",
     "atmosphereNotes": "",
     "wifiNotes": "",
@@ -239,7 +239,7 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Ricki",
@@ -371,7 +371,7 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "MadMum Vaartkom",
@@ -393,7 +393,7 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": ture
   },
   {
     "name": "Bad Habits",
@@ -459,7 +459,7 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Soigneur",
@@ -516,7 +516,7 @@
     "foodAndDrinkAvailability": "full",
     "seatingType": "individual",
     "hasOutlets": "few",
-    "description": "",
+    "description": "There's a small laptop area at the back, the front of the cafe is not laptop-friendly.",
     "openingHours": "Wed-Sun 10:00-18:00",
     "atmosphereNotes": "",
     "wifiNotes": "",
@@ -525,7 +525,7 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Noordoever",
@@ -547,7 +547,7 @@
     "drinkNotes": "Coffee, tea, beer, fresh juices, lemonades",
     "seatingNotes": "Tables from 2-4p, 1 big table for 8p, 1 sofa area for 3p, separate space for group reservation",
     "outletNotes": "1 large table with outlets, sofa area with outlets",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Komfort",
@@ -569,7 +569,7 @@
     "drinkNotes": "",
     "seatingNotes": "All tables are 2-3 people but pretty small. There's one 6p table.",
     "outletNotes": "",
-    "verified": false
+    "verified": true
   },
   {
     "name": "Lapaz Cafe",
