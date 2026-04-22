@@ -62,11 +62,13 @@ function resetFilters() {
     seatingType: 'all',
     hasOutlets: 'all',
     verified: 'all',
+    openNow: props.filters.openNow,
   })
 }
 
 const hasActiveFilters = computed(() => {
-  return Object.values(props.filters).some((v) => v !== 'all')
+  const { openNow: _ignored, ...rest } = props.filters
+  return Object.values(rest).some((v) => v !== 'all')
 })
 
 const sortOptions: { field: SortField; label: string }[] = [

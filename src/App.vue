@@ -7,6 +7,8 @@ import FilterBar from './components/FilterBar.vue'
 import SpaceList from './components/SpaceList.vue'
 import MapView from './components/MapView.vue'
 import VisitProgress from './components/VisitProgress.vue'
+import OpenNowChip from './components/OpenNowChip.vue'
+import { parseOpeningHours, isOpen } from './utils/hoursBasic'
 import spacesData from './data/spaces.json'
 
 const spaces = spacesData as ICoworkingSpace[]
@@ -19,6 +21,7 @@ const DEFAULT_FILTERS: IFilterState = {
   seatingType: 'all',
   hasOutlets: 'all',
   verified: 'all',
+  openNow: false,
 }
 
 // URL params and filter states
@@ -34,14 +37,22 @@ const filters = ref<IFilterState>({
     (urlParams.seatingType as IFilterState['seatingType']) || DEFAULT_FILTERS.seatingType,
   hasOutlets: (urlParams.hasOutlets as IFilterState['hasOutlets']) || DEFAULT_FILTERS.hasOutlets,
   verified: (urlParams.verified as IFilterState['verified']) || DEFAULT_FILTERS.verified,
+  openNow: urlParams.openNow === '1',
 })
 
 // Sync filters to URL
 watch(
   filters,
   (newFilters) => {
-    const filterKeys = Object.keys(DEFAULT_FILTERS) as (keyof IFilterState)[]
-    for (const key of filterKeys) {
+    if (newFilters.openNow) {
+      urlParams.openNow = '1'
+    } else {
+      delete urlParams.openNow
+    }
+    const selectKeys = Object.keys(DEFAULT_FILTERS).filter(
+      (k) => k !== 'openNow',
+    ) as Exclude<keyof IFilterState, 'openNow'>[]
+    for (const key of selectKeys) {
       if (newFilters[key] !== 'all') {
         urlParams[key] = newFilters[key]
       } else {
@@ -63,12 +74,18 @@ const viewMode = ref<ViewMode>('list')
 const showFilters = ref(false)
 
 const activeFilterCount = computed(() => {
-  return Object.values(filters.value).filter((v) => v !== 'all').length
+  const { openNow: _ignored, ...rest } = filters.value
+  return Object.values(rest).filter((v) => v !== 'all').length
 })
 
 const filteredSpaces = computed(() => {
+  const now = new Date()
   return spaces.filter((space) => {
     const activeFilters = filters.value
+
+    if (activeFilters.openNow) {
+      if (isOpen(parseOpeningHours(space.openingHours), now) !== true) return false
+    }
 
     return (
       (activeFilters.noiseLevel === 'all' || space.noiseLevel === activeFilters.noiseLevel) &&
@@ -81,6 +98,10 @@ const filteredSpaces = computed(() => {
     )
   })
 })
+
+function toggleOpenNow() {
+  filters.value = { ...filters.value, openNow: !filters.value.openNow }
+}
 </script>
 
 <template>
@@ -107,12 +128,15 @@ const filteredSpaces = computed(() => {
     <!-- Main Content -->
     <main class="mx-auto max-w-6xl px-6 py-8">
       <!-- Toolbar: Space count, Filter toggle, View mode -->
-      <div class="mb-4 flex items-center justify-between">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-y-3">
         <p class="m-0 text-sm text-[#718096]">
           Showing {{ filteredSpaces.length }} of {{ spaces.length }} spaces
         </p>
 
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <!-- Open now chip -->
+          <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
+
           <!-- Filter Toggle -->
           <button
             class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors"
