@@ -47,6 +47,7 @@ function toggle() {
       <!-- Front -->
       <div
         class="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg border-2 border-[#e2d9c8] bg-white p-5 [backface-visibility:hidden] group-hover:border-[#ed8936]"
+        :aria-hidden="flipped"
       >
         <div>
           <p class="m-0 mb-2 text-xs font-semibold tracking-wide text-[#ed8936] uppercase">
@@ -81,6 +82,7 @@ function toggle() {
       <!-- Back -->
       <div
         class="absolute inset-0 [transform:rotateY(180deg)] overflow-y-auto rounded-lg border-2 border-[#ed8936] bg-[#fffaf0] p-5 [backface-visibility:hidden]"
+        :aria-hidden="!flipped"
       >
         <h3 class="font-display m-0 mb-2 text-lg font-bold text-[#1a365d]">
           {{ pick.space.name }}
