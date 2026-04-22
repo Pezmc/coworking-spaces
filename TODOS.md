@@ -30,7 +30,10 @@
 ## Design debt (not blocking ship)
 
 - [x] Extract implicit palette into `DESIGN.md` — shipped. Doc captures 22 named hues, typography, component conventions, a11y baseline.
+- [x] 7-pass design-system review of `DESIGN.md` — shipped. Added TOC + "How to use", Layout & responsive section (breakpoints, container, grids, spacing), iconography policy, deviation rubric, full state/variant tables, three-token motion system, explicit contrast pairs, screen-reader patterns, Open questions section. Final rating: 8.5/10 avg across 7 passes.
 - [ ] Migrate components from `bg-[#hex]` to Tailwind 4 `@theme` tokens (`bg-primary`, `text-accent`, etc.) — see DESIGN.md "Design debt" section. ~30 min, touches ~7 files via find-and-replace.
+- [ ] **Apply focus-ring rule uniformly.** `FilterBar.vue` selects + sort buttons lack the prescribed `focus-visible:ring-2 focus-visible:ring-[#ed8936]` pattern. ~15 min. See DESIGN.md Design debt.
+- [ ] **Add `motion-reduce:transition-none` to motion tokens.** No current `prefers-reduced-motion` handling. ~10 min. Low priority while transitions stay subtle.
 
 ## Explicitly not doing (yet)
 
