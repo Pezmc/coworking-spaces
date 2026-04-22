@@ -9,6 +9,7 @@ import MapView from './components/MapView.vue'
 import VisitProgress from './components/VisitProgress.vue'
 import OpenNowChip from './components/OpenNowChip.vue'
 import TodayView from './components/TodayView.vue'
+import AskBar from './components/AskBar.vue'
 import { parseOpeningHours, isOpen } from './utils/hoursBasic'
 import spacesData from './data/spaces.json'
 
@@ -106,6 +107,10 @@ const filteredSpaces = computed(() => {
 function toggleOpenNow() {
   filters.value = { ...filters.value, openNow: !filters.value.openNow }
 }
+
+function applyAskPatch(patch: Partial<IFilterState>) {
+  filters.value = { ...filters.value, ...patch }
+}
 </script>
 
 <template>
@@ -133,6 +138,9 @@ function toggleOpenNow() {
     <main class="mx-auto max-w-6xl px-6 py-8">
       <!-- Today's picks (list view only) -->
       <TodayView v-if="viewMode === 'list'" :spaces="spaces" />
+
+      <!-- Smart search: natural-language filter -->
+      <AskBar @apply="applyAskPatch" />
 
       <!-- Toolbar: Space count, Filter toggle, View mode -->
       <div class="mb-4 flex flex-wrap items-center justify-between gap-y-3">
