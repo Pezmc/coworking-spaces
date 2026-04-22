@@ -49,9 +49,10 @@ watch(
     } else {
       delete urlParams.openNow
     }
-    const selectKeys = Object.keys(DEFAULT_FILTERS).filter(
-      (k) => k !== 'openNow',
-    ) as Exclude<keyof IFilterState, 'openNow'>[]
+    const selectKeys = Object.keys(DEFAULT_FILTERS).filter((k) => k !== 'openNow') as Exclude<
+      keyof IFilterState,
+      'openNow'
+    >[]
     for (const key of selectKeys) {
       if (newFilters[key] !== 'all') {
         urlParams[key] = newFilters[key]
@@ -91,10 +92,12 @@ const filteredSpaces = computed(() => {
       (activeFilters.noiseLevel === 'all' || space.noiseLevel === activeFilters.noiseLevel) &&
       (activeFilters.wifiSpeed === 'all' || space.wifiSpeed === activeFilters.wifiSpeed) &&
       (activeFilters.hasAC === 'all' || space.hasAC === activeFilters.hasAC) &&
-      (activeFilters.foodAvailability === 'all' || space.foodAndDrinkAvailability === activeFilters.foodAvailability) &&
+      (activeFilters.foodAvailability === 'all' ||
+        space.foodAndDrinkAvailability === activeFilters.foodAvailability) &&
       (activeFilters.seatingType === 'all' || space.seatingType === activeFilters.seatingType) &&
       (activeFilters.hasOutlets === 'all' || space.hasOutlets === activeFilters.hasOutlets) &&
-      (activeFilters.verified === 'all' || (activeFilters.verified === 'verified' ? space.verified : !space.verified))
+      (activeFilters.verified === 'all' ||
+        (activeFilters.verified === 'verified' ? space.verified : !space.verified))
     )
   })
 })
