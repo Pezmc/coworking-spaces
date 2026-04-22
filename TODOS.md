@@ -29,10 +29,8 @@
 
 ## Design debt (not blocking ship)
 
-- [ ] Extract implicit palette into `DESIGN.md` (post-ship polish)
-  - **Why:** palette lives only in Tailwind hex values across 7 components now; next design change will scatter further
-  - **Context:** navy `#1a365d`, orange `#ed8936`, cream `#f5f0e6`, warm bg `#fffaf0`, display font on h1/h2, emoji prefix convention on buttons
-  - **Depends on:** nothing; ~15 min
+- [x] Extract implicit palette into `DESIGN.md` — shipped. Doc captures 22 named hues, typography, component conventions, a11y baseline.
+- [ ] Migrate components from `bg-[#hex]` to Tailwind 4 `@theme` tokens (`bg-primary`, `text-accent`, etc.) — see DESIGN.md "Design debt" section. ~30 min, touches ~7 files via find-and-replace.
 
 ## Explicitly not doing (yet)
 
