@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
+import { parseOpeningHours, isOpen } from '../utils/hoursBasic'
 
 interface Props {
   spaces: ICoworkingSpace[]
@@ -14,6 +15,20 @@ const props = defineProps<Props>()
 
 const WIFI_SPEED_ORDER = { unknown: 0, slow: 1, medium: 2, fast: 3 }
 const NOISE_LEVEL_ORDER = { quiet: 0, medium: 1, loud: 2 }
+
+const isOnlyOpenNowActive = computed(() => {
+  const f = props.filters
+  if (!f.openNow) return false
+  return (
+    f.noiseLevel === 'all' &&
+    f.wifiSpeed === 'all' &&
+    f.hasAC === 'all' &&
+    f.foodAvailability === 'all' &&
+    f.seatingType === 'all' &&
+    f.hasOutlets === 'all' &&
+    f.verified === 'all'
+  )
+})
 
 const filteredAndSortedSpaces = computed(() => {
   let result = [...props.spaces]
@@ -43,6 +58,10 @@ const filteredAndSortedSpaces = computed(() => {
   if (props.filters.verified === 'unverified') {
     result = result.filter((s) => !s.verified)
   }
+  if (props.filters.openNow) {
+    const now = new Date()
+    result = result.filter((s) => isOpen(parseOpeningHours(s.openingHours), now) === true)
+  }
 
   // Apply sorting
   const direction = props.sort.direction === 'asc' ? 1 : -1
@@ -71,8 +90,23 @@ const filteredAndSortedSpaces = computed(() => {
       v-if="filteredAndSortedSpaces.length === 0"
       class="rounded-lg border-2 border-dashed border-[#cbd5e0] bg-[#f5f0e6] px-6 py-12 text-center"
     >
-      <p class="m-0 mb-2 text-lg text-[#718096]">No spaces match your filters</p>
-      <p class="m-0 text-sm text-[#a0aec0]">Try adjusting your filter criteria</p>
+      <template v-if="isOnlyOpenNowActive">
+        <p class="m-0 mb-2 text-lg text-[#718096]">Nothing open right now</p>
+        <p class="m-0 text-sm text-[#a0aec0]">
+          Leuven is quiet at this hour. Try turning off <strong>Open now</strong>, or check back
+          later.
+        </p>
+      </template>
+      <template v-else-if="props.filters.openNow">
+        <p class="m-0 mb-2 text-lg text-[#718096]">No open spaces match your filters</p>
+        <p class="m-0 text-sm text-[#a0aec0]">
+          Try removing <strong>Open now</strong> or loosening another filter.
+        </p>
+      </template>
+      <template v-else>
+        <p class="m-0 mb-2 text-lg text-[#718096]">No spaces match your filters</p>
+        <p class="m-0 text-sm text-[#a0aec0]">Try adjusting your filter criteria</p>
+      </template>
     </div>
 
     <!-- Space grid -->

@@ -61,6 +61,7 @@ export interface IFilterState {
   seatingType: SeatingType | 'all'
   hasOutlets: OutletAvailability | 'all'
   verified: VerifiedFilter
+  openNow: boolean
 }
 
 export type SortField = 'name' | 'wifiSpeed' | 'noiseLevel'

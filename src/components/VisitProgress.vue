@@ -64,7 +64,9 @@ async function copyShareLink() {
                   :class="{ 'text-green-400 hover:text-green-400': copyStatus === 'copied' }"
                   @click="copyShareLink"
                 >
-                  {{ copyStatus === 'copied' ? 'copied link to clipboard!' : 'copy my progress link' }}
+                  {{
+                    copyStatus === 'copied' ? 'copied link to clipboard!' : 'copy my progress link'
+                  }}
                 </button>
               </p>
             </div>
