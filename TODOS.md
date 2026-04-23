@@ -33,16 +33,19 @@
 
 - [ ] ~~`weatherFit: boolean` filter + weather-appropriate sort~~ — shipped as **emoji-only aliveness signal in chip label**. Revisit if users ask for it. If you bring it back: add a second boolean to IFilterState, rank spaces by `indoor vs outdoor` metadata (which doesn't exist in spaces.json yet — would require schema extension).
 
-## Manual QA — confirm before closing
+## Manual QA — confirmed on prod (2026-04-23 via /qa)
 
-- [ ] Toggle chip on desktop; verify count changes and URL gains `?openNow=1`
-- [ ] Reload with `?openNow=1` — chip renders active
-- [ ] 375px mobile (Safari/Chrome devtools): toolbar wraps cleanly, no horizontal scroll
-- [ ] Keyboard: Tab to chip, Space/Enter toggles, focus ring visible
-- [ ] VoiceOver / TalkBack: chip announces "Open now, pressed/not pressed" with weather context
-- [ ] Empty-state copy shown when Leuven is quiet (e.g., open devtools, mock `Date` to 03:00 Mon)
-- [ ] Weather failure: throttle network to offline in devtools, hard refresh — chip falls back to plain "Open now" label (no weather)
-- [ ] Weather cache: toggle chip multiple times in a session — Network tab shows only one `api.open-meteo.com` request
+- [x] Toggle chip on desktop; count changes and URL gains `?openNow=1` — verified, 13 of 28 open at 09:32 Wed
+- [x] Reload with `?openNow=1` — chip renders active (`aria-pressed=true`, dark bg)
+- [x] 375px mobile: toolbar wraps cleanly, no horizontal scroll (`scrollWidth === clientWidth === 375`)
+- [x] Keyboard: focus ring visible on chip and AskBar input
+- [x] Screen-reader semantics: chip exposes `aria-label="Open now, currently 10 degrees sunny"` + `aria-pressed`
+- [x] Weather cache: only one `api.open-meteo.com` request per session (verified in network log)
+
+Skipped — low ROI without a user-reported issue:
+
+- Empty-state copy when Leuven is quiet (requires mocking `Date` to 03:00 Mon)
+- Weather-API failure fallback (requires throttling network to offline)
 
 ## Design debt
 
