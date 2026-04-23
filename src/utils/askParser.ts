@@ -233,8 +233,10 @@ function isWordBoundary(ch: string | undefined): boolean {
   return !ch || !/[a-z0-9]/.test(ch)
 }
 
+const MAX_QUERY_LENGTH = 1000
+
 export function parseAsk(query: string): IAskResult {
-  const normalized = query.toLowerCase()
+  const normalized = query.slice(0, MAX_QUERY_LENGTH).toLowerCase()
   const rawMatches: IRawMatch[] = []
 
   for (const entry of SORTED_PHRASES) {
