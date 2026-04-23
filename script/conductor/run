@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mise trust
+
+if [[ -n "${CONDUCTOR_PORT:-}" ]]; then
+  exec bun run dev -- --port "$CONDUCTOR_PORT"
+else
+  exec bun run dev
+fi
