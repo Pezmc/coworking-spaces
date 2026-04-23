@@ -114,9 +114,9 @@ function applyAskPatch(patch: Partial<IFilterState>) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#fffaf0]">
+  <div class="bg-cream min-h-screen">
     <!-- Header -->
-    <header class="bg-[#1a365d] px-4 py-6 text-white sm:px-6 sm:py-8">
+    <header class="bg-primary px-4 py-6 text-white sm:px-6 sm:py-8">
       <div class="mx-auto flex max-w-6xl items-center gap-4 sm:gap-6">
         <img
           src="/favicon.svg"
@@ -127,9 +127,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
           <h1 class="font-display m-0 mb-1 text-2xl font-bold sm:mb-2 sm:text-4xl md:text-5xl">
             Leuven Coworking Cafes
           </h1>
-          <p class="m-0 text-sm text-[#cbd5e0] sm:text-lg">
-            Find your perfect spot to work in Leuven
-          </p>
+          <p class="text-cool m-0 text-sm sm:text-lg">Find your perfect spot to work in Leuven</p>
         </div>
       </div>
     </header>
@@ -144,7 +142,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
 
       <!-- Toolbar: Space count, Filter toggle, View mode -->
       <div class="mb-4 flex flex-wrap items-center justify-between gap-y-3">
-        <p class="m-0 text-sm text-[#718096]">
+        <p class="text-muted m-0 text-sm">
           Showing {{ filteredSpaces.length }} of {{ spaces.length }} spaces
         </p>
 
@@ -154,11 +152,11 @@ function applyAskPatch(patch: Partial<IFilterState>) {
 
           <!-- Filter Toggle -->
           <button
-            class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors"
+            class="focus-visible:ring-accent flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
             :class="
               showFilters
-                ? 'border-[#1a365d] bg-[#1a365d] text-white'
-                : 'border-[#1a365d] bg-white text-[#1a365d] hover:bg-[#f5f0e6]'
+                ? 'border-primary bg-primary text-white'
+                : 'border-primary text-primary hover:bg-cream-panel bg-white'
             "
             @click="showFilters = !showFilters"
           >
@@ -166,31 +164,31 @@ function applyAskPatch(patch: Partial<IFilterState>) {
             <span
               v-if="activeFilterCount > 0"
               class="rounded-full px-1.5 py-0.5 text-xs font-bold"
-              :class="showFilters ? 'bg-[#ed8936] text-white' : 'bg-[#ed8936] text-white'"
+              :class="showFilters ? 'bg-accent text-white' : 'bg-accent text-white'"
             >
               {{ activeFilterCount }}
             </span>
           </button>
 
           <!-- View Mode Toggle -->
-          <div class="inline-flex overflow-hidden rounded-lg border-2 border-[#1a365d]">
+          <div class="border-primary inline-flex overflow-hidden rounded-lg border-2">
             <button
-              class="px-4 py-2 text-sm font-medium transition-colors"
+              class="focus-visible:ring-accent px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
               :class="
                 viewMode === 'list'
-                  ? 'bg-[#1a365d] text-white'
-                  : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'
+                  ? 'bg-primary text-white'
+                  : 'text-primary hover:bg-cream-panel bg-white'
               "
               @click="viewMode = 'list'"
             >
               📋 List
             </button>
             <button
-              class="border-l-2 border-[#1a365d] px-4 py-2 text-sm font-medium transition-colors"
+              class="border-primary focus-visible:ring-accent border-l-2 px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
               :class="
                 viewMode === 'map'
-                  ? 'bg-[#1a365d] text-white'
-                  : 'bg-white text-[#1a365d] hover:bg-[#f5f0e6]'
+                  ? 'bg-primary text-white'
+                  : 'text-primary hover:bg-cream-panel bg-white'
               "
               @click="viewMode = 'map'"
             >
@@ -217,22 +215,18 @@ function applyAskPatch(patch: Partial<IFilterState>) {
     </main>
 
     <!-- Footer -->
-    <footer class="mt-12 border-t-2 border-[#e2d9c8] bg-[#f5f0e6] px-6 py-8 pb-24">
+    <footer class="border-warm bg-cream-panel mt-12 border-t-2 px-6 py-8 pb-24">
       <div class="mx-auto max-w-6xl space-y-6 text-center">
         <div class="flex flex-col justify-center gap-2 sm:flex-row">
-          <div
-            class="w-full rounded-lg bg-[#1a365d] p-6 text-white sm:w-auto sm:max-w-md sm:flex-1"
-          >
+          <div class="bg-primary w-full rounded-lg p-6 text-white sm:w-auto sm:max-w-md sm:flex-1">
             <p class="m-0 mb-3 text-lg font-medium">🏢 Know a great coworking spot?</p>
-            <p class="m-0 mb-4 text-sm text-[#cbd5e0]">
-              Help fellow remote workers find new places!
-            </p>
+            <p class="text-cool m-0 mb-4 text-sm">Help fellow remote workers find new places!</p>
             <div class="flex flex-wrap justify-center gap-3">
               <a
                 :href="NEW_SPACE_URL"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="rounded bg-[#ed8936] px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#dd7826]"
+                class="bg-accent hover:bg-accent-hover focus-visible:ring-accent rounded px-4 py-2 text-sm font-semibold text-white no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
               >
                 ✨ Suggest via GitHub
               </a>
@@ -240,38 +234,38 @@ function applyAskPatch(patch: Partial<IFilterState>) {
                 href="https://pezcuckow.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="rounded bg-white px-4 py-2 text-sm font-semibold text-[#1a365d] no-underline transition-colors hover:bg-[#f5f0e6]"
+                class="text-primary hover:bg-cream-panel focus-visible:ring-accent rounded bg-white px-4 py-2 text-sm font-semibold no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
               >
                 ✉️ Email me
               </a>
             </div>
           </div>
           <div
-            class="w-full rounded-lg border-2 border-[#ed8936] bg-white p-6 sm:w-auto sm:max-w-md sm:flex-1"
+            class="border-accent w-full rounded-lg border-2 bg-white p-6 sm:w-auto sm:max-w-md sm:flex-1"
           >
-            <p class="m-0 mb-2 text-lg font-medium text-[#1a365d]">
+            <p class="text-primary m-0 mb-2 text-lg font-medium">
               👋 Looking for people to co-work with?
             </p>
-            <p class="m-0 mb-4 text-sm text-[#718096]">
+            <p class="text-muted m-0 mb-4 text-sm">
               <strong>Join</strong> the Leuven Social Groups co-working group!
             </p>
             <a
               href="https://labs.pez.io/leuven-social-groups/"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-block rounded bg-[#ed8936] px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#dd7826]"
+              class="bg-accent hover:bg-accent-hover focus-visible:ring-accent inline-block rounded px-4 py-2 text-sm font-semibold text-white no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
             >
               Learn more →
             </a>
           </div>
         </div>
-        <p class="m-0 text-sm text-[#718096]">
+        <p class="text-muted m-0 text-sm">
           Made with ☕ in Leuven by
           <a
             href="https://pezcuckow.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-[#718096] underline hover:text-[#ed8936]"
+            class="text-muted hover:text-accent focus-visible:ring-accent rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Pez
           </a>
@@ -280,7 +274,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
             href="https://github.com/Pezmc/coworking-spaces"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-[#718096] underline hover:text-[#ed8936]"
+            class="text-muted hover:text-accent focus-visible:ring-accent rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Open Source
           </a>

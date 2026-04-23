@@ -17,11 +17,11 @@ const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
 
 <template>
   <article
-    class="overflow-hidden rounded-lg border-2 border-[#e2d9c8] bg-white transition-all duration-200 hover:border-[#ed8936] hover:shadow-lg"
+    class="border-warm hover:border-accent overflow-hidden rounded-lg border-2 bg-white transition-all duration-200 hover:shadow-lg motion-reduce:transition-none"
     :class="{ 'opacity-70': !space.verified }"
   >
     <!-- Header with Summary -->
-    <div class="border-b border-[#e2d9c8] p-5">
+    <div class="border-warm border-b p-5">
       <SpaceSummary :space="space">
         <template #title>
           <span :id="slugify(space.name)">{{ space.name }}</span>
@@ -32,93 +32,84 @@ const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
     <!-- Expandable Details -->
     <div class="px-5 py-3">
       <button
-        class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent py-1 text-sm font-medium text-[#1a365d]"
+        class="text-primary focus-visible:ring-accent flex w-full cursor-pointer items-center justify-between rounded border-0 bg-transparent py-1 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         @click="expanded = !expanded"
       >
         <span>{{ expanded ? 'Hide details' : 'Show details' }}</span>
-        <span class="transform transition-transform" :class="{ 'rotate-180': expanded }"> ▼ </span>
+        <span
+          class="transform transition-transform motion-reduce:transition-none"
+          :class="{ 'rotate-180': expanded }"
+        >
+          ▼
+        </span>
       </button>
 
       <div v-show="expanded" class="mt-4 space-y-3 text-sm">
         <!-- Atmosphere -->
         <div v-if="space.atmosphereNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">
             Atmosphere
           </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.atmosphereNotes }}</p>
+          <p class="text-body m-0">{{ space.atmosphereNotes }}</p>
         </div>
 
         <!-- Seating -->
         <div v-if="space.seatingNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Seating
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.seatingNotes }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Seating</h4>
+          <p class="text-body m-0">{{ space.seatingNotes }}</p>
         </div>
 
         <!-- WiFi Notes -->
         <div v-if="space.wifiNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            WiFi
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.wifiNotes }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">WiFi</h4>
+          <p class="text-body m-0">{{ space.wifiNotes }}</p>
         </div>
 
         <!-- Climate -->
         <div v-if="space.climateNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Climate
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.climateNotes }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Climate</h4>
+          <p class="text-body m-0">{{ space.climateNotes }}</p>
         </div>
 
         <!-- Outlets -->
         <div>
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Outlets
-          </h4>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Outlets</h4>
           <p
             v-tippy="OUTLET_DESCRIPTIONS[space.hasOutlets]"
-            class="m-0 inline-block cursor-help text-[#4a5568]"
+            class="text-body m-0 inline-block cursor-help"
           >
             {{ OUTLET_LABELS[space.hasOutlets] }}
           </p>
-          <p v-if="space.outletNotes" class="m-0 mt-1 text-xs text-[#4a5568]">
+          <p v-if="space.outletNotes" class="text-body m-0 mt-1 text-xs">
             {{ space.outletNotes }}
           </p>
         </div>
 
         <!-- Drinks -->
         <div v-if="space.drinkNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Drinks
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.drinkNotes }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Drinks</h4>
+          <p class="text-body m-0">{{ space.drinkNotes }}</p>
         </div>
 
         <!-- Food -->
         <div v-if="space.foodNotes">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Food
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.foodNotes }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Food</h4>
+          <p class="text-body m-0">{{ space.foodNotes }}</p>
         </div>
 
         <!-- Opening Hours -->
         <div v-if="space.openingHours">
-          <h4 class="m-0 mb-1 text-xs font-semibold tracking-wide text-[#718096] uppercase">
-            Hours
-          </h4>
-          <p class="m-0 text-[#4a5568]">{{ space.openingHours }}</p>
+          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Hours</h4>
+          <p class="text-body m-0">{{ space.openingHours }}</p>
         </div>
 
         <!-- Update link for verified spaces -->
-        <div v-if="space.verified" class="mt-3 border-t border-[#e2d9c8] pt-3">
+        <div v-if="space.verified" class="border-warm mt-3 border-t pt-3">
           <a
             :href="updateUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-xs text-[#718096] hover:text-[#ed8936] hover:underline"
+            class="text-muted hover:text-accent focus-visible:ring-accent rounded text-xs hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Something wrong? Update this space →
           </a>

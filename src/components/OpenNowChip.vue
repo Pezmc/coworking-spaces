@@ -40,11 +40,11 @@ const title = computed(() =>
     :aria-label="ariaLabel"
     :title="title"
     :class="[
-      'inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors',
-      'focus-visible:ring-2 focus-visible:ring-[#ed8936] focus-visible:ring-offset-2 focus-visible:outline-none',
+      'inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors motion-reduce:transition-none',
+      'focus-visible:ring-accent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
       active
-        ? 'border-[#1a365d] bg-[#1a365d] text-white hover:bg-[#15284a]'
-        : 'border-[#1a365d] bg-white text-[#1a365d] hover:bg-[#f5f0e6]',
+        ? 'border-primary bg-primary hover:bg-primary-hover text-white'
+        : 'border-primary text-primary hover:bg-cream-panel bg-white',
       loading && 'cursor-wait opacity-70',
     ]"
     @click="emit('toggle')"

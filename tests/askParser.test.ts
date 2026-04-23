@@ -153,4 +153,12 @@ describe('parseAsk', () => {
     expect(r.matches[0].filter).toBe('wifiSpeed')
     expect(r.matches[0].value).toBe('fast')
   })
+
+  it('truncates pathologically long input to 1000 chars', () => {
+    const padding = 'x '.repeat(600) // ~1200 chars, beyond the cap
+    const beyondCap = parseAsk(`${padding}fast wifi`)
+    expect(beyondCap.matches).toHaveLength(0)
+    const beforeCap = parseAsk(`fast wifi ${padding}`)
+    expect(beforeCap.filterPatch).toEqual({ wifiSpeed: 'fast' })
+  })
 })
