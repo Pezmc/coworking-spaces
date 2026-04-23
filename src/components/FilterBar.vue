@@ -79,12 +79,12 @@ const sortOptions: { field: SortField; label: string }[] = [
 </script>
 
 <template>
-  <div class="mb-8 rounded-lg border-2 border-[#1a365d] bg-[#f5f0e6] p-5">
+  <div class="border-primary bg-cream-panel mb-8 rounded-lg border-2 p-5">
     <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-      <h2 class="font-display m-0 text-xl font-bold text-[#1a365d]">Filter Spaces</h2>
+      <h2 class="font-display text-primary m-0 text-xl font-bold">Filter Spaces</h2>
       <button
         v-if="hasActiveFilters"
-        class="cursor-pointer border-0 bg-transparent text-sm text-[#ed8936] underline hover:text-[#dd7826]"
+        class="text-accent hover:text-accent-hover focus-visible:ring-accent cursor-pointer rounded border-0 bg-transparent text-sm underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         @click="resetFilters"
       >
         Clear all filters
@@ -94,10 +94,10 @@ const sortOptions: { field: SortField; label: string }[] = [
     <div class="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-7">
       <!-- Noise Level -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Noise </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Noise </label>
         <select
           :value="filters.noiseLevel"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'noiseLevel',
@@ -114,10 +114,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- WiFi Speed -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> WiFi </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> WiFi </label>
         <select
           :value="filters.wifiSpeed"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'wifiSpeed',
@@ -134,12 +134,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- AC -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
-          Climate
-        </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Climate </label>
         <select
           :value="filters.hasAC"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'hasAC',
@@ -156,10 +154,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Food -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Food </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Food </label>
         <select
           :value="filters.foodAvailability"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'foodAvailability',
@@ -176,12 +174,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Seating -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
-          Seating
-        </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Seating </label>
         <select
           :value="filters.seatingType"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'seatingType',
@@ -198,12 +194,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Outlets -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase">
-          Outlets
-        </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Outlets </label>
         <select
           :value="filters.hasOutlets"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'hasOutlets',
@@ -220,10 +214,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 
       <!-- Verified -->
       <div class="flex flex-col gap-1">
-        <label class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Status </label>
+        <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Status </label>
         <select
           :value="filters.verified"
-          class="cursor-pointer rounded border-2 border-[#cbd5e0] bg-white px-3 py-2 text-sm text-[#1a202c] transition-colors hover:border-[#ed8936] focus:border-[#ed8936] focus:outline-none"
+          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'verified',
@@ -239,17 +233,17 @@ const sortOptions: { field: SortField; label: string }[] = [
     </div>
 
     <!-- Sort -->
-    <div class="flex items-center gap-3 border-t border-[#cbd5e0] pt-4">
-      <span class="text-xs font-semibold tracking-wide text-[#718096] uppercase"> Sort by: </span>
+    <div class="border-cool flex items-center gap-3 border-t pt-4">
+      <span class="text-muted text-xs font-semibold tracking-wide uppercase"> Sort by: </span>
       <div class="flex gap-2">
         <button
           v-for="option in sortOptions"
           :key="option.field"
-          class="cursor-pointer rounded border-2 px-3 py-1.5 text-sm transition-all"
+          class="focus-visible:ring-accent cursor-pointer rounded border-2 px-3 py-1.5 text-sm transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           :class="
             sort.field === option.field
-              ? 'border-[#1a365d] bg-[#1a365d] text-white'
-              : 'border-[#cbd5e0] bg-white text-[#1a365d] hover:border-[#1a365d]'
+              ? 'border-primary bg-primary text-white'
+              : 'border-cool text-primary hover:border-primary bg-white'
           "
           @click="updateSort(option.field)"
         >

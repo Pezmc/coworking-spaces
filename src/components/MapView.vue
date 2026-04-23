@@ -92,10 +92,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
 </script>
 
 <template>
-  <div
-    class="map-container overflow-hidden rounded-lg border-2 border-[#e2d9c8]"
-    style="height: 600px"
-  >
+  <div class="map-container border-warm overflow-hidden rounded-lg border-2" style="height: 600px">
     <LMap
       ref="mapRef"
       :zoom="zoom"
@@ -127,9 +124,9 @@ function getMarkerIcon(space: ICoworkingSpace) {
     <!-- No results message -->
     <div
       v-if="spaces.filter((s) => s.coordinates).length === 0"
-      class="absolute inset-0 flex items-center justify-center bg-[#f5f0e6]/90"
+      class="bg-cream-panel/90 absolute inset-0 flex items-center justify-center"
     >
-      <p class="text-lg text-[#718096]">No spaces match your filters</p>
+      <p class="text-muted text-lg">No spaces match your filters</p>
     </div>
   </div>
 </template>

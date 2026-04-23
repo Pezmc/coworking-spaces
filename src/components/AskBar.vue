@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
   <div class="mb-5">
     <div class="relative">
       <span
-        class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-base text-[#ed8936]"
+        class="text-accent pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-base"
         aria-hidden="true"
       >
         ✨
@@ -105,31 +105,31 @@ onBeforeUnmount(() => {
         v-model="rawInput"
         type="text"
         :placeholder="placeholderText"
-        class="w-full rounded-lg border-2 border-[#e2d9c8] bg-white py-3 pr-24 pl-11 text-sm text-[#1a365d] placeholder:text-[#a0aec0] focus:border-[#ed8936] focus:outline-none"
+        class="border-warm text-primary placeholder:text-faint focus-visible:border-accent focus-visible:ring-accent w-full rounded-lg border-2 bg-white py-3 pr-24 pl-11 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         aria-label="Describe what you need — smart search"
       />
       <div
         v-if="thinking"
-        class="pointer-events-none absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-1.5 text-xs text-[#718096]"
+        class="text-muted pointer-events-none absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-1.5 text-xs"
         aria-live="polite"
       >
         <span>Thinking</span>
         <span class="flex gap-0.5">
           <span
-            class="inline-block h-1 w-1 animate-bounce rounded-full bg-[#ed8936] [animation-delay:0ms] motion-reduce:animate-none"
+            class="bg-accent inline-block h-1 w-1 animate-bounce rounded-full [animation-delay:0ms] motion-reduce:animate-none"
           ></span>
           <span
-            class="inline-block h-1 w-1 animate-bounce rounded-full bg-[#ed8936] [animation-delay:150ms] motion-reduce:animate-none"
+            class="bg-accent inline-block h-1 w-1 animate-bounce rounded-full [animation-delay:150ms] motion-reduce:animate-none"
           ></span>
           <span
-            class="inline-block h-1 w-1 animate-bounce rounded-full bg-[#ed8936] [animation-delay:300ms] motion-reduce:animate-none"
+            class="bg-accent inline-block h-1 w-1 animate-bounce rounded-full [animation-delay:300ms] motion-reduce:animate-none"
           ></span>
         </span>
       </div>
       <button
         v-else-if="rawInput"
         type="button"
-        class="absolute top-1/2 right-2 -translate-y-1/2 rounded px-2 py-1 text-xs font-medium text-[#718096] transition-colors hover:text-[#1a365d] focus-visible:ring-2 focus-visible:ring-[#ed8936] focus-visible:outline-none"
+        class="text-muted hover:text-primary focus-visible:ring-accent absolute top-1/2 right-2 -translate-y-1/2 rounded px-2 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none"
         @click="clearAll"
       >
         Clear
@@ -141,23 +141,26 @@ onBeforeUnmount(() => {
       class="mt-2 flex flex-wrap items-center gap-2"
       aria-label="Matched filters — click to remove"
     >
-      <span class="text-xs text-[#718096]">Matched:</span>
+      <span class="text-muted text-xs">Matched:</span>
       <button
         v-for="m in matches"
         :key="m.filter"
         type="button"
-        class="group inline-flex items-center gap-1.5 rounded-full bg-[#ed8936] px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-[#dd7826] focus-visible:ring-2 focus-visible:ring-[#1a365d] focus-visible:outline-none"
+        class="group bg-accent hover:bg-accent-hover focus-visible:ring-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold text-white transition-colors focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none"
         :aria-label="`Remove ${m.label} filter`"
         @click="removeChip(m)"
       >
         <span>{{ m.label }}</span>
-        <span aria-hidden="true" class="opacity-70 transition-opacity group-hover:opacity-100">
+        <span
+          aria-hidden="true"
+          class="opacity-70 transition-opacity group-hover:opacity-100 motion-reduce:transition-none"
+        >
           ×
         </span>
       </button>
     </div>
 
-    <p v-else-if="rawInput && !thinking" class="mt-2 text-xs text-[#a0aec0]" aria-live="polite">
+    <p v-else-if="rawInput && !thinking" class="text-faint mt-2 text-xs" aria-live="polite">
       Try "quiet", "fast wifi", or "AC"
     </p>
   </div>

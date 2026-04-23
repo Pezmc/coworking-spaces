@@ -88,24 +88,24 @@ const filteredAndSortedSpaces = computed(() => {
     <!-- Empty state -->
     <div
       v-if="filteredAndSortedSpaces.length === 0"
-      class="rounded-lg border-2 border-dashed border-[#cbd5e0] bg-[#f5f0e6] px-6 py-12 text-center"
+      class="border-cool bg-cream-panel rounded-lg border-2 border-dashed px-6 py-12 text-center"
     >
       <template v-if="isOnlyOpenNowActive">
-        <p class="m-0 mb-2 text-lg text-[#718096]">Nothing open right now</p>
-        <p class="m-0 text-sm text-[#a0aec0]">
+        <p class="text-muted m-0 mb-2 text-lg">Nothing open right now</p>
+        <p class="text-faint m-0 text-sm">
           Leuven is quiet at this hour. Try turning off <strong>Open now</strong>, or check back
           later.
         </p>
       </template>
       <template v-else-if="props.filters.openNow">
-        <p class="m-0 mb-2 text-lg text-[#718096]">No open spaces match your filters</p>
-        <p class="m-0 text-sm text-[#a0aec0]">
+        <p class="text-muted m-0 mb-2 text-lg">No open spaces match your filters</p>
+        <p class="text-faint m-0 text-sm">
           Try removing <strong>Open now</strong> or loosening another filter.
         </p>
       </template>
       <template v-else>
-        <p class="m-0 mb-2 text-lg text-[#718096]">No spaces match your filters</p>
-        <p class="m-0 text-sm text-[#a0aec0]">Try adjusting your filter criteria</p>
+        <p class="text-muted m-0 mb-2 text-lg">No spaces match your filters</p>
+        <p class="text-faint m-0 text-sm">Try adjusting your filter criteria</p>
       </template>
     </div>
 
