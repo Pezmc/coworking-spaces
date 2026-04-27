@@ -113,8 +113,8 @@ function getNoiseStyle(level: string) {
         <h3
           :class="[
             compact
-              ? 'm-0 mb-1 text-lg font-bold text-[#1a365d]'
-              : 'font-display m-0 mb-1 text-xl font-bold text-[#1a365d]',
+              ? 'text-primary m-0 mb-1 text-lg font-bold'
+              : 'font-display text-primary m-0 mb-1 text-xl font-bold',
             visited && 'line-through opacity-70',
           ]"
         >
@@ -125,7 +125,7 @@ function getNoiseStyle(level: string) {
           :href="space.googleMapsUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="m-0 text-sm text-[#718096] hover:text-[#ed8936] hover:underline"
+          class="text-muted hover:text-accent focus-visible:ring-accent m-0 rounded text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           {{ space.address.split(',')[0] }}</a
         >
@@ -135,15 +135,15 @@ function getNoiseStyle(level: string) {
         <button
           @click="handleToggleVisited"
           v-tippy="visited ? 'Click to unmark' : 'Check off once you\'ve visited!'"
-          class="flex h-7 w-7 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-200"
+          class="focus-visible:ring-accent flex h-7 w-7 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           :class="
             visited
               ? 'border-green-500 bg-green-500 text-white'
-              : 'border-[#cbd5e0] bg-white text-transparent hover:border-[#ed8936] hover:text-[#ed8936]'
+              : 'border-cool hover:border-accent hover:text-accent bg-white text-transparent'
           "
         >
           <span
-            class="text-sm transition-transform duration-200"
+            class="text-sm transition-transform duration-200 motion-reduce:transition-none"
             :class="{ 'scale-125': justChecked }"
           >
             {{ visited ? '✓' : '○' }}
@@ -153,7 +153,7 @@ function getNoiseStyle(level: string) {
         <span
           v-if="!space.verified"
           v-tippy="VERIFIED_DESCRIPTIONS.unverified"
-          class="cursor-help text-xs font-medium text-[#ed8936]"
+          class="text-accent cursor-help text-xs font-medium"
         >
           ⚠️ Unverified
         </span>
@@ -177,7 +177,7 @@ function getNoiseStyle(level: string) {
         :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="font-semibold text-[#ed8936] hover:underline"
+        class="text-accent focus-visible:ring-accent rounded font-semibold hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         Help verify it →
       </a>
@@ -210,8 +210,8 @@ function getNoiseStyle(level: string) {
       <span
         v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
         :class="[
-          'cursor-help rounded bg-[#f5f0e6] px-2 text-xs font-medium text-[#1a365d]',
-          compact ? 'py-0.5' : 'border border-[#e2d9c8] py-1',
+          'bg-cream-panel text-primary cursor-help rounded px-2 text-xs font-medium',
+          compact ? 'py-0.5' : 'border-warm border py-1',
         ]"
       >
         🪑 {{ SEATING_LABELS[space.seatingType] }}
@@ -243,8 +243,8 @@ function getNoiseStyle(level: string) {
     </div>
 
     <!-- Description -->
-    <div v-if="space.description" class="mt-3 rounded bg-[#faf5eb] px-3 py-2">
-      <p class="m-0 text-sm text-[#4a5568] italic">"{{ space.description }}"</p>
+    <div v-if="space.description" class="bg-cream-deep mt-3 rounded px-3 py-2">
+      <p class="text-body m-0 text-sm italic">"{{ space.description }}"</p>
     </div>
 
     <!-- Unverified notice -->
@@ -258,7 +258,7 @@ function getNoiseStyle(level: string) {
         :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="ml-1 font-semibold text-[#ed8936] hover:underline"
+        class="text-accent focus-visible:ring-accent ml-1 rounded font-semibold hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         Help verify →
       </a>

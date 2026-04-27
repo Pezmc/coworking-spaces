@@ -9,7 +9,7 @@ Brand mood: _neighbourhood cafe directory_, not tech product. Warm paper-cream b
 - **Adding a new colour?** Check **Palette** first. If it's not there, either it maps to an existing hue (use that) or it's a new token — add a row here before you ship.
 - **Building a new component?** Read **Component conventions** — button shape, focus ring, touch-target minimum, and emoji-prefix rule are all prescriptive.
 - **Auditing contrast or keyboard nav?** See **Accessibility baseline**.
-- **Wondering why palette values aren't `bg-primary`?** That's in **Design debt** — it's known, not accidental.
+- **Reaching for a hex code in a class?** Don't. The palette lives as `@theme` tokens in `src/style.css`. Use `bg-primary`, `text-accent`, `border-warm`, etc. New hexes need a token row above before they ship.
 
 Rules in this doc are **prescriptive** unless marked otherwise. Anything under "Design debt" is a known gap with a plan.
 
@@ -217,7 +217,7 @@ No `transform` transitions, no `scale`/`translate` on hover, no new easing curve
 
 **Touch targets.** 44×44 CSS px minimum (Apple HIG). See `min-h-[44px]` rule in Component conventions.
 
-**Reduced motion.** Not currently implemented. The `duration-200` card hover and `duration-500` progress fill will play for everyone regardless of `prefers-reduced-motion`. Low-priority debt — transitions are subtle — but should be fixed before adding any transform-based animations. See **Design debt**.
+**Reduced motion.** Honored. Every `transition-*` utility in components is paired with `motion-reduce:transition-none`, and the bouncing thinking dots in `AskBar` use `motion-reduce:animate-none`. Add the same pairing to any new transition or animation you introduce.
 
 ---
 
@@ -235,12 +235,7 @@ Design forks the project hasn't resolved. Not debt (debt has a plan) — these a
 
 ## Design debt
 
-- **CSS custom properties in `style.css` are unused.** Components inline the same hex values in Tailwind bracket classes. Consequence: renaming a brand colour today requires editing ~7 component files instead of one variable.
-  - Options:
-    1. Migrate components to `bg-[var(--color-primary)]` — works but keeps the dual source of truth.
-    2. Move to Tailwind 4 `@theme` block in `style.css` — registers real design tokens so classes like `bg-primary` / `text-accent` work natively. Recommended.
-  - Scope: ~30 min, touches every component but only via find-and-replace.
-- **Hues outside the seven named vars** (navy-hover, navy-track, cream-deep, warm-border, cool-border, cream-surface, orange-hover, ink, body-muted, placeholder) need names before we can promote to tokens — hence this doc.
-- **No `prefers-reduced-motion` handling.** All transitions play regardless of OS setting. Low-priority for current motion set (subtle fades) but will become a real issue if we ever add transform/scale. Fix: add a `motion-reduce:transition-none` variant to the motion tokens in Component conventions. ~10 min.
-- **Focus-ring rule not universally applied.** The prescribed `focus-visible:ring-2 focus-visible:ring-[#ed8936]` pattern lives only on `OpenNowChip.vue`. `FilterBar.vue` selects use `focus:border-[#ed8936] focus:outline-none` (no ring — relies on border colour change only); sort buttons have no focus treatment at all. Consequence: keyboard users on the filter panel get a weaker focus cue than on the chip. Fix: audit all interactive elements, apply the prescribed ring pattern. ~15 min.
+- ~~**CSS custom properties in `style.css` are unused.**~~ Resolved. `style.css` now declares Tailwind 4 `@theme` tokens (`primary`, `primary-hover`, `primary-track`, `accent`, `accent-hover`, `cream`, `cream-panel`, `cream-deep`, `warm`, `cool`, `ink`, `body`, `muted`, `faint`). Components use `bg-primary`, `text-accent`, `border-warm`, etc. No more `[#hex]` bracket classes anywhere in `src/`.
+- ~~**No `prefers-reduced-motion` handling.**~~ Resolved. Every `transition-(colors|all|transform|opacity)` utility is paired with `motion-reduce:transition-none`. The bouncing dots in `AskBar` use `motion-reduce:animate-none`.
+- ~~**Focus-ring rule not universally applied.**~~ Resolved. The prescribed `focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none` pattern is applied to every interactive element. Two known exceptions, both deliberate: (a) controls inside the segmented View toggle use `focus-visible:ring-inset` because the parent is `overflow-hidden`; (b) chip-internal controls in `AskBar` (the × on each match chip and the absolute-positioned Clear button) omit `ring-offset-2` because the offset would extend beyond the chip pill.
 - **No dark mode.** Cream-first palette doesn't currently map to a dark counterpart. Defer until there's a user ask.

@@ -35,7 +35,7 @@ function toggle() {
 <template>
   <button
     type="button"
-    class="group relative block h-64 w-full cursor-pointer rounded-lg text-left [perspective:1000px] focus-visible:ring-2 focus-visible:ring-[#ed8936] focus-visible:outline-none"
+    class="group focus-visible:ring-accent relative block h-64 w-full cursor-pointer rounded-lg text-left [perspective:1000px] focus-visible:ring-2 focus-visible:outline-none"
     :aria-pressed="flipped"
     :aria-label="`${pick.label}: ${pick.space.name} — click to ${flipped ? 'hide' : 'show'} details`"
     @click="toggle"
@@ -46,60 +46,60 @@ function toggle() {
     >
       <!-- Front -->
       <div
-        class="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg border-2 border-[#e2d9c8] bg-white p-5 [backface-visibility:hidden] group-hover:border-[#ed8936]"
+        class="border-warm group-hover:border-accent absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg border-2 bg-white p-5 [backface-visibility:hidden]"
         :aria-hidden="flipped"
       >
         <div>
-          <p class="m-0 mb-2 text-xs font-semibold tracking-wide text-[#ed8936] uppercase">
+          <p class="text-accent m-0 mb-2 text-xs font-semibold tracking-wide uppercase">
             {{ pick.label }}
           </p>
-          <h3 class="font-display m-0 mb-1 text-xl font-bold text-[#1a365d]">
+          <h3 class="font-display text-primary m-0 mb-1 text-xl font-bold">
             {{ pick.space.name }}
           </h3>
-          <p class="m-0 text-xs text-[#718096] italic">{{ pick.hook }}</p>
+          <p class="text-muted m-0 text-xs italic">{{ pick.hook }}</p>
         </div>
 
         <div>
-          <p class="m-0 mb-3 line-clamp-3 text-sm text-[#4a5568]">
+          <p class="text-body m-0 mb-3 line-clamp-3 text-sm">
             {{ firstSentence }}
           </p>
           <div class="flex flex-wrap gap-1.5">
             <span
               v-for="pill in pills"
               :key="pill"
-              class="rounded-full bg-[#f5f0e6] px-2 py-0.5 text-xs font-medium text-[#1a365d]"
+              class="bg-cream-panel text-primary rounded-full px-2 py-0.5 text-xs font-medium"
             >
               {{ pill }}
             </span>
           </div>
         </div>
 
-        <span aria-hidden="true" class="absolute right-3 bottom-3 text-xs text-[#a0aec0]">
+        <span aria-hidden="true" class="text-faint absolute right-3 bottom-3 text-xs">
           tap to flip ↻
         </span>
       </div>
 
       <!-- Back -->
       <div
-        class="absolute inset-0 [transform:rotateY(180deg)] overflow-y-auto rounded-lg border-2 border-[#ed8936] bg-[#fffaf0] p-5 [backface-visibility:hidden]"
+        class="border-accent bg-cream absolute inset-0 [transform:rotateY(180deg)] overflow-y-auto rounded-lg border-2 p-5 [backface-visibility:hidden]"
         :aria-hidden="!flipped"
       >
-        <h3 class="font-display m-0 mb-2 text-lg font-bold text-[#1a365d]">
+        <h3 class="font-display text-primary m-0 mb-2 text-lg font-bold">
           {{ pick.space.name }}
         </h3>
-        <p class="m-0 mb-3 text-sm text-[#4a5568]">{{ pick.space.description }}</p>
+        <p class="text-body m-0 mb-3 text-sm">{{ pick.space.description }}</p>
 
         <div v-if="pick.space.atmosphereNotes" class="mb-2">
-          <p class="m-0 text-xs font-semibold tracking-wide text-[#718096] uppercase">Atmosphere</p>
-          <p class="m-0 text-xs text-[#4a5568]">{{ pick.space.atmosphereNotes }}</p>
+          <p class="text-muted m-0 text-xs font-semibold tracking-wide uppercase">Atmosphere</p>
+          <p class="text-body m-0 text-xs">{{ pick.space.atmosphereNotes }}</p>
         </div>
 
         <div v-if="pick.space.seatingNotes">
-          <p class="m-0 text-xs font-semibold tracking-wide text-[#718096] uppercase">Seating</p>
-          <p class="m-0 text-xs text-[#4a5568]">{{ pick.space.seatingNotes }}</p>
+          <p class="text-muted m-0 text-xs font-semibold tracking-wide uppercase">Seating</p>
+          <p class="text-body m-0 text-xs">{{ pick.space.seatingNotes }}</p>
         </div>
 
-        <span aria-hidden="true" class="absolute right-3 bottom-3 text-xs text-[#a0aec0]">
+        <span aria-hidden="true" class="text-faint absolute right-3 bottom-3 text-xs">
           tap to flip back ↺
         </span>
       </div>

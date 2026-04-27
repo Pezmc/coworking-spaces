@@ -1,19 +1,33 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
+  /* Brand */
   --color-primary: #1a365d;
-  --color-secondary: #2d3748;
+  --color-primary-hover: #15284a;
+  --color-primary-track: #2d4a7c;
   --color-accent: #ed8936;
-  --color-surface: #fffaf0;
-  --color-surface-dark: #faf5eb;
-  --color-text: #1a202c;
-  --color-text-muted: #718096;
+  --color-accent-hover: #dd7826;
+
+  /* Surfaces */
+  --color-cream: #fffaf0;
+  --color-cream-panel: #f5f0e6;
+  --color-cream-deep: #faf5eb;
+
+  /* Borders */
+  --color-warm: #e2d9c8;
+  --color-cool: #cbd5e0;
+
+  /* Text */
+  --color-ink: #1a202c;
+  --color-body: #4a5568;
+  --color-muted: #718096;
+  --color-faint: #a0aec0;
 }
 
 body {
   font-family: 'Crimson Pro', Georgia, serif;
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
 }
 
 .font-display {

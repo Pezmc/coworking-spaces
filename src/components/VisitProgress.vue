@@ -46,7 +46,7 @@ async function copyShareLink() {
   <Transition name="slide-up">
     <div
       v-if="visitedCount > 0"
-      class="fixed right-0 bottom-0 left-0 z-50 bg-[#1a365d] text-white shadow-lg"
+      class="bg-primary fixed right-0 bottom-0 left-0 z-50 text-white shadow-lg"
     >
       <div class="mx-auto max-w-6xl px-6 py-3">
         <div class="flex items-center justify-between gap-4">
@@ -56,11 +56,11 @@ async function copyShareLink() {
               <p class="m-0 text-sm font-medium">
                 {{ message }}
               </p>
-              <p class="m-0 text-xs text-[#cbd5e0]">
+              <p class="text-cool m-0 text-xs">
                 {{ visitedCount }} of {{ totalSpaces }} spaces visited ·
                 <button
                   v-tippy="'Bookmark this link to restore your progress'"
-                  class="cursor-pointer border-0 bg-transparent p-0 text-[#cbd5e0] underline transition-colors hover:text-white"
+                  class="text-cool focus-visible:ring-accent cursor-pointer rounded border-0 bg-transparent p-0 underline transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
                   :class="{ 'text-green-400 hover:text-green-400': copyStatus === 'copied' }"
                   @click="copyShareLink"
                 >
@@ -74,13 +74,13 @@ async function copyShareLink() {
 
           <!-- Progress bar -->
           <div class="flex min-w-0 flex-1 items-center gap-3">
-            <div class="h-3 flex-1 overflow-hidden rounded-full bg-[#2d4a7c]">
+            <div class="bg-primary-track h-3 flex-1 overflow-hidden rounded-full">
               <div
-                class="h-full rounded-full bg-[#ed8936] transition-all duration-500 ease-out"
+                class="bg-accent h-full rounded-full transition-all duration-500 ease-out motion-reduce:transition-none"
                 :style="{ width: `${percentage}%` }"
               />
             </div>
-            <span class="flex-shrink-0 text-xs text-[#cbd5e0]">{{ percentage }}%</span>
+            <span class="text-cool flex-shrink-0 text-xs">{{ percentage }}%</span>
           </div>
         </div>
       </div>
