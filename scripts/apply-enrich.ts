@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync, appendFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, existsSync, appendFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import spaces from '../src/data/spaces.json'
 import {
@@ -8,6 +8,7 @@ import {
   ENUM_FIELD_NAMES,
   IMMUTABLE_FIELDS,
   stringifySpaces,
+  atomicWriteFile,
   colors,
   type EnumFieldName,
 } from './space-validator'
@@ -139,6 +140,20 @@ for (let i = 0; i < parsed.length; i++) {
       })
       continue
     }
+    // Within-response dedup: reject if an earlier candidate in this response
+    // already proposed a transition for the same (space, field). Without this,
+    // a duplicate object in the LLM output would silently let the later value win.
+    const dupe = accepted.find((a) => a.spaceName === current.name && a.field === field)
+    if (dupe) {
+      rejected.push({
+        spaceName: current.name,
+        field,
+        reason: `duplicate transition in response (already accepted ${dupe.oldValue} -> ${dupe.newValue})`,
+        oldValue: before,
+        newValue: after,
+      })
+      continue
+    }
     accepted.push({
       spaceName: current.name,
       field,
@@ -218,7 +233,7 @@ const updated = allSpaces.map((s) => {
   return copy as ICoworkingSpace
 })
 
-writeFileSync(SPACES_FILE, stringifySpaces(updated) + '\n', 'utf8')
+atomicWriteFile(SPACES_FILE, stringifySpaces(updated) + '\n')
 
 mkdirSync(join(REPO_ROOT, '.gstack'), { recursive: true })
 const ts = new Date().toISOString()

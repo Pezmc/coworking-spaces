@@ -1,3 +1,4 @@
+import { writeFileSync, renameSync } from 'node:fs'
 import {
   NOISE_LEVELS,
   WIFI_SPEEDS,
@@ -19,9 +20,61 @@ export const ENUM_FIELDS = {
   hasOutlets: OUTLET_OPTIONS.filter((v) => v !== 'unknown'), // few | some | many
 } as const
 
+// Full enum sets including 'unknown' where the source type permits it.
+// Used by validateEnumValues to decide whether 'unknown' is a legal value
+// for the field at all (vs. a hallucination on e.g. noiseLevel).
+const ENUM_FIELDS_FULL = {
+  noiseLevel: NOISE_LEVELS,
+  wifiSpeed: WIFI_SPEEDS,
+  hasAC: AC_OPTIONS,
+  foodAndDrinkAvailability: FOOD_AND_DRINK_OPTIONS,
+  seatingType: SEATING_TYPES,
+  hasOutlets: OUTLET_OPTIONS,
+} as const
+
 export type EnumFieldName = keyof typeof ENUM_FIELDS
 
 export const ENUM_FIELD_NAMES = Object.keys(ENUM_FIELDS) as EnumFieldName[]
+
+// Whitelist of fields persisted into spaces.json. Anything else in an
+// LLM response is dropped on the floor by pickKnownSpaceFields.
+export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
+  'name',
+  'address',
+  'googleMapsUrl',
+  'coordinates',
+  'noiseLevel',
+  'wifiSpeed',
+  'hasAC',
+  'foodAndDrinkAvailability',
+  'seatingType',
+  'hasOutlets',
+  'description',
+  'openingHours',
+  'atmosphereNotes',
+  'wifiNotes',
+  'climateNotes',
+  'foodNotes',
+  'drinkNotes',
+  'seatingNotes',
+  'outletNotes',
+  'verified',
+] as const
+
+export function pickKnownSpaceFields(c: Record<string, unknown>): ICoworkingSpace {
+  const out: Record<string, unknown> = {}
+  for (const k of KNOWN_SPACE_KEYS) out[k] = c[k]
+  return out as ICoworkingSpace
+}
+
+// Atomic file replacement: write to .tmp then rename. POSIX rename is atomic,
+// so a crash during writeFileSync leaves either the old file or the new file
+// intact, never a half-written one.
+export function atomicWriteFile(path: string, content: string): void {
+  const tmp = path + '.tmp'
+  writeFileSync(tmp, content, 'utf8')
+  renameSync(tmp, path)
+}
 
 // Free-text / structural fields that must never change on non-verified spaces
 // via the enrichment pipeline.
@@ -47,6 +100,40 @@ export const LEUVEN_BBOX = {
   latMax: 50.92,
   lngMin: 4.65,
   lngMax: 4.75,
+}
+
+// Two new spaces within this distance are treated as duplicates.
+// Tuned for Leuven's dense centre: 45m caught a real false positive
+// (Swartehond vs MadMum Tiensestraat on adjacent streets).
+export const PROXIMITY_DUPE_METRES = 50
+
+/**
+ * Returns the list of enum fields whose value is not in the allowed set
+ * for that field. Used by apply-discover.ts to reject LLM hallucinations
+ * before they reach spaces.json. apply-enrich.ts has its own per-transition
+ * check (only allows unknown -> valid enum on non-verified spaces).
+ *
+ * 'unknown' is allowed only for fields whose source type includes it
+ * (wifiSpeed, hasAC, hasOutlets). Fields like noiseLevel and seatingType
+ * have no 'unknown' in the type, so an LLM returning 'unknown' there is
+ * a hallucination and gets rejected.
+ */
+export function validateEnumValues(candidate: Record<string, unknown>): IValidationError[] {
+  const errors: IValidationError[] = []
+  const label = (candidate.name as string) ?? '(unnamed)'
+  for (const field of ENUM_FIELD_NAMES) {
+    const value = candidate[field]
+    if (typeof value !== 'string') continue // shape validator handles type errors
+    const allowed = ENUM_FIELDS_FULL[field] as readonly string[]
+    if (!allowed.includes(value)) {
+      errors.push({
+        spaceName: label,
+        field,
+        reason: `invalid enum value "${value}"; allowed: ${allowed.join('|')}`,
+      })
+    }
+  }
+  return errors
 }
 
 /**

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
@@ -6,11 +6,15 @@ import spaces from '../src/data/spaces.json'
 import {
   extractJson,
   validateSpaceShape,
+  validateEnumValues,
   isInLeuvenBbox,
   distanceMetres,
   normalizeName,
   stringifySpaces,
+  atomicWriteFile,
+  pickKnownSpaceFields,
   colors,
+  PROXIMITY_DUPE_METRES,
 } from './space-validator'
 import type { ICoworkingSpace } from '../src/types/space'
 
@@ -70,6 +74,15 @@ for (let i = 0; i < parsed.length; i++) {
     continue
   }
 
+  const enumErrs = validateEnumValues(c as Record<string, unknown>)
+  if (enumErrs.length > 0) {
+    rejections.push({
+      label,
+      reason: `enum errors: ${enumErrs.map((e) => `${e.field} (${e.reason})`).join('; ')}`,
+    })
+    continue
+  }
+
   const space = c as ICoworkingSpace
 
   if (space.verified !== false) {
@@ -93,19 +106,29 @@ for (let i = 0; i < parsed.length; i++) {
     continue
   }
 
-  const near = allSpaces.find((s) => distanceMetres(s.coordinates, space.coordinates) < 50)
+  // Within-response dedup: also check against earlier candidates accepted in this run.
+  const allKnownSpaces: { name: string; coordinates: { lat: number; lng: number } }[] = [
+    ...allSpaces,
+    ...candidates.map((c) => c.space),
+  ]
+  const near = allKnownSpaces.find(
+    (s) => distanceMetres(s.coordinates, space.coordinates) < PROXIMITY_DUPE_METRES,
+  )
   if (near) {
     rejections.push({
       label,
-      reason: `within 50m of existing "${near.name}" (${Math.round(distanceMetres(near.coordinates, space.coordinates))}m)`,
+      reason: `within ${PROXIMITY_DUPE_METRES}m of existing "${near.name}" (${Math.round(distanceMetres(near.coordinates, space.coordinates))}m)`,
     })
     continue
   }
 
+  // Persist only known fields; LLM noise (sourceUrls, confidence, etc.) gets dropped.
+  const cleanSpace = pickKnownSpaceFields(c as Record<string, unknown>)
   const notes: string[] = []
-  if (space.noiseLevel === 'unknown') notes.push('noiseLevel=unknown')
-  if (space.seatingType === 'unknown') notes.push('seatingType=unknown')
-  candidates.push({ space, notes })
+  if (cleanSpace.noiseLevel === 'unknown') notes.push('noiseLevel=unknown')
+  if (cleanSpace.seatingType === 'unknown') notes.push('seatingType=unknown')
+  existingNorms.add(normalizeName(cleanSpace.name))
+  candidates.push({ space: cleanSpace, notes })
 }
 
 console.log(`${colors.bold}Discovery review${colors.reset}`)
@@ -174,7 +197,7 @@ if (accepted.length === 0) {
 }
 
 const merged = [...allSpaces, ...accepted]
-writeFileSync(SPACES_FILE, stringifySpaces(merged) + '\n', 'utf8')
+atomicWriteFile(SPACES_FILE, stringifySpaces(merged) + '\n')
 
 console.log(
   `\n${colors.green}${colors.bold}Added ${accepted.length} new space(s) to ${SPACES_FILE}${colors.reset}`,
