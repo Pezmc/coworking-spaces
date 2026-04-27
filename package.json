@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "validate": "bun scripts/validate-spaces.ts",
+    "enrich:prompt": "bun scripts/build-enrich-prompt.ts",
+    "enrich:apply": "bun scripts/apply-enrich.ts",
+    "discover:prompt": "bun scripts/build-discover-prompt.ts",
+    "discover:apply": "bun scripts/apply-discover.ts",
     "build": "bun run validate && vue-tsc -b && vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,vue,css}\" \"scripts/**/*.ts\"",
