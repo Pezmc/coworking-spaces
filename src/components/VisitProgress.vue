@@ -39,7 +39,7 @@ async function copyShareLink() {
       class="bg-paper border-rule fixed right-0 bottom-0 left-0 z-50 border-t"
     >
       <div class="mx-auto max-w-6xl px-5 py-3 sm:px-6">
-        <div class="font-sans text-ink flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
+        <div class="text-ink flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-[13px]">
           <span class="text-rust flex-shrink-0" aria-hidden="true">
             <AppIcon name="check" />
           </span>
@@ -62,7 +62,7 @@ async function copyShareLink() {
               :style="{ width: `${percentage}%` }"
             />
           </div>
-          <span class="font-mono text-muted order-3 flex-shrink-0 text-xs sm:order-4">
+          <span class="text-muted order-3 flex-shrink-0 font-mono text-xs sm:order-4">
             {{ percentage }}%
           </span>
           <button

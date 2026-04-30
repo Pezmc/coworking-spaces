@@ -31,7 +31,7 @@ const photoGradient = computed(() => {
 
 <template>
   <article
-    class="entry border-rule-soft hover:bg-rust/[0.03] grid grid-cols-[64px_1fr] gap-3 border-b py-5 transition-colors motion-reduce:transition-none sm:grid-cols-[88px_1fr] sm:gap-5"
+    class="entry border-rule-soft hover:bg-rust/[0.03] grid grid-cols-[64px_1fr] gap-3 border-b px-3 py-5 transition-colors motion-reduce:transition-none sm:grid-cols-[88px_1fr] sm:gap-5 sm:px-4"
     :class="{ 'opacity-70': !space.verified }"
   >
     <div
@@ -57,7 +57,7 @@ const photoGradient = computed(() => {
 
       <button
         type="button"
-        class="text-muted hover:text-rust focus-visible:ring-rust font-sans mt-3 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-xs font-medium tracking-wide uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+        class="text-muted hover:text-rust focus-visible:ring-rust mt-3 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-sans text-xs font-medium tracking-wide uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
         :aria-expanded="expanded"
         @click="expanded = !expanded"
       >
@@ -73,35 +73,45 @@ const photoGradient = computed(() => {
 
       <div v-show="expanded" class="font-desc mt-3 space-y-3 text-[14px] leading-relaxed">
         <div v-if="space.atmosphereNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Atmosphere
           </h4>
           <p class="text-ink m-0">{{ space.atmosphereNotes }}</p>
         </div>
 
         <div v-if="space.seatingNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Seating
           </h4>
           <p class="text-ink m-0">{{ space.seatingNotes }}</p>
         </div>
 
         <div v-if="space.wifiNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             WiFi
           </h4>
           <p class="text-ink m-0">{{ space.wifiNotes }}</p>
         </div>
 
         <div v-if="space.climateNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Climate
           </h4>
           <p class="text-ink m-0">{{ space.climateNotes }}</p>
         </div>
 
         <div>
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Outlets
           </h4>
           <p
@@ -116,24 +126,30 @@ const photoGradient = computed(() => {
         </div>
 
         <div v-if="space.drinkNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Drinks
           </h4>
           <p class="text-ink m-0">{{ space.drinkNotes }}</p>
         </div>
 
         <div v-if="space.foodNotes">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Food
           </h4>
           <p class="text-ink m-0">{{ space.foodNotes }}</p>
         </div>
 
         <div v-if="space.openingHours">
-          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+          <h4
+            class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
+          >
             Hours
           </h4>
-          <p class="font-mono text-ink m-0 text-xs not-italic">{{ space.openingHours }}</p>
+          <p class="text-ink m-0 font-mono text-xs not-italic">{{ space.openingHours }}</p>
         </div>
 
         <div v-if="space.verified" class="border-rule-soft mt-3 border-t pt-3">
@@ -141,7 +157,7 @@ const photoGradient = computed(() => {
             :href="updateUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-muted hover:text-rust focus-visible:ring-rust font-sans rounded text-xs not-italic hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            class="text-muted hover:text-rust focus-visible:ring-rust rounded font-sans text-xs not-italic hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Something wrong? Update this space →
           </a>

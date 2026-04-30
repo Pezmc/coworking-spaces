@@ -104,7 +104,7 @@ function toggle() {
           </h3>
           <p class="font-desc text-muted m-0 hidden text-[12.5px] sm:block">{{ pick.hook }}</p>
           <p
-            class="font-desc text-ink m-0 hidden line-clamp-2 text-[13.5px] leading-relaxed sm:block"
+            class="font-desc text-ink m-0 line-clamp-2 hidden text-[13.5px] leading-relaxed sm:block"
           >
             {{ firstSentence }}
           </p>
@@ -114,7 +114,7 @@ function toggle() {
           >
             <template v-for="(pill, i) in pills" :key="pill.label">
               <span
-                class="text-muted font-sans inline-flex items-center gap-1 font-medium tracking-[0.1em] uppercase"
+                class="text-muted inline-flex items-center gap-1 font-sans font-medium tracking-[0.1em] uppercase"
               >
                 <AppIcon :name="pill.icon" size="sm" />
                 {{ pill.label }}
@@ -123,7 +123,7 @@ function toggle() {
             </template>
             <span
               aria-hidden="true"
-              class="font-mono text-faint hidden ml-auto pl-2 text-[9px] tracking-wide sm:inline"
+              class="text-faint ml-auto hidden pl-2 font-mono text-[9px] tracking-wide sm:inline"
             >
               tap to flip ↻
             </span>
@@ -133,7 +133,7 @@ function toggle() {
 
       <!-- Back -->
       <div
-        class="border-rust bg-paper-deep absolute inset-0 overflow-y-auto border p-4 [transform:rotateY(180deg)] [backface-visibility:hidden] sm:p-5"
+        class="border-rust bg-paper-deep absolute inset-0 [transform:rotateY(180deg)] overflow-y-auto border p-4 [backface-visibility:hidden] sm:p-5"
         :aria-hidden="!flipped"
       >
         <h3 class="font-display text-navy m-0 mb-2 text-lg leading-tight font-semibold">
@@ -144,7 +144,7 @@ function toggle() {
         </p>
 
         <div v-if="pick.space.atmosphereNotes" class="mb-2">
-          <p class="text-faint font-sans m-0 text-[10px] font-medium tracking-[0.14em] uppercase">
+          <p class="text-faint m-0 font-sans text-[10px] font-medium tracking-[0.14em] uppercase">
             Atmosphere
           </p>
           <p class="font-desc text-ink m-0 text-[12.5px]">
@@ -153,7 +153,7 @@ function toggle() {
         </div>
 
         <div v-if="pick.space.seatingNotes">
-          <p class="text-faint font-sans m-0 text-[10px] font-medium tracking-[0.14em] uppercase">
+          <p class="text-faint m-0 font-sans text-[10px] font-medium tracking-[0.14em] uppercase">
             Seating
           </p>
           <p class="font-desc text-ink m-0 text-[12.5px]">{{ pick.space.seatingNotes }}</p>
@@ -161,7 +161,7 @@ function toggle() {
 
         <span
           aria-hidden="true"
-          class="font-mono text-faint absolute right-3 bottom-3 text-[9px] tracking-wide"
+          class="text-faint absolute right-3 bottom-3 font-mono text-[9px] tracking-wide"
         >
           tap to flip back ↺
         </span>

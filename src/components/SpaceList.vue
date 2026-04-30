@@ -92,24 +92,24 @@ const filteredAndSortedSpaces = computed(() => {
     >
       <template v-if="isOnlyOpenNowActive">
         <p class="font-display text-navy m-0 mb-2 text-xl italic">Nothing's open right now.</p>
-        <p class="text-muted font-sans m-0 text-sm">
+        <p class="text-muted m-0 font-sans text-sm">
           Leuven keeps odd café hours. Try again after lunch, or clear the filter.
         </p>
       </template>
       <template v-else-if="props.filters.openNow">
         <p class="font-display text-navy m-0 mb-2 text-xl italic">No open spots match.</p>
-        <p class="text-muted font-sans m-0 text-sm">
+        <p class="text-muted m-0 font-sans text-sm">
           Try clearing <strong class="font-medium">Open now</strong> or loosening another filter.
         </p>
       </template>
       <template v-else>
         <p class="font-display text-navy m-0 mb-2 text-xl italic">Nothing matches.</p>
-        <p class="text-muted font-sans m-0 text-sm">Try clearing a filter.</p>
+        <p class="text-muted m-0 font-sans text-sm">Try clearing a filter.</p>
       </template>
     </div>
 
-    <!-- Single-column list with hairline rules between rows -->
-    <div v-else>
+    <!-- Two-column grid on md+; hairline rules between rows on each card -->
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 md:gap-x-8">
       <SpaceCard
         v-for="space in filteredAndSortedSpaces"
         :key="slugify(space.name)"

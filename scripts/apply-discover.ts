@@ -163,7 +163,9 @@ async function askYesNo(rl: ReturnType<typeof createInterface>, q: string): Prom
 const accepted: ICoworkingSpace[] = []
 
 if (AUTO_YES) {
-  console.log(`${colors.cyan}--yes flag set: accepting all ${candidates.length} candidates${colors.reset}\n`)
+  console.log(
+    `${colors.cyan}--yes flag set: accepting all ${candidates.length} candidates${colors.reset}\n`,
+  )
   for (const c of candidates) accepted.push(c.space)
 } else {
   const rl = createInterface({ input, output })

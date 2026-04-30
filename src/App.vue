@@ -123,30 +123,31 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         class="border-rule mb-8 flex flex-col items-baseline justify-between gap-3 border-b pb-5 sm:flex-row sm:gap-8 sm:pb-7"
       >
         <h1
-          class="font-display text-navy m-0 text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl"
+          class="font-display text-navy m-0 text-3xl leading-[1.05] font-bold tracking-tight sm:text-4xl md:text-5xl"
         >
-          Leuven Coworking Cafes
+          Coworking Cafes
         </h1>
         <p
-          class="font-desc text-muted m-0 max-w-md text-sm leading-snug sm:text-right sm:text-base"
+          class="font-desc text-muted m-0 max-w-xl text-sm leading-snug sm:text-right sm:text-base"
         >
           A small Leuven field guide to cafés where it's nice to open a laptop.
         </p>
       </header>
 
-      <!-- Today's picks: standalone subordinate section, list view only -->
-      <TodayView v-if="viewMode === 'list'" :spaces="spaces" />
+      <!-- Today's picks: standalone subordinate section, visible in both list and map views -->
+      <TodayView :spaces="spaces" />
 
       <!-- All spots: the main section with prominent List/Map toggle -->
       <div
         class="border-rule mt-10 flex flex-col-reverse items-stretch justify-between gap-3 border-t pt-6 sm:flex-row sm:items-baseline sm:gap-6 sm:pt-7"
       >
-        <h2
-          class="font-display text-navy m-0 text-xl font-semibold tracking-tight sm:text-2xl"
-        >
+        <h2 class="font-display text-navy m-0 text-xl font-semibold tracking-tight sm:text-2xl">
           All spots
-          <span class="font-mono text-muted ml-2 text-xs font-normal">
-            {{ filteredSpaces.length }}<span v-if="filteredSpaces.length !== spaces.length" class="text-faint"> of {{ spaces.length }}</span>
+          <span class="text-muted ml-2 font-mono text-xs font-normal">
+            {{ filteredSpaces.length
+            }}<span v-if="filteredSpaces.length !== spaces.length" class="text-faint">
+              of {{ spaces.length }}</span
+            >
           </span>
         </h2>
         <ViewSegmented v-model="viewMode" />
@@ -157,7 +158,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
         <button
           type="button"
-          class="font-sans text-ink hover:text-rust focus-visible:ring-rust inline-flex cursor-pointer items-center gap-1.5 border-0 border-b-2 border-transparent bg-transparent px-1 pb-0.5 text-xs font-medium tracking-[0.04em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="text-ink hover:text-rust focus-visible:ring-rust inline-flex cursor-pointer items-center gap-1.5 border-0 border-b-2 border-transparent bg-transparent px-1 pb-0.5 font-sans text-xs font-medium tracking-[0.04em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           :class="showFilters ? '!border-rust' : ''"
           :aria-expanded="showFilters"
           @click="showFilters = !showFilters"
