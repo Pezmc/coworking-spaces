@@ -10,6 +10,7 @@ import VisitProgress from './components/VisitProgress.vue'
 import OpenNowChip from './components/OpenNowChip.vue'
 import TodayView from './components/TodayView.vue'
 import AskBar from './components/AskBar.vue'
+import IconDefs from './components/IconDefs.vue'
 import { parseOpeningHours, isOpen } from './utils/hoursBasic'
 import spacesData from './data/spaces.json'
 
@@ -114,6 +115,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
 </script>
 
 <template>
+  <IconDefs />
   <div class="bg-paper min-h-screen">
     <!-- Header -->
     <header class="bg-navy px-4 py-6 text-white sm:px-6 sm:py-8">
