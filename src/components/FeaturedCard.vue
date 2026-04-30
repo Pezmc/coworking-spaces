@@ -64,7 +64,7 @@ function toggle() {
 <template>
   <button
     type="button"
-    class="group focus-visible:ring-rust relative block h-72 w-full cursor-pointer text-left [perspective:1000px] focus-visible:ring-2 focus-visible:outline-none"
+    class="group focus-visible:ring-rust relative block h-32 w-full cursor-pointer text-left [perspective:1000px] focus-visible:ring-2 focus-visible:outline-none sm:h-72"
     :aria-pressed="flipped"
     :aria-label="`${pick.label}: ${pick.space.name} — click to ${flipped ? 'hide' : 'show'} details`"
     @click="toggle"
@@ -73,34 +73,36 @@ function toggle() {
       class="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] motion-reduce:transition-none"
       :class="flipped ? '[transform:rotateY(180deg)]' : ''"
     >
-      <!-- Front -->
+      <!-- Front: photo-on-left compact on mobile, photo-on-top on sm+ -->
       <div
-        class="border-rule group-hover:border-rust absolute inset-0 flex flex-col overflow-hidden border bg-white transition-colors [backface-visibility:hidden] motion-reduce:transition-none"
+        class="border-rule group-hover:border-rust absolute inset-0 flex flex-row overflow-hidden border bg-white transition-colors [backface-visibility:hidden] motion-reduce:transition-none sm:flex-col"
         :aria-hidden="flipped"
       >
         <div
-          class="h-[120px] w-full flex-shrink-0"
+          class="h-full w-[110px] flex-shrink-0 sm:h-[120px] sm:w-full"
           :style="{ background: photoGradient }"
           role="presentation"
         />
-        <div class="flex flex-1 flex-col gap-2 p-4 sm:p-5">
+        <div class="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-5">
           <span
-            class="text-rust font-sans text-[10px] font-medium tracking-[0.16em] uppercase"
+            class="text-rust font-sans text-[9.5px] font-medium tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]"
           >
             {{ pick.label }}
           </span>
           <h3
-            class="font-display text-navy m-0 text-xl leading-tight font-semibold tracking-tight sm:text-[22px]"
+            class="font-display text-navy m-0 text-base leading-tight font-semibold tracking-tight sm:text-[22px]"
           >
             {{ pick.space.name }}
           </h3>
-          <p class="font-desc text-muted m-0 text-[12.5px]">{{ pick.hook }}</p>
-          <p class="font-desc text-ink m-0 line-clamp-2 text-[13.5px] leading-relaxed">
+          <p class="font-desc text-muted m-0 hidden text-[12.5px] sm:block">{{ pick.hook }}</p>
+          <p
+            class="font-desc text-ink m-0 hidden line-clamp-2 text-[13.5px] leading-relaxed sm:block"
+          >
             {{ firstSentence }}
           </p>
 
           <div
-            class="border-rule-soft mt-auto flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t pt-2 text-[10px]"
+            class="border-rule-soft mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1.5 text-[9.5px] sm:gap-x-2.5 sm:border-t sm:pt-2 sm:text-[10px]"
           >
             <template v-for="(pill, i) in pills" :key="pill.label">
               <span
@@ -113,7 +115,7 @@ function toggle() {
             </template>
             <span
               aria-hidden="true"
-              class="font-mono text-faint ml-auto pl-2 text-[9px] tracking-wide"
+              class="font-mono text-faint hidden ml-auto pl-2 text-[9px] tracking-wide sm:inline"
             >
               tap to flip ↻
             </span>
