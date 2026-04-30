@@ -23,10 +23,7 @@ const picks = computed(() => getFeaturedSpaces(props.spaces))
       <h2 class="font-display text-navy m-0 text-base font-semibold italic sm:text-lg">
         Today's picks
       </h2>
-      <span
-        class="font-mono text-muted text-[10px] tracking-[0.06em] uppercase"
-        aria-hidden="true"
-      >
+      <span class="text-muted font-mono text-[10px] tracking-[0.06em] uppercase" aria-hidden="true">
         {{ picks.length }} of {{ spaces.length }} · rotates daily
       </span>
     </div>

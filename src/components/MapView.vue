@@ -73,9 +73,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
 </script>
 
 <template>
-  <div
-    class="border-rule relative mt-3 h-[60vh] min-h-[500px] overflow-hidden border sm:h-[600px]"
-  >
+  <div class="border-rule relative mt-3 h-[60vh] min-h-[500px] overflow-hidden border sm:h-[600px]">
     <LMap
       ref="mapRef"
       :zoom="zoom"
@@ -106,7 +104,7 @@ function getMarkerIcon(space: ICoworkingSpace) {
 
     <!-- Centrum stamp top-left -->
     <div
-      class="bg-paper/90 border-rule font-mono text-muted absolute top-3 left-3 z-[400] border px-2 py-1 text-[10px] tracking-[0.06em] uppercase"
+      class="bg-paper/90 border-rule text-muted absolute top-3 left-3 z-[400] border px-2 py-1 font-mono text-[10px] tracking-[0.06em] uppercase"
       aria-hidden="true"
     >
       Leuven

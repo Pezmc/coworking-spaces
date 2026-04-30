@@ -81,12 +81,10 @@ const sortOptions: { field: SortField; label: string }[] = [
 <template>
   <div class="border-rule mt-3 mb-6 border-t border-b py-5">
     <div class="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-      <h3 class="font-mono text-faint m-0 text-[10px] tracking-[0.16em] uppercase">
-        More filters
-      </h3>
+      <h3 class="text-faint m-0 font-mono text-[10px] tracking-[0.16em] uppercase">More filters</h3>
       <button
         v-if="hasActiveFilters"
-        class="text-ink hover:text-rust focus-visible:ring-rust font-sans cursor-pointer border-0 border-b border-rust bg-transparent p-0 pb-px text-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="text-ink hover:text-rust focus-visible:ring-rust border-rust cursor-pointer border-0 border-b bg-transparent p-0 pb-px font-sans text-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         @click="resetFilters"
       >
         Clear filters
@@ -95,7 +93,7 @@ const sortOptions: { field: SortField; label: string }[] = [
 
     <div class="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Noise</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Noise</span>
         <select
           :value="filters.noiseLevel"
           class="filter-select"
@@ -114,7 +112,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Wifi</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Wifi</span>
         <select
           :value="filters.wifiSpeed"
           class="filter-select"
@@ -133,7 +131,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Climate</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Climate</span>
         <select
           :value="filters.hasAC"
           class="filter-select"
@@ -152,7 +150,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Food</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Food</span>
         <select
           :value="filters.foodAvailability"
           class="filter-select"
@@ -171,7 +169,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Seating</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Seating</span>
         <select
           :value="filters.seatingType"
           class="filter-select"
@@ -190,7 +188,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Outlets</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Outlets</span>
         <select
           :value="filters.hasOutlets"
           class="filter-select"
@@ -209,7 +207,7 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
 
       <label class="flex flex-col gap-1">
-        <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Status</span>
+        <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Status</span>
         <select
           :value="filters.verified"
           class="filter-select"
@@ -227,15 +225,13 @@ const sortOptions: { field: SortField; label: string }[] = [
       </label>
     </div>
 
-    <div
-      class="border-rule-soft mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t pt-4"
-    >
-      <span class="font-sans text-faint text-[10px] tracking-[0.12em] uppercase">Sort by</span>
+    <div class="border-rule-soft mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t pt-4">
+      <span class="text-faint font-sans text-[10px] tracking-[0.12em] uppercase">Sort by</span>
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <button
           v-for="option in sortOptions"
           :key="option.field"
-          class="font-sans text-muted hover:text-ink focus-visible:ring-rust cursor-pointer border-0 border-b-2 border-transparent bg-transparent px-0.5 pb-0.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="text-muted hover:text-ink focus-visible:ring-rust cursor-pointer border-0 border-b-2 border-transparent bg-transparent px-0.5 pb-0.5 font-sans text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           :class="sort.field === option.field ? 'text-ink !border-rust' : ''"
           @click="updateSort(option.field)"
         >
