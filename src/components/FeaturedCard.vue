@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import type { IFeaturedPick } from '../utils/featuredSpaces'
 import { NOISE_LEVEL_LABELS, WIFI_SPEED_LABELS, FOOD_LABELS } from '../types/space'
+import AppIcon from './AppIcon.vue'
 
 interface Props {
   pick: IFeaturedPick
@@ -16,15 +17,43 @@ const firstSentence = computed(() => {
   return (match ? match[0] : d).trim()
 })
 
-const pills = computed(() => {
+interface Pill {
+  icon: string
+  label: string
+}
+
+const pills = computed<Pill[]>(() => {
   const s = props.pick.space
-  const out: string[] = []
-  out.push(NOISE_LEVEL_LABELS[s.noiseLevel])
-  out.push(`${WIFI_SPEED_LABELS[s.wifiSpeed]} WiFi`)
+  const out: Pill[] = []
+  out.push({
+    icon:
+      s.noiseLevel === 'quiet'
+        ? 'volume-quiet'
+        : s.noiseLevel === 'loud'
+          ? 'volume-loud'
+          : 'volume-mid',
+    label: NOISE_LEVEL_LABELS[s.noiseLevel],
+  })
+  out.push({
+    icon: s.wifiSpeed === 'unknown' ? 'wifi-off' : 'wifi',
+    label: `${WIFI_SPEED_LABELS[s.wifiSpeed]} wifi`,
+  })
   if (s.foodAndDrinkAvailability !== 'none') {
-    out.push(FOOD_LABELS[s.foodAndDrinkAvailability])
+    out.push({ icon: 'utensils', label: FOOD_LABELS[s.foodAndDrinkAvailability] })
   }
   return out
+})
+
+const photoGradient = computed(() => {
+  const name = props.pick.space.name
+  let h = 5381
+  for (let i = 0; i < name.length; i++) h = (h * 33) ^ name.charCodeAt(i)
+  const variants = [
+    'radial-gradient(ellipse at 30% 35%, #e9c485 0%, #c39256 35%, #6e4322 80%)',
+    'radial-gradient(ellipse at 60% 30%, #d4b88a 0%, #a07b4a 40%, #5a3a1a 90%)',
+    'radial-gradient(ellipse at 40% 50%, #e0c8a8 0%, #b39060 45%, #6e4f2c 90%)',
+  ]
+  return variants[Math.abs(h) % variants.length]
 })
 
 function toggle() {
@@ -35,7 +64,7 @@ function toggle() {
 <template>
   <button
     type="button"
-    class="group focus-visible:ring-accent relative block h-64 w-full cursor-pointer rounded-lg text-left [perspective:1000px] focus-visible:ring-2 focus-visible:outline-none"
+    class="group focus-visible:ring-rust relative block h-32 w-full cursor-pointer text-left [perspective:1000px] focus-visible:ring-2 focus-visible:outline-none sm:h-72"
     :aria-pressed="flipped"
     :aria-label="`${pick.label}: ${pick.space.name} — click to ${flipped ? 'hide' : 'show'} details`"
     @click="toggle"
@@ -44,62 +73,88 @@ function toggle() {
       class="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] motion-reduce:transition-none"
       :class="flipped ? '[transform:rotateY(180deg)]' : ''"
     >
-      <!-- Front -->
+      <!-- Front: photo-on-left compact on mobile, photo-on-top on sm+ -->
       <div
-        class="border-warm group-hover:border-accent absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg border-2 bg-white p-5 [backface-visibility:hidden]"
+        class="border-rule group-hover:border-rust absolute inset-0 flex flex-row overflow-hidden border bg-white transition-colors [backface-visibility:hidden] motion-reduce:transition-none sm:flex-col"
         :aria-hidden="flipped"
       >
-        <div>
-          <p class="text-accent m-0 mb-2 text-xs font-semibold tracking-wide uppercase">
+        <div
+          class="h-full w-[110px] flex-shrink-0 sm:h-[120px] sm:w-full"
+          :style="{ background: photoGradient }"
+          role="presentation"
+        />
+        <div class="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-5">
+          <span
+            class="text-rust font-sans text-[9.5px] font-medium tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]"
+          >
             {{ pick.label }}
-          </p>
-          <h3 class="font-display text-primary m-0 mb-1 text-xl font-bold">
+          </span>
+          <h3
+            class="font-display text-navy m-0 text-base leading-tight font-semibold tracking-tight sm:text-[22px]"
+          >
             {{ pick.space.name }}
           </h3>
-          <p class="text-muted m-0 text-xs italic">{{ pick.hook }}</p>
-        </div>
-
-        <div>
-          <p class="text-body m-0 mb-3 line-clamp-3 text-sm">
+          <p class="font-desc text-muted m-0 hidden text-[12.5px] sm:block">{{ pick.hook }}</p>
+          <p
+            class="font-desc text-ink m-0 hidden line-clamp-2 text-[13.5px] leading-relaxed sm:block"
+          >
             {{ firstSentence }}
           </p>
-          <div class="flex flex-wrap gap-1.5">
+
+          <div
+            class="border-rule-soft mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1.5 text-[9.5px] sm:gap-x-2.5 sm:border-t sm:pt-2 sm:text-[10px]"
+          >
+            <template v-for="(pill, i) in pills" :key="pill.label">
+              <span
+                class="text-muted font-sans inline-flex items-center gap-1 font-medium tracking-[0.1em] uppercase"
+              >
+                <AppIcon :name="pill.icon" size="sm" />
+                {{ pill.label }}
+              </span>
+              <span v-if="i < pills.length - 1" class="text-rule">·</span>
+            </template>
             <span
-              v-for="pill in pills"
-              :key="pill"
-              class="bg-cream-panel text-primary rounded-full px-2 py-0.5 text-xs font-medium"
+              aria-hidden="true"
+              class="font-mono text-faint hidden ml-auto pl-2 text-[9px] tracking-wide sm:inline"
             >
-              {{ pill }}
+              tap to flip ↻
             </span>
           </div>
         </div>
-
-        <span aria-hidden="true" class="text-faint absolute right-3 bottom-3 text-xs">
-          tap to flip ↻
-        </span>
       </div>
 
       <!-- Back -->
       <div
-        class="border-accent bg-cream absolute inset-0 [transform:rotateY(180deg)] overflow-y-auto rounded-lg border-2 p-5 [backface-visibility:hidden]"
+        class="border-rust bg-paper-deep absolute inset-0 overflow-y-auto border p-4 [transform:rotateY(180deg)] [backface-visibility:hidden] sm:p-5"
         :aria-hidden="!flipped"
       >
-        <h3 class="font-display text-primary m-0 mb-2 text-lg font-bold">
+        <h3 class="font-display text-navy m-0 mb-2 text-lg leading-tight font-semibold">
           {{ pick.space.name }}
         </h3>
-        <p class="text-body m-0 mb-3 text-sm">{{ pick.space.description }}</p>
+        <p class="font-desc text-ink m-0 mb-3 text-[14px] leading-relaxed">
+          {{ pick.space.description }}
+        </p>
 
         <div v-if="pick.space.atmosphereNotes" class="mb-2">
-          <p class="text-muted m-0 text-xs font-semibold tracking-wide uppercase">Atmosphere</p>
-          <p class="text-body m-0 text-xs">{{ pick.space.atmosphereNotes }}</p>
+          <p class="text-faint font-sans m-0 text-[10px] font-medium tracking-[0.14em] uppercase">
+            Atmosphere
+          </p>
+          <p class="font-desc text-ink m-0 text-[12.5px]">
+            {{ pick.space.atmosphereNotes }}
+          </p>
         </div>
 
         <div v-if="pick.space.seatingNotes">
-          <p class="text-muted m-0 text-xs font-semibold tracking-wide uppercase">Seating</p>
-          <p class="text-body m-0 text-xs">{{ pick.space.seatingNotes }}</p>
+          <p class="text-faint font-sans m-0 text-[10px] font-medium tracking-[0.14em] uppercase">
+            Seating
+          </p>
+          <p class="font-desc text-ink m-0 text-[12.5px]">{{ pick.space.seatingNotes }}</p>
         </div>
 
-        <span aria-hidden="true" class="text-faint absolute right-3 bottom-3 text-xs">
+        <span
+          aria-hidden="true"
+          class="font-mono text-faint absolute right-3 bottom-3 text-[9px] tracking-wide"
+        >
           tap to flip back ↺
         </span>
       </div>

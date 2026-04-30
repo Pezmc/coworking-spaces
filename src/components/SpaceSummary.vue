@@ -15,15 +15,17 @@ import {
 } from '../types/space'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
+import AppIcon from './AppIcon.vue'
 
 interface Props {
   space: ICoworkingSpace
-  compact?: boolean // For map popup (smaller styling)
+  compact?: boolean
 }
 
 const props = defineProps<Props>()
 
 const verifyUrl = computed(() => buildUpdateSpaceUrl(props.space, 'verify'))
+const neighbourhood = computed(() => props.space.address.split(',')[0]?.trim() ?? '')
 
 const { isVisited, toggleVisited } = useVisitedSpaces()
 const visited = computed(() => isVisited(props.space.name))
@@ -39,229 +41,152 @@ function handleToggleVisited() {
   }
 }
 
-function getWifiColorHex(speed: string): string {
-  switch (speed) {
-    case 'fast':
-      return '#22c55e'
-    case 'medium':
-      return '#eab308'
-    case 'slow':
-      return '#ef4444'
-    default:
-      return '#9ca3af'
-  }
+function noiseIcon(level: string): string {
+  if (level === 'quiet') return 'volume-quiet'
+  if (level === 'loud') return 'volume-loud'
+  return 'volume-mid'
 }
 
-function getNoiseColorHex(level: string): string {
-  switch (level) {
-    case 'quiet':
-      return '#22c55e'
-    case 'medium':
-      return '#eab308'
-    case 'loud':
-      return '#ef4444'
-    default:
-      return '#9ca3af'
-  }
-}
-
-function getWifiClasses(speed: string): string {
-  switch (speed) {
-    case 'fast':
-      return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'slow':
-      return 'bg-red-100 text-red-800 border-red-300'
-    default:
-      return 'bg-gray-100 text-gray-600 border-gray-300'
-  }
-}
-
-function getNoiseClasses(level: string): string {
-  switch (level) {
-    case 'quiet':
-      return 'bg-green-100 text-green-800 border-green-300'
-    case 'medium':
-      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'loud':
-      return 'bg-red-100 text-red-800 border-red-300'
-    default:
-      return 'bg-gray-100 text-gray-600 border-gray-300'
-  }
-}
-
-// For compact mode, we use inline styles; for full mode, we use Tailwind classes
-function getWifiStyle(speed: string) {
-  if (!props.compact) return undefined
-  const color = getWifiColorHex(speed)
-  return { backgroundColor: color + '20', color }
-}
-
-function getNoiseStyle(level: string) {
-  if (!props.compact) return undefined
-  const color = getNoiseColorHex(level)
-  return { backgroundColor: color + '20', color }
+function wifiIcon(speed: string): string {
+  return speed === 'unknown' ? 'wifi-off' : 'wifi'
 }
 </script>
 
 <template>
-  <div>
-    <!-- Header -->
+  <div :class="compact ? 'compact-summary' : 'entry-summary'">
+    <!-- Title row: name + neighbourhood + verified dot + visited button -->
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
-        <h3
-          :class="[
-            compact
-              ? 'text-primary m-0 mb-1 text-lg font-bold'
-              : 'font-display text-primary m-0 mb-1 text-xl font-bold',
-            visited && 'line-through opacity-70',
-          ]"
-        >
-          <slot name="title">{{ space.name }}</slot>
-        </h3>
-
-        <a
-          :href="space.googleMapsUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-muted hover:text-accent focus-visible:ring-accent m-0 rounded text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-        >
-          {{ space.address.split(',')[0] }}</a
-        >
-      </div>
-      <div class="flex flex-shrink-0 flex-col items-end gap-2">
-        <!-- Visited checkbox -->
-        <button
-          @click="handleToggleVisited"
-          v-tippy="visited ? 'Click to unmark' : 'Check off once you\'ve visited!'"
-          class="focus-visible:ring-accent flex h-7 w-7 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
-          :class="
-            visited
-              ? 'border-green-500 bg-green-500 text-white'
-              : 'border-cool hover:border-accent hover:text-accent bg-white text-transparent'
-          "
-        >
+        <div class="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
           <span
-            class="text-sm transition-transform duration-200 motion-reduce:transition-none"
-            :class="{ 'scale-125': justChecked }"
+            v-if="space.verified"
+            v-tippy="VERIFIED_DESCRIPTIONS.verified"
+            class="bg-moss inline-block h-[7px] w-[7px] flex-shrink-0 cursor-help rounded-full"
+            aria-label="Verified"
+          />
+          <h3
+            :class="[
+              'font-display text-navy m-0 font-semibold tracking-tight',
+              compact ? 'text-lg leading-tight' : 'text-xl leading-tight sm:text-[22px]',
+              visited && 'opacity-60',
+            ]"
           >
-            {{ visited ? '✓' : '○' }}
-          </span>
-        </button>
-
-        <span
-          v-if="!space.verified"
-          v-tippy="VERIFIED_DESCRIPTIONS.unverified"
-          class="text-accent cursor-help text-xs font-medium"
-        >
-          ⚠️ Unverified
-        </span>
-        <span
-          v-else-if="!compact"
-          v-tippy="VERIFIED_DESCRIPTIONS.verified"
-          class="cursor-help text-xs font-medium text-green-600"
-        >
-          ✓ Verified
-        </span>
+            <slot name="title">{{ space.name }}</slot>
+          </h3>
+          <a
+            v-if="neighbourhood"
+            :href="space.googleMapsUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-muted hover:text-rust focus-visible:ring-rust font-sans text-xs hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            <span class="text-faint">·</span> {{ neighbourhood }}
+          </a>
+        </div>
       </div>
+
+      <!-- Visited toggle -->
+      <button
+        v-if="!compact"
+        type="button"
+        @click="handleToggleVisited"
+        v-tippy="visited ? 'Click to unmark' : 'Mark as visited'"
+        class="focus-visible:ring-rust flex h-6 w-6 flex-shrink-0 cursor-pointer items-center justify-center border transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+        :class="
+          visited
+            ? 'bg-rust border-rust text-paper'
+            : 'border-rule hover:border-rust text-transparent hover:text-rust bg-transparent'
+        "
+        :aria-pressed="visited"
+        :aria-label="visited ? 'Marked visited' : 'Mark visited'"
+      >
+        <AppIcon
+          name="check"
+          size="sm"
+          class="transition-transform duration-150 motion-reduce:transition-none"
+          :class="{ 'scale-110': justChecked }"
+        />
+      </button>
     </div>
 
-    <!-- Unverified banner -->
-    <div
-      v-if="!space.verified && !compact"
-      class="mt-3 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"
+    <!-- Unverified caption (only if !verified) -->
+    <p
+      v-if="!space.verified"
+      class="text-muted font-sans mt-1 text-xs"
     >
-      <span>📋 Not verified yet. </span>
+      Not verified yet.
       <a
         :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-accent focus-visible:ring-accent rounded font-semibold hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="text-ink hover:text-rust focus-visible:ring-rust border-b border-rust pb-px focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
-        Help verify it →
+        Help verify it
       </a>
-    </div>
-
-    <!-- Quick Tags -->
-    <div :class="compact ? 'mt-3 mb-3 flex flex-wrap gap-1.5' : 'mt-4 flex flex-wrap gap-2'">
-      <span
-        v-tippy="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
-        :class="[
-          'cursor-help rounded px-2 text-xs font-medium',
-          compact ? 'py-0.5' : 'border py-1',
-          !compact && getWifiClasses(space.wifiSpeed),
-        ]"
-        :style="getWifiStyle(space.wifiSpeed)"
-      >
-        📶 {{ WIFI_SPEED_LABELS[space.wifiSpeed] }}
-      </span>
-      <span
-        v-tippy="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
-        :class="[
-          'cursor-help rounded px-2 text-xs font-medium',
-          compact ? 'py-0.5' : 'border py-1',
-          !compact && getNoiseClasses(space.noiseLevel),
-        ]"
-        :style="getNoiseStyle(space.noiseLevel)"
-      >
-        🔊 {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
-      </span>
-      <span
-        v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
-        :class="[
-          'bg-cream-panel text-primary cursor-help rounded px-2 text-xs font-medium',
-          compact ? 'py-0.5' : 'border-warm border py-1',
-        ]"
-      >
-        🪑 {{ SEATING_LABELS[space.seatingType] }}
-      </span>
-      <span
-        v-if="space.hasAC === 'yes'"
-        v-tippy="AC_DESCRIPTIONS[space.hasAC]"
-        :class="[
-          'cursor-help rounded px-2 text-xs font-medium',
-          compact
-            ? 'bg-blue-100 py-0.5 text-blue-700'
-            : 'border border-blue-300 bg-blue-100 py-1 text-blue-800',
-        ]"
-      >
-        ❄️ AC
-      </span>
-      <span
-        v-if="space.foodAndDrinkAvailability !== 'none'"
-        v-tippy="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
-        :class="[
-          'cursor-help rounded px-2 text-xs font-medium',
-          compact
-            ? 'bg-orange-100 py-0.5 text-orange-700'
-            : 'border border-orange-300 bg-orange-100 py-1 text-orange-800',
-        ]"
-      >
-        🍽️ {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
-      </span>
-    </div>
+    </p>
 
     <!-- Description -->
-    <div v-if="space.description" class="bg-cream-deep mt-3 rounded px-3 py-2">
-      <p class="text-body m-0 text-sm italic">"{{ space.description }}"</p>
-    </div>
-
-    <!-- Unverified notice -->
-    <div
-      v-if="!space.verified && compact"
-      v-tippy="VERIFIED_DESCRIPTIONS.unverified"
-      class="mb-3 cursor-help rounded border border-amber-200 bg-amber-50 px-2 py-1.5 text-xs text-amber-800"
+    <p
+      v-if="space.description"
+      :class="[
+        'font-desc text-ink m-0',
+        compact ? 'mt-2 text-sm' : 'mt-2 text-[15px] leading-relaxed',
+        visited && 'opacity-70',
+      ]"
     >
-      ⚠️ Unverified
-      <a
-        :href="verifyUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-accent focus-visible:ring-accent ml-1 rounded font-semibold hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      {{ space.description }}
+    </p>
+
+    <!-- Meta strip: icon-pill metadata, separated by · -->
+    <div
+      :class="[
+        'font-sans text-muted flex flex-wrap items-center text-[11px] font-medium tracking-[0.06em] uppercase',
+        compact ? 'mt-2 gap-x-2 gap-y-1' : 'mt-3 gap-x-2.5 gap-y-1.5',
+      ]"
+    >
+      <span
+        v-tippy="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
+        class="inline-flex cursor-help items-center gap-1"
       >
-        Help verify →
-      </a>
+        <AppIcon :name="wifiIcon(space.wifiSpeed)" size="sm" />
+        {{ WIFI_SPEED_LABELS[space.wifiSpeed] }} wifi
+      </span>
+      <span class="text-rule">·</span>
+      <span
+        v-tippy="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
+        class="inline-flex cursor-help items-center gap-1"
+      >
+        <AppIcon :name="noiseIcon(space.noiseLevel)" size="sm" />
+        {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
+      </span>
+      <span class="text-rule">·</span>
+      <span
+        v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
+        class="inline-flex cursor-help items-center gap-1"
+      >
+        <AppIcon name="armchair" size="sm" />
+        {{ SEATING_LABELS[space.seatingType] }}
+      </span>
+      <template v-if="space.hasAC === 'yes'">
+        <span class="text-rule">·</span>
+        <span
+          v-tippy="AC_DESCRIPTIONS[space.hasAC]"
+          class="inline-flex cursor-help items-center gap-1"
+        >
+          <AppIcon name="snowflake" size="sm" />
+          AC
+        </span>
+      </template>
+      <template v-if="space.foodAndDrinkAvailability !== 'none'">
+        <span class="text-rule">·</span>
+        <span
+          v-tippy="FOOD_DESCRIPTIONS[space.foodAndDrinkAvailability]"
+          class="inline-flex cursor-help items-center gap-1"
+        >
+          <AppIcon name="utensils" size="sm" />
+          {{ FOOD_LABELS[space.foodAndDrinkAvailability] }}
+        </span>
+      </template>
     </div>
   </div>
 </template>

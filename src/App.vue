@@ -2,7 +2,6 @@
 import { ref, computed, watch } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import type { ICoworkingSpace, IFilterState, ISortState } from './types/space'
-import { NEW_SPACE_URL } from './utils/issueUrl'
 import FilterBar from './components/FilterBar.vue'
 import SpaceList from './components/SpaceList.vue'
 import MapView from './components/MapView.vue'
@@ -10,6 +9,10 @@ import VisitProgress from './components/VisitProgress.vue'
 import OpenNowChip from './components/OpenNowChip.vue'
 import TodayView from './components/TodayView.vue'
 import AskBar from './components/AskBar.vue'
+import IconDefs from './components/IconDefs.vue'
+import ViewSegmented from './components/ViewSegmented.vue'
+import CoworkingGroupCallout from './components/CoworkingGroupCallout.vue'
+import SiteFooter from './components/SiteFooter.vue'
 import { parseOpeningHours, isOpen } from './utils/hoursBasic'
 import spacesData from './data/spaces.json'
 
@@ -26,7 +29,6 @@ const DEFAULT_FILTERS: IFilterState = {
   openNow: false,
 }
 
-// URL params and filter states
 const urlParams = useUrlSearchParams<Record<string, string>>('history')
 const filters = ref<IFilterState>({
   noiseLevel: (urlParams.noiseLevel as IFilterState['noiseLevel']) || DEFAULT_FILTERS.noiseLevel,
@@ -42,7 +44,6 @@ const filters = ref<IFilterState>({
   openNow: urlParams.openNow === '1',
 })
 
-// Sync filters to URL
 watch(
   filters,
   (newFilters) => {
@@ -114,91 +115,67 @@ function applyAskPatch(patch: Partial<IFilterState>) {
 </script>
 
 <template>
-  <div class="bg-cream min-h-screen">
-    <!-- Header -->
-    <header class="bg-primary px-4 py-6 text-white sm:px-6 sm:py-8">
-      <div class="mx-auto flex max-w-6xl items-center gap-4 sm:gap-6">
-        <img
-          src="/favicon.svg"
-          alt="Leuven Coworking Cafes logo"
-          class="h-12 w-12 flex-shrink-0 rounded-full bg-white p-1.5 sm:h-16 sm:w-16 md:h-20 md:w-20"
-        />
-        <div>
-          <h1 class="font-display m-0 mb-1 text-2xl font-bold sm:mb-2 sm:text-4xl md:text-5xl">
-            Leuven Coworking Cafes
-          </h1>
-          <p class="text-cool m-0 text-sm sm:text-lg">Find your perfect spot to work in Leuven</p>
-        </div>
-      </div>
-    </header>
+  <IconDefs />
+  <div class="bg-paper min-h-screen">
+    <main class="mx-auto max-w-6xl px-5 pt-8 pb-8 sm:px-6 sm:pt-12">
+      <!-- Masthead -->
+      <header
+        class="border-rule mb-8 flex flex-col items-baseline justify-between gap-3 border-b pb-5 sm:flex-row sm:gap-8 sm:pb-7"
+      >
+        <h1
+          class="font-display text-navy m-0 text-3xl font-bold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl"
+        >
+          Leuven Coworking Cafes
+        </h1>
+        <p
+          class="font-desc text-muted m-0 max-w-md text-sm leading-snug sm:text-right sm:text-base"
+        >
+          A small Leuven field guide to cafés where it's nice to open a laptop.
+        </p>
+      </header>
 
-    <!-- Main Content -->
-    <main class="mx-auto max-w-6xl px-6 py-8">
-      <!-- Today's picks (list view only) -->
+      <!-- Today's picks: standalone subordinate section, list view only -->
       <TodayView v-if="viewMode === 'list'" :spaces="spaces" />
 
-      <!-- Smart search: natural-language filter -->
-      <AskBar @apply="applyAskPatch" />
-
-      <!-- Toolbar: Space count, Filter toggle, View mode -->
-      <div class="mb-4 flex flex-wrap items-center justify-between gap-y-3">
-        <p class="text-muted m-0 text-sm">
-          Showing {{ filteredSpaces.length }} of {{ spaces.length }} spaces
-        </p>
-
-        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-          <!-- Open now chip -->
-          <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
-
-          <!-- Filter Toggle -->
-          <button
-            class="focus-visible:ring-accent flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
-            :class="
-              showFilters
-                ? 'border-primary bg-primary text-white'
-                : 'border-primary text-primary hover:bg-cream-panel bg-white'
-            "
-            @click="showFilters = !showFilters"
-          >
-            🎛️ Filters
-            <span
-              v-if="activeFilterCount > 0"
-              class="rounded-full px-1.5 py-0.5 text-xs font-bold"
-              :class="showFilters ? 'bg-accent text-white' : 'bg-accent text-white'"
-            >
-              {{ activeFilterCount }}
-            </span>
-          </button>
-
-          <!-- View Mode Toggle -->
-          <div class="border-primary inline-flex overflow-hidden rounded-lg border-2">
-            <button
-              class="focus-visible:ring-accent px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
-              :class="
-                viewMode === 'list'
-                  ? 'bg-primary text-white'
-                  : 'text-primary hover:bg-cream-panel bg-white'
-              "
-              @click="viewMode = 'list'"
-            >
-              📋 List
-            </button>
-            <button
-              class="border-primary focus-visible:ring-accent border-l-2 px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
-              :class="
-                viewMode === 'map'
-                  ? 'bg-primary text-white'
-                  : 'text-primary hover:bg-cream-panel bg-white'
-              "
-              @click="viewMode = 'map'"
-            >
-              🗺️ Map
-            </button>
-          </div>
-        </div>
+      <!-- All spots: the main section with prominent List/Map toggle -->
+      <div
+        class="border-rule mt-10 flex flex-col-reverse items-stretch justify-between gap-3 border-t pt-6 sm:flex-row sm:items-baseline sm:gap-6 sm:pt-7"
+      >
+        <h2
+          class="font-display text-navy m-0 text-xl font-semibold tracking-tight sm:text-2xl"
+        >
+          All spots
+          <span class="font-mono text-muted ml-2 text-xs font-normal">
+            {{ filteredSpaces.length }}<span v-if="filteredSpaces.length !== spaces.length" class="text-faint"> of {{ spaces.length }}</span>
+          </span>
+        </h2>
+        <ViewSegmented v-model="viewMode" />
       </div>
 
-      <!-- Collapsible Filters -->
+      <!-- Toolbar: Open now + filters disclosure -->
+      <div class="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
+        <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
+        <button
+          type="button"
+          class="font-sans text-ink hover:text-rust focus-visible:ring-rust inline-flex cursor-pointer items-center gap-1.5 border-0 border-b-2 border-transparent bg-transparent px-1 pb-0.5 text-xs font-medium tracking-[0.04em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          :class="showFilters ? '!border-rust' : ''"
+          :aria-expanded="showFilters"
+          @click="showFilters = !showFilters"
+        >
+          More filters
+          <span
+            v-if="activeFilterCount > 0"
+            class="bg-rust text-paper inline-flex h-4 min-w-4 items-center justify-center px-1 text-[10px] font-bold"
+          >
+            {{ activeFilterCount }}
+          </span>
+        </button>
+      </div>
+
+      <!-- AskBar (smart filter) -->
+      <AskBar @apply="applyAskPatch" />
+
+      <!-- Collapsible filter dropdowns -->
       <FilterBar
         v-show="showFilters"
         :filters="filters"
@@ -207,82 +184,18 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         @update:sort="sort = $event"
       />
 
-      <!-- List View -->
+      <!-- List or Map -->
       <SpaceList v-if="viewMode === 'list'" :spaces="spaces" :filters="filters" :sort="sort" />
-
-      <!-- Map View -->
       <MapView v-else :spaces="filteredSpaces" :all-spaces="spaces" />
+
+      <!-- Marketing callout: Leuven coworking group -->
+      <CoworkingGroupCallout />
+
+      <!-- Footer -->
+      <SiteFooter :total-spaces="spaces.length" />
     </main>
 
-    <!-- Footer -->
-    <footer class="border-warm bg-cream-panel mt-12 border-t-2 px-6 py-8 pb-24">
-      <div class="mx-auto max-w-6xl space-y-6 text-center">
-        <div class="flex flex-col justify-center gap-2 sm:flex-row">
-          <div class="bg-primary w-full rounded-lg p-6 text-white sm:w-auto sm:max-w-md sm:flex-1">
-            <p class="m-0 mb-3 text-lg font-medium">🏢 Know a great coworking spot?</p>
-            <p class="text-cool m-0 mb-4 text-sm">Help fellow remote workers find new places!</p>
-            <div class="flex flex-wrap justify-center gap-3">
-              <a
-                :href="NEW_SPACE_URL"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="bg-accent hover:bg-accent-hover focus-visible:ring-accent rounded px-4 py-2 text-sm font-semibold text-white no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
-              >
-                ✨ Suggest via GitHub
-              </a>
-              <a
-                href="https://pezcuckow.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-primary hover:bg-cream-panel focus-visible:ring-accent rounded bg-white px-4 py-2 text-sm font-semibold no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
-              >
-                ✉️ Email me
-              </a>
-            </div>
-          </div>
-          <div
-            class="border-accent w-full rounded-lg border-2 bg-white p-6 sm:w-auto sm:max-w-md sm:flex-1"
-          >
-            <p class="text-primary m-0 mb-2 text-lg font-medium">
-              👋 Looking for people to co-work with?
-            </p>
-            <p class="text-muted m-0 mb-4 text-sm">
-              <strong>Join</strong> the Leuven Social Groups co-working group!
-            </p>
-            <a
-              href="https://labs.pez.io/leuven-social-groups/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="bg-accent hover:bg-accent-hover focus-visible:ring-accent inline-block rounded px-4 py-2 text-sm font-semibold text-white no-underline transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
-            >
-              Learn more →
-            </a>
-          </div>
-        </div>
-        <p class="text-muted m-0 text-sm">
-          Made with ☕ in Leuven by
-          <a
-            href="https://pezcuckow.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-muted hover:text-accent focus-visible:ring-accent rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            Pez
-          </a>
-          ·
-          <a
-            href="https://github.com/Pezmc/coworking-spaces"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-muted hover:text-accent focus-visible:ring-accent rounded underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            Open Source
-          </a>
-        </p>
-      </div>
-    </footer>
-
-    <!-- Visit Progress Bar -->
+    <!-- Visit progress (sticky bottom bar; appears once any space is marked visited) -->
     <VisitProgress :total-spaces="spaces.length" />
   </div>
 </template>

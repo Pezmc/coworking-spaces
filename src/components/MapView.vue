@@ -1,15 +1,34 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type L from 'leaflet'
+import L from 'leaflet'
 import { LMap, LTileLayer, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { type ICoworkingSpace } from '../types/space'
 import { slugify } from '../utils/slug'
 import SpaceSummary from './SpaceSummary.vue'
 
+// Build the custom rust pin icons synchronously so they're available
+// on first marker render. divIcon HTML is styled via the global CSS
+// in this component's <style> block.
+const verifiedIcon = L.divIcon({
+  className: 'cw-pin cw-pin--verified',
+  html: '<span class="cw-pin-dot" aria-hidden="true"></span>',
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
+  popupAnchor: [0, -12],
+})
+
+const unverifiedIcon = L.divIcon({
+  className: 'cw-pin cw-pin--unverified',
+  html: '<span class="cw-pin-dot" aria-hidden="true"></span>',
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+  popupAnchor: [0, -10],
+})
+
 interface Props {
-  spaces: ICoworkingSpace[] // Filtered spaces to show as markers
-  allSpaces: ICoworkingSpace[] // All spaces for calculating bounds
+  spaces: ICoworkingSpace[]
+  allSpaces: ICoworkingSpace[]
 }
 
 const props = defineProps<Props>()
@@ -17,11 +36,10 @@ const props = defineProps<Props>()
 const mapRef = ref<InstanceType<typeof LMap> | null>(null)
 const hasFittedBounds = ref(false)
 
-// Use ALL spaces for center calculation so filtering doesn't shift the map
 const mapCenter = computed(() => {
   const validSpaces = props.allSpaces.filter((s) => s.coordinates)
   if (validSpaces.length === 0) {
-    return [50.8798, 4.7005] as [number, number] // Leuven center
+    return [50.8798, 4.7005] as [number, number]
   }
 
   const avgLat = validSpaces.reduce((sum, s) => sum + s.coordinates!.lat, 0) / validSpaces.length
@@ -31,9 +49,7 @@ const mapCenter = computed(() => {
 
 const zoom = ref(14)
 
-// Fit bounds once on mount to prevent jarring map movements when filters change
 onMounted(() => {
-  // Small delay to ensure map is ready
   setTimeout(() => {
     if (mapRef.value && !hasFittedBounds.value) {
       const validSpaces = props.allSpaces.filter((s) => s.coordinates)
@@ -44,55 +60,22 @@ onMounted(() => {
         const map = mapRef.value as unknown as {
           leafletObject?: { fitBounds: (b: Array<[number, number]>, o: object) => void }
         }
-        map.leafletObject?.fitBounds(bounds, { padding: [50, 50] })
+        map.leafletObject?.fitBounds(bounds, { padding: [40, 40] })
         hasFittedBounds.value = true
       }
     }
   }, 100)
 })
 
-const verifiedIcon = ref<L.Icon | null>(null)
-const unverifiedIcon = ref<L.Icon | null>(null)
-
-// Leaflet's default icon paths break with bundlers - manually set CDN URLs
-onMounted(async () => {
-  const L = await import('leaflet')
-  delete (L.Icon.Default.prototype as any)._getIconUrl
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  })
-
-  verifiedIcon.value = new L.Icon({
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  })
-
-  unverifiedIcon.value = new L.Icon({
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-    className: 'unverified-marker',
-  })
-})
-
 function getMarkerIcon(space: ICoworkingSpace) {
-  return space.verified ? verifiedIcon.value : unverifiedIcon.value
+  return space.verified ? verifiedIcon : unverifiedIcon
 }
 </script>
 
 <template>
-  <div class="map-container border-warm overflow-hidden rounded-lg border-2" style="height: 600px">
+  <div
+    class="border-rule relative mt-3 h-[60vh] min-h-[500px] overflow-hidden border sm:h-[600px]"
+  >
     <LMap
       ref="mapRef"
       :zoom="zoom"
@@ -101,19 +84,19 @@ function getMarkerIcon(space: ICoworkingSpace) {
       style="height: 100%; width: 100%"
     >
       <LTileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+        url="https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank" rel="noopener noreferrer">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank" rel="noopener noreferrer">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
         layer-type="base"
-        name="OpenStreetMap"
+        name="Stamen Toner Lite"
       />
 
       <LMarker
         v-for="space in spaces.filter((s) => s.coordinates)"
         :key="slugify(space.name)"
         :lat-lng="[space.coordinates!.lat, space.coordinates!.lng]"
-        :options="getMarkerIcon(space) ? { icon: getMarkerIcon(space) } : {}"
+        :options="{ icon: getMarkerIcon(space) }"
       >
-        <LPopup :options="{ maxWidth: 300, minWidth: 250 }">
+        <LPopup :options="{ maxWidth: 280, minWidth: 240, closeButton: true }">
           <div class="space-popup">
             <SpaceSummary :space="space" compact />
           </div>
@@ -121,46 +104,87 @@ function getMarkerIcon(space: ICoworkingSpace) {
       </LMarker>
     </LMap>
 
-    <!-- No results message -->
+    <!-- Centrum stamp top-left -->
+    <div
+      class="bg-paper/90 border-rule font-mono text-muted absolute top-3 left-3 z-[400] border px-2 py-1 text-[10px] tracking-[0.06em] uppercase"
+      aria-hidden="true"
+    >
+      Leuven
+    </div>
+
     <div
       v-if="spaces.filter((s) => s.coordinates).length === 0"
-      class="bg-cream-panel/90 absolute inset-0 flex items-center justify-center"
+      class="bg-paper/90 absolute inset-0 z-[500] flex items-center justify-center"
     >
-      <p class="text-muted text-lg">No spaces match your filters</p>
+      <p class="font-display text-navy text-xl italic">No spaces match.</p>
     </div>
   </div>
 </template>
 
-<style scoped>
-.map-container {
-  position: relative;
+<style>
+/* Custom Lucide-shaped Leaflet markers — global so they can target divIcon descendants */
+.cw-pin {
+  background: var(--color-rust);
+  border: 2px solid var(--color-paper);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 120ms;
+}
+.cw-pin:hover {
+  transform: scale(1.15);
+}
+.cw-pin--unverified {
+  background: var(--color-paper);
+  border-color: var(--color-rust);
+  opacity: 0.85;
+}
+.cw-pin-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--color-paper);
+  border-radius: 50%;
+}
+.cw-pin--unverified .cw-pin-dot {
+  background: var(--color-rust);
+  width: 5px;
+  height: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cw-pin {
+    transition: none;
+  }
 }
 
-/* Override Leaflet popup styles */
-:deep(.leaflet-popup-content-wrapper) {
-  border-radius: 8px;
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+/* Popup chrome */
+.leaflet-popup-content-wrapper {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 1px solid var(--color-navy);
+  border-radius: 0 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
 }
-
-:deep(.leaflet-popup-content) {
-  margin: 12px 14px;
-}
-
-:deep(.leaflet-popup-close-button) {
-  color: #718096;
-  font-size: 20px;
-  padding: 8px;
-}
-
-.space-popup {
+.leaflet-popup-content {
+  margin: 14px 16px !important;
   font-family: inherit;
 }
-
-/* Unverified marker styling - more transparent/faded */
-:deep(.unverified-marker) {
-  opacity: 0.5;
-  filter: grayscale(50%);
+.leaflet-popup-tip {
+  background: var(--color-paper);
+  border: 1px solid var(--color-navy);
+}
+.leaflet-popup-close-button {
+  color: var(--color-muted) !important;
+  font-size: 18px !important;
+  padding: 6px 8px !important;
+}
+.leaflet-popup-close-button:hover {
+  color: var(--color-rust) !important;
+}
+.space-popup {
+  font-family: inherit;
 }
 </style>

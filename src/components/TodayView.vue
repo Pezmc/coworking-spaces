@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import type { ICoworkingSpace } from '../types/space'
 import { getFeaturedSpaces } from '../utils/featuredSpaces'
 import FeaturedCard from './FeaturedCard.vue'
@@ -10,50 +10,28 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const STORAGE_KEY = 'todayView.collapsed'
-const collapsed = ref(false)
-
-try {
-  collapsed.value = localStorage.getItem(STORAGE_KEY) === '1'
-} catch {
-  collapsed.value = false
-}
-
-watch(collapsed, (val) => {
-  try {
-    if (val) localStorage.setItem(STORAGE_KEY, '1')
-    else localStorage.removeItem(STORAGE_KEY)
-  } catch {
-    // ignore storage failures
-  }
-})
-
 const picks = computed(() => getFeaturedSpaces(props.spaces))
 </script>
 
 <template>
-  <section v-if="picks.length > 0" class="mb-6" aria-label="Today's featured coworking spaces">
-    <div class="mb-3 flex items-center justify-between">
-      <h2 class="font-display text-primary m-0 text-lg font-bold sm:text-xl">Today's picks</h2>
-      <button
-        type="button"
-        class="text-muted hover:text-primary focus-visible:ring-accent flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none"
-        :aria-expanded="!collapsed"
-        :aria-label="collapsed ? 'Show today\'s picks' : 'Hide today\'s picks'"
-        @click="collapsed = !collapsed"
+  <section
+    v-if="picks.length > 0"
+    class="mt-6 mb-2 sm:mb-4"
+    aria-label="Today's featured coworking spaces"
+  >
+    <div class="mb-3 flex items-baseline justify-between gap-3">
+      <h2 class="font-display text-navy m-0 text-base font-semibold italic sm:text-lg">
+        Today's picks
+      </h2>
+      <span
+        class="font-mono text-muted text-[10px] tracking-[0.06em] uppercase"
+        aria-hidden="true"
       >
-        <span>{{ collapsed ? 'Show' : 'Hide' }}</span>
-        <span
-          aria-hidden="true"
-          class="inline-block transition-transform motion-reduce:transition-none"
-          :class="{ 'rotate-180': !collapsed }"
-        >
-          ▼
-        </span>
-      </button>
+        {{ picks.length }} of {{ spaces.length }} · rotates daily
+      </span>
     </div>
 
-    <div v-show="!collapsed" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <FeaturedCard v-for="pick in picks" :key="pick.slot" :pick="pick" />
     </div>
   </section>

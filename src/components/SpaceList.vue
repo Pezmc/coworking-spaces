@@ -88,29 +88,28 @@ const filteredAndSortedSpaces = computed(() => {
     <!-- Empty state -->
     <div
       v-if="filteredAndSortedSpaces.length === 0"
-      class="border-cool bg-cream-panel rounded-lg border-2 border-dashed px-6 py-12 text-center"
+      class="border-rule border-y px-2 py-10 text-center"
     >
       <template v-if="isOnlyOpenNowActive">
-        <p class="text-muted m-0 mb-2 text-lg">Nothing open right now</p>
-        <p class="text-faint m-0 text-sm">
-          Leuven is quiet at this hour. Try turning off <strong>Open now</strong>, or check back
-          later.
+        <p class="font-display text-navy m-0 mb-2 text-xl italic">Nothing's open right now.</p>
+        <p class="text-muted font-sans m-0 text-sm">
+          Leuven keeps odd café hours. Try again after lunch, or clear the filter.
         </p>
       </template>
       <template v-else-if="props.filters.openNow">
-        <p class="text-muted m-0 mb-2 text-lg">No open spaces match your filters</p>
-        <p class="text-faint m-0 text-sm">
-          Try removing <strong>Open now</strong> or loosening another filter.
+        <p class="font-display text-navy m-0 mb-2 text-xl italic">No open spots match.</p>
+        <p class="text-muted font-sans m-0 text-sm">
+          Try clearing <strong class="font-medium">Open now</strong> or loosening another filter.
         </p>
       </template>
       <template v-else>
-        <p class="text-muted m-0 mb-2 text-lg">No spaces match your filters</p>
-        <p class="text-faint m-0 text-sm">Try adjusting your filter criteria</p>
+        <p class="font-display text-navy m-0 mb-2 text-xl italic">Nothing matches.</p>
+        <p class="text-muted font-sans m-0 text-sm">Try clearing a filter.</p>
       </template>
     </div>
 
-    <!-- Space grid -->
-    <div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <!-- Single-column list with hairline rules between rows -->
+    <div v-else>
       <SpaceCard
         v-for="space in filteredAndSortedSpaces"
         :key="slugify(space.name)"
