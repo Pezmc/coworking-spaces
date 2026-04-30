@@ -21,7 +21,7 @@ const lastUpdated = new Date().toLocaleDateString('en-GB', {
   <footer
     class="border-rule mt-14 flex flex-col items-baseline justify-between gap-2 border-t pt-7 pb-32 sm:flex-row sm:gap-6 sm:pb-24"
   >
-    <p class="font-sans text-muted m-0 text-sm leading-relaxed">
+    <p class="text-muted m-0 font-sans text-sm leading-relaxed">
       Know a good spot that's missing?
       <a
         :href="NEW_SPACE_URL"
@@ -41,7 +41,7 @@ const lastUpdated = new Date().toLocaleDateString('en-GB', {
         Open source on GitHub
       </a>
     </p>
-    <span class="font-mono text-faint text-[11px] tracking-[0.04em]">
+    <span class="text-faint font-mono text-[11px] tracking-[0.04em]">
       {{ totalSpaces }} cafés · last updated {{ lastUpdated.toLowerCase() }}
     </span>
   </footer>

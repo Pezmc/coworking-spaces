@@ -8,12 +8,7 @@ withDefaults(defineProps<Props>(), { size: 'md' })
 </script>
 
 <template>
-  <svg
-    class="icon"
-    :class="{ 'icon-sm': size === 'sm' }"
-    aria-hidden="true"
-    focusable="false"
-  >
+  <svg class="icon" :class="{ 'icon-sm': size === 'sm' }" aria-hidden="true" focusable="false">
     <use :href="'#i-' + name" />
   </svg>
 </template>

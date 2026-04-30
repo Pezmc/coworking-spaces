@@ -23,8 +23,7 @@ const placeholderText = computed(() => EXAMPLES[placeholderIdx.value])
 let placeholderTimer: number | undefined
 
 const reduceMotion =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 onMounted(() => {
   if (reduceMotion) return
@@ -93,7 +92,7 @@ onBeforeUnmount(() => {
   <div class="ask-bar mt-4 mb-2">
     <label
       for="askInput"
-      class="font-mono text-faint mb-1 block text-[10px] tracking-[0.08em] uppercase"
+      class="text-faint mb-1 block font-mono text-[10px] tracking-[0.08em] uppercase"
     >
       or describe what you want
     </label>
@@ -102,7 +101,7 @@ onBeforeUnmount(() => {
       v-model="rawInput"
       type="text"
       :placeholder="placeholderText"
-      class="font-desc border-rule focus:border-rust w-full border-0 border-b-[1.5px] bg-transparent py-2 pr-2 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:italic placeholder:text-[var(--color-faint)] motion-reduce:transition-none"
+      class="font-desc border-rule focus:border-rust w-full border-0 border-b-[1.5px] bg-transparent py-2 pr-2 text-base text-[var(--color-ink)] transition-colors outline-none placeholder:text-[var(--color-faint)] placeholder:italic motion-reduce:transition-none"
       aria-label="Describe what you're looking for — smart filter"
     />
 
@@ -111,12 +110,12 @@ onBeforeUnmount(() => {
       class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2"
       aria-label="Matched filters — click to remove"
     >
-      <span class="font-mono text-faint text-[10px] tracking-[0.16em] uppercase">Matched</span>
+      <span class="text-faint font-mono text-[10px] tracking-[0.16em] uppercase">Matched</span>
       <button
         v-for="m in matches"
         :key="m.filter"
         type="button"
-        class="font-sans text-ink hover:text-rust focus-visible:ring-rust inline-flex items-baseline gap-1.5 border-0 border-b-2 border-rust bg-transparent px-0 pb-0.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+        class="text-ink hover:text-rust focus-visible:ring-rust border-rust inline-flex items-baseline gap-1.5 border-0 border-b-2 bg-transparent px-0 pb-0.5 font-sans text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
         :aria-label="`Remove ${m.label} filter`"
         @click="removeChip(m)"
       >

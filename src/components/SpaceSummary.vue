@@ -95,7 +95,7 @@ function wifiIcon(speed: string): string {
         :class="
           visited
             ? 'bg-rust border-rust text-paper'
-            : 'border-rule hover:border-rust text-transparent hover:text-rust bg-transparent'
+            : 'border-rule hover:border-rust hover:text-rust bg-transparent text-transparent'
         "
         :aria-pressed="visited"
         :aria-label="visited ? 'Marked visited' : 'Mark visited'"
@@ -110,16 +110,13 @@ function wifiIcon(speed: string): string {
     </div>
 
     <!-- Unverified caption (only if !verified) -->
-    <p
-      v-if="!space.verified"
-      class="text-muted font-sans mt-1 text-xs"
-    >
+    <p v-if="!space.verified" class="text-muted mt-1 font-sans text-xs">
       Not verified yet.
       <a
         :href="verifyUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-ink hover:text-rust focus-visible:ring-rust border-b border-rust pb-px focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="text-ink hover:text-rust focus-visible:ring-rust border-rust border-b pb-px focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         Help verify it
       </a>
@@ -140,7 +137,7 @@ function wifiIcon(speed: string): string {
     <!-- Meta strip: icon-pill metadata, separated by · -->
     <div
       :class="[
-        'font-sans text-muted flex flex-wrap items-center text-[11px] font-medium tracking-[0.06em] uppercase',
+        'text-muted flex flex-wrap items-center font-sans text-[11px] font-medium tracking-[0.06em] uppercase',
         compact ? 'mt-2 gap-x-2 gap-y-1' : 'mt-3 gap-x-2.5 gap-y-1.5',
       ]"
     >
