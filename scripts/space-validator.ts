@@ -59,6 +59,7 @@ export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
   'seatingNotes',
   'outletNotes',
   'verified',
+  'imageUrl',
 ] as const
 
 export function pickKnownSpaceFields(c: Record<string, unknown>): ICoworkingSpace {
@@ -93,6 +94,7 @@ export const IMMUTABLE_FIELDS = [
   'seatingNotes',
   'outletNotes',
   'verified',
+  'imageUrl',
 ] as const
 
 export const LEUVEN_BBOX = {

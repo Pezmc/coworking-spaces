@@ -19,7 +19,8 @@
     "drinkNotes": "Coffee, tea, mate",
     "seatingNotes": "8 person co-working table and three 4 person booths",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/madmum-tiensestraat.jpg"
   },
   {
     "name": "Bar Madrid",
@@ -41,7 +42,8 @@
     "drinkNotes": "Coffee, smoothies",
     "seatingNotes": "Many smaller tables for 2 or 4 people throughout the room",
     "outletNotes": "Visit Leuven notes plenty of power outlets for everyone.",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/bar-madrid.jpg"
   },
   {
     "name": "MadMum Train Station",
@@ -63,7 +65,8 @@
     "drinkNotes": "",
     "seatingNotes": "Limited group seating",
     "outletNotes": "Only a couple of outlets",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/madmum-train-station.jpg"
   },
   {
     "name": "MadMum Erasmushuis",
@@ -85,7 +88,8 @@
     "drinkNotes": "",
     "seatingNotes": "1 big group table",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/madmum-erasmushuis.jpg"
   },
   {
     "name": "Bar Berlin",
@@ -107,7 +111,8 @@
     "drinkNotes": "Coffee, tea, lemonade, alcoholic drinks",
     "seatingNotes": "One large table and a few smaller ones",
     "outletNotes": "Four outlets on the big table and some on smaller tables",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/bar-berlin.jpg"
   },
   {
     "name": "Noir Coffeebar",
@@ -129,7 +134,8 @@
     "drinkNotes": "Coffee",
     "seatingNotes": "Smaller tables. Plus terrace seating",
     "outletNotes": "Some outlets inside, but not many",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/noir-coffeebar.jpg"
   },
   {
     "name": "Blanco Coffeebar",
@@ -151,7 +157,8 @@
     "drinkNotes": "All drinks, cakes",
     "seatingNotes": "8 person table",
     "outletNotes": "3 outlets",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/blanco-coffeebar.jpg"
   },
   {
     "name": "Onan",
@@ -173,7 +180,8 @@
     "drinkNotes": "Coffee and tea.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/onan.jpg"
   },
   {
     "name": "MOK",
@@ -195,7 +203,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/mok.jpg"
   },
   {
     "name": "Koffie en Staal",
@@ -217,7 +226,8 @@
     "drinkNotes": "Coffee and tea.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/koffie-en-staal.jpg"
   },
   {
     "name": "Barbóék",
@@ -239,7 +249,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/barbk.jpg"
   },
   {
     "name": "Ricki",
@@ -261,29 +272,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
-  },
-  {
-    "name": "Thelma Store & Café",
-    "address": "Vaartstraat 12, 3000 Leuven",
-    "googleMapsUrl": "https://maps.app.goo.gl/DZo7iurDuxxWNCvS6",
-    "coordinates": { "lat": 50.8810063, "lng": 4.7005056 },
-    "noiseLevel": "unknown",
-    "wifiSpeed": "unknown",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "light",
-    "seatingType": "unknown",
-    "hasOutlets": "unknown",
-    "description": "Concept store with an in-house café in central Leuven.",
-    "openingHours": "Mon–Sat 10:30–18:00",
-    "atmosphereNotes": "",
-    "wifiNotes": "",
-    "climateNotes": "",
-    "foodNotes": "",
-    "drinkNotes": "",
-    "seatingNotes": "",
-    "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/ricki.jpg"
   },
   {
     "name": "IZY Coffee (Diestsestraat)",
@@ -305,7 +295,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/izy-coffee-diestsestraat.jpg"
   },
   {
     "name": "IZY Coffee (Brusselsestraat)",
@@ -327,7 +318,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/izy-coffee-brusselsestraat.jpg"
   },
   {
     "name": "Koffiehuis Java",
@@ -349,7 +341,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/koffiehuis-java.jpg"
   },
   {
     "name": "MadMum Brusselsestraat",
@@ -371,7 +364,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/madmum-brusselsestraat.jpg"
   },
   {
     "name": "MadMum Vaartkom",
@@ -393,7 +387,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/madmum-vaartkom.jpg"
   },
   {
     "name": "Bad Habits",
@@ -415,7 +410,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/bad-habits.jpg"
   },
   {
     "name": "Pulse Hub",
@@ -437,7 +433,8 @@
     "drinkNotes": "Smoothies, coffee, matcha.",
     "seatingNotes": "",
     "outletNotes": "Reported to have laptop outlets.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/pulse-hub.jpg"
   },
   {
     "name": "Danta's Coffee",
@@ -459,7 +456,8 @@
     "drinkNotes": "Coffee.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/dantas-coffee.jpg"
   },
   {
     "name": "Soigneur",
@@ -481,7 +479,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/soigneur.jpg"
   },
   {
     "name": "STUKcafé",
@@ -503,7 +502,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/stukcaf.jpg"
   },
   {
     "name": "Fika Lab",
@@ -525,7 +525,8 @@
     "drinkNotes": "",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/fika-lab.jpg"
   },
   {
     "name": "Noordoever",
@@ -547,7 +548,8 @@
     "drinkNotes": "Coffee, tea, beer, fresh juices, lemonades",
     "seatingNotes": "Tables from 2-4p, 1 big table for 8p, 1 sofa area for 3p, separate space for group reservation",
     "outletNotes": "1 large table with outlets, sofa area with outlets",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/noordoever.jpg"
   },
   {
     "name": "Komfort",
@@ -569,7 +571,8 @@
     "drinkNotes": "",
     "seatingNotes": "All tables are 2-3 people but pretty small. There's one 6p table.",
     "outletNotes": "",
-    "verified": true
+    "verified": true,
+    "imageUrl": "/photos/komfort.jpg"
   },
   {
     "name": "Hygge Leuven",
@@ -591,29 +594,8 @@
     "drinkNotes": "",
     "seatingNotes": "One large table.",
     "outletNotes": "",
-    "verified": false
-  },
-  {
-    "name": "Lapaz Cafe",
-    "address": "Tiensestraat 73, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lapaz%20Cafe%20Tiensestraat%2073%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.877026, "lng": 4.7054557 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "fast",
-    "hasAC": "no",
-    "foodAndDrinkAvailability": "full",
-    "seatingType": "mixed",
-    "hasOutlets": "few",
-    "description": "Friendly cafe with fair prices on drinks, bites and toasts. Has a terrace and upstairs seating.",
-    "openingHours": "Mon-Fri 10:00-03:00, Sat 13:00-03:00, Sun 17:00-02:00",
-    "atmosphereNotes": "Cozy, with a terrace and friendly people",
-    "wifiNotes": "",
-    "climateNotes": "No AC",
-    "foodNotes": "Cakes, toasts, spaghetti for student-friendly prices",
-    "drinkNotes": "Specialty coffee, beers, cocktails",
-    "seatingNotes": "8-10 person seating near the window, 4 person tables, plus space upstairs",
-    "outletNotes": "Only one outlet found, near the window",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/hygge-leuven.jpg"
   },
   {
     "name": "Bar Stan",
@@ -635,7 +617,8 @@
     "drinkNotes": "MOK coffee, ONAN tea, natural wines, and craft beers.",
     "seatingNotes": "Mixed seating including an outdoor terrace.",
     "outletNotes": "Some outlets available along the walls.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/bar-stan.jpg"
   },
   {
     "name": "Hal 5",
@@ -657,29 +640,31 @@
     "drinkNotes": "Central bar for coffee, beers, and soft drinks.",
     "seatingNotes": "Mostly large communal picnic tables.",
     "outletNotes": "Outlets are scarce, mostly near the walls.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/hal-5.jpg"
   },
   {
-    "name": "Bibliotheek Tweebronnen",
+    "name": "Stadscafe Van de Velde (Tweebronnen)",
     "address": "Rijschoolstraat 4, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bibliotheek%20Tweebronnen%20Rijschoolstraat%204%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Stadscafe%20Van%20de%20Velde%20Rijschoolstraat%204%2C%203000%20Leuven",
     "coordinates": { "lat": 50.880791, "lng": 4.703607 },
-    "noiseLevel": "quiet",
+    "noiseLevel": "medium",
     "wifiSpeed": "medium",
     "hasAC": "unknown",
-    "foodAndDrinkAvailability": "none",
-    "seatingType": "individual",
+    "foodAndDrinkAvailability": "full",
+    "seatingType": "mixed",
     "hasOutlets": "some",
-    "description": "Main public library of Leuven. Reservable study places, free wifi, internet PCs, printing and scanning. Best for quiet laptop work in the centre.",
-    "openingHours": "Mon-Wed 10:00-18:00, Thu 12:00-20:00, Fri 10:00-18:00, Sat 10:00-17:00, Sun closed",
-    "atmosphereNotes": "Strictly quiet and studious environment.",
-    "wifiNotes": "Free public wifi available for library visitors.",
+    "description": "Breakfast and lunch cafe inside Bibliotheek Tweebronnen. A warm, relatively quiet place for coffee, meals, and focused laptop work.",
+    "openingHours": "Mon-Wed 08:30-18:30, Thu 08:30-20:30, Fri-Sat 08:30-18:30, Sun closed",
+    "atmosphereNotes": "Warm and calm cafe atmosphere inside the library building.",
+    "wifiNotes": "Wifi available in the library building; quality may vary depending on seating location.",
     "climateNotes": "",
-    "foodNotes": "No food allowed in the study areas.",
-    "drinkNotes": "Water bottles permitted.",
-    "seatingNotes": "Individual desks and reading tables, reservable in the main library.",
-    "outletNotes": "Outlets available at many of the study desks.",
-    "verified": false
+    "foodNotes": "Serves breakfast, lunch, and snacks.",
+    "drinkNotes": "Coffee, soft drinks, and other cafe beverages available.",
+    "seatingNotes": "Cafe tables suitable for solo work or casual meetings.",
+    "outletNotes": "Some outlets may be available depending on the table location.",
+    "verified": false,
+    "imageUrl": "/photos/bibliotheek-tweebronnen.jpg"
   },
   {
     "name": "Wasbar Leuven",
@@ -701,29 +686,8 @@
     "drinkNotes": "Coffees, homemade lemonades, and cocktails.",
     "seatingNotes": "Mix of regular dining tables and cozy corners.",
     "outletNotes": "Outlets available at several tables.",
-    "verified": false
-  },
-  {
-    "name": "Punto Caffè",
-    "address": "Brusselsestraat 33, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Punto%20Caff%C3%A8%20Brusselsestraat%2033%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.8796, "lng": 4.698 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "medium",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "light",
-    "seatingType": "mixed",
-    "hasOutlets": "some",
-    "description": "Popular, straightforward coffee shop near the centre offering bagels, sweets, and beverages. Often frequented by students looking for a study spot.",
-    "openingHours": "Mon-Fri 08:00-18:00, Sat 09:00-18:00, Sun 10:00-18:00",
-    "atmosphereNotes": "Bustling and student-friendly.",
-    "wifiNotes": "Decent wifi connection.",
-    "climateNotes": "",
-    "foodNotes": "Bagels, muffins, cookies, and brownies.",
-    "drinkNotes": "Wide range of coffees, frappes, and smoothies.",
-    "seatingNotes": "A mix of small tables and window seating.",
-    "outletNotes": "Available at select spots along the walls.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/wasbar-leuven.jpg"
   },
   {
     "name": "Elisa by JAVA Coffee",
@@ -745,73 +709,8 @@
     "drinkNotes": "Freshly roasted JAVA coffee and artisan teas.",
     "seatingNotes": "Comfortable cafe seating.",
     "outletNotes": "A few accessible outlets for charging laptops.",
-    "verified": false
-  },
-  {
-    "name": "Leo Pancakes",
-    "address": "Mechelsestraat 45, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Leo%20Pancakes%20Mechelsestraat%2045%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.8804, "lng": 4.7001 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "fast",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "full",
-    "seatingType": "individual",
-    "hasOutlets": "some",
-    "description": "Cozy lunchroom specialising in sweet and savoury American pancakes and bagels. Good natural light and a surprisingly solid internet connection.",
-    "openingHours": "Wed-Sun 09:00-17:00, Mon-Tue closed",
-    "atmosphereNotes": "Casual and bright with natural light.",
-    "wifiNotes": "Great internet connection reported by remote workers.",
-    "climateNotes": "",
-    "foodNotes": "Wide variety of pancakes and bagels, plenty of vegan options.",
-    "drinkNotes": "Coffee, lattes with oat milk, and cold drinks.",
-    "seatingNotes": "Standard cafe seating with some outdoor options.",
-    "outletNotes": "A few outlets scattered around the seating area.",
-    "verified": false
-  },
-  {
-    "name": "De Bib Leuven Heverlee",
-    "address": "Waversebaan 66, 3001 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=De%20Bib%20Leuven%20Heverlee%20Waversebaan%2066%2C%203001%20Leuven",
-    "coordinates": { "lat": 50.864753, "lng": 4.693319 },
-    "noiseLevel": "quiet",
-    "wifiSpeed": "medium",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "none",
-    "seatingType": "individual",
-    "hasOutlets": "unknown",
-    "description": "Neighbourhood public library in Heverlee with free wifi, internet PCs and a calm reading-room feel. Good for a short quiet work block when the branch is open.",
-    "openingHours": "Mon 15:30-19:30, Tue closed, Wed 14:00-17:00, Thu 15:30-19:30, Fri closed, Sat 09:30-12:30, Sun closed",
-    "atmosphereNotes": "Small, quiet branch-library atmosphere with limited opening windows.",
-    "wifiNotes": "Free library wifi for people using their own device; internet PCs also available.",
-    "climateNotes": "",
-    "foodNotes": "No food service in the library.",
-    "drinkNotes": "No drink service in the library.",
-    "seatingNotes": "Library seating and reading tables; better for individual work than calls.",
-    "outletNotes": "",
-    "verified": false
-  },
-  {
-    "name": "De Bib Leuven Kessel-Lo",
-    "address": "Stadionlaan 4, 3010 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=De%20Bib%20Leuven%20Kessel-Lo%20Stadionlaan%204%2C%203010%20Leuven",
-    "coordinates": { "lat": 50.882989, "lng": 4.734499 },
-    "noiseLevel": "quiet",
-    "wifiSpeed": "medium",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "none",
-    "seatingType": "individual",
-    "hasOutlets": "unknown",
-    "description": "Neighbourhood public library in Kessel-Lo with free wifi and internet PCs. Useful for quiet laptop work outside the busy centre.",
-    "openingHours": "Mon 15:30-19:30, Tue closed, Wed 14:00-17:00, Thu 15:30-19:30, Fri closed, Sat 10:00-17:00, Sun closed",
-    "atmosphereNotes": "Quiet local-library setting. Limited opening windows, but calm when open.",
-    "wifiNotes": "Free library wifi for people using their own device; internet PCs also available.",
-    "climateNotes": "",
-    "foodNotes": "No food service in the library.",
-    "drinkNotes": "No drink service in the library.",
-    "seatingNotes": "Library seating and reading tables; best for individual focus work.",
-    "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/elisa-by-java-coffee.jpg"
   },
   {
     "name": "KUp University Bar",
@@ -833,29 +732,8 @@
     "drinkNotes": "Coffee, chai latte, and other cafe drinks.",
     "seatingNotes": "Cafe seating suited to solo work, study, and small meetups.",
     "outletNotes": "",
-    "verified": false
-  },
-  {
-    "name": "Pentahotel Leuven Pentalounge",
-    "address": "Alfons Smetsplein 7, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Pentahotel%20Leuven%20Pentalounge%20Alfons%20Smetsplein%207%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.877146, "lng": 4.703613 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "fast",
-    "hasAC": "yes",
-    "foodAndDrinkAvailability": "full",
-    "seatingType": "mixed",
-    "hasOutlets": "many",
-    "description": "Hotel lounge, bar and reception hybrid with fast free wifi, 24/7 dining, and plenty of lounge seating. Good fallback when cafes are busy or closing early.",
-    "openingHours": "Daily 24 hours",
-    "atmosphereNotes": "Hotel-lounge feel with background chatter, arrivals, and bar traffic.",
-    "wifiNotes": "Public listings describe free, fast or high-speed wifi.",
-    "climateNotes": "Air-conditioned hotel and meeting facilities.",
-    "foodNotes": "Full dining available through the Pentalounge.",
-    "drinkNotes": "Coffee, soft drinks, beer, wine, and bar drinks.",
-    "seatingNotes": "Mixed lounge seating, tables, and bar-style seating.",
-    "outletNotes": "Laptop-friendly listings mention ample power outlets.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/kup-university-bar.jpg"
   },
   {
     "name": "Café Entrepot",
@@ -877,50 +755,7 @@
     "drinkNotes": "Coffee, beer, cocktails, and standard cafe drinks.",
     "seatingNotes": "Indoor cafe tables plus terrace seating; suitable for solo work or small groups.",
     "outletNotes": "Laptop-friendly listings mention numerous power outlets.",
-    "verified": false
-  },
-  {
-    "name": "Novotel Leuven Centrum Gourmet Bar",
-    "address": "Vuurkruisenlaan 4, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Novotel%20Leuven%20Centrum%20Gourmet%20Bar%20Vuurkruisenlaan%204%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.8862, "lng": 4.70994 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "medium",
-    "hasAC": "yes",
-    "foodAndDrinkAvailability": "full",
-    "seatingType": "mixed",
-    "hasOutlets": "unknown",
-    "description": "Hotel lobby, bar, and restaurant near the station with free wifi, air conditioning, 24-hour reception, and full food service via the Gourmet Bar. Steady backup when cafes are full.",
-    "openingHours": "Daily 24 hours; Gourmet Bar hours vary",
-    "atmosphereNotes": "Modern hotel atmosphere with guest traffic and bar/restaurant noise.",
-    "wifiNotes": "Official and hotel listings mention free wifi; speed not listed.",
-    "climateNotes": "Air conditioning listed for the hotel and meeting facilities.",
-    "foodNotes": "Gourmet Bar serves local and international dishes; breakfast also available.",
-    "drinkNotes": "Hotel bar drinks, coffee, and soft drinks.",
-    "seatingNotes": "Mixed hotel-lobby, bar, and restaurant seating.",
-    "outletNotes": "",
-    "verified": false
-  },
-  {
-    "name": "Swartehond",
-    "address": "Jodenstraat 4, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Swartehond%20Jodenstraat%204%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.8778, "lng": 4.7032 },
-    "noiseLevel": "medium",
-    "wifiSpeed": "medium",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "light",
-    "seatingType": "individual",
-    "hasOutlets": "some",
-    "description": "Cozy bagel shop and coffee bar tucked into a quiet street in the centre. Popular with students and remote workers for a quick lunch and work session.",
-    "openingHours": "Mon-Fri 08:30-17:00, Sat 09:00-17:00, Sun closed",
-    "atmosphereNotes": "Cozy, laid-back, and intimate.",
-    "wifiNotes": "Good wifi for browsing and emails.",
-    "climateNotes": "",
-    "foodNotes": "Known for delicious, freshly made bagels and pastries.",
-    "drinkNotes": "Specialty coffee and teas.",
-    "seatingNotes": "Small tables suitable for 1-2 people.",
-    "outletNotes": "A few outlets scattered along the seating area.",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/caf-entrepot.jpg"
   }
 ]
