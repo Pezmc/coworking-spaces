@@ -13,103 +13,127 @@ const props = defineProps<Props>()
 
 const expanded = ref(false)
 const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
+
+// Deterministic gradient placeholder until imageUrl exists.
+const photoGradient = computed(() => {
+  const name = props.space.name
+  let h = 5381
+  for (let i = 0; i < name.length; i++) h = (h * 33) ^ name.charCodeAt(i)
+  const variants = [
+    'linear-gradient(135deg, #d4b88a, #8a6a3e)',
+    'linear-gradient(135deg, #b8a99a, #5a4530)',
+    'linear-gradient(135deg, #c8c1b0, #6e6855)',
+    'linear-gradient(135deg, #d8b9a0, #7a4a2e)',
+  ]
+  return variants[Math.abs(h) % variants.length]
+})
 </script>
 
 <template>
   <article
-    class="border-rule hover:border-rust overflow-hidden rounded-lg border-2 bg-white transition-all duration-200 hover:shadow-lg motion-reduce:transition-none"
+    class="entry border-rule-soft hover:bg-rust/[0.03] grid grid-cols-[64px_1fr] gap-3 border-b py-5 transition-colors motion-reduce:transition-none sm:grid-cols-[88px_1fr] sm:gap-5"
     :class="{ 'opacity-70': !space.verified }"
   >
-    <!-- Header with Summary -->
-    <div class="border-rule border-b p-5">
+    <div
+      class="entry-photo h-[64px] w-[64px] flex-shrink-0 sm:h-[88px] sm:w-[88px]"
+      :style="{ background: photoGradient }"
+      role="presentation"
+    />
+
+    <div class="min-w-0">
       <SpaceSummary :space="space">
         <template #title>
           <span :id="slugify(space.name)">{{ space.name }}</span>
         </template>
       </SpaceSummary>
-    </div>
 
-    <!-- Expandable Details -->
-    <div class="px-5 py-3">
       <button
-        class="text-navy focus-visible:ring-rust flex w-full cursor-pointer items-center justify-between rounded border-0 bg-transparent py-1 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        type="button"
+        class="text-muted hover:text-rust focus-visible:ring-rust font-sans mt-3 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-xs font-medium tracking-wide uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+        :aria-expanded="expanded"
         @click="expanded = !expanded"
       >
-        <span>{{ expanded ? 'Hide details' : 'Show details' }}</span>
+        <span>{{ expanded ? 'Hide details' : 'More' }}</span>
         <span
-          class="transform transition-transform motion-reduce:transition-none"
+          aria-hidden="true"
+          class="inline-block transition-transform motion-reduce:transition-none"
           :class="{ 'rotate-180': expanded }"
         >
-          ▼
+          ▾
         </span>
       </button>
 
-      <div v-show="expanded" class="mt-4 space-y-3 text-sm">
-        <!-- Atmosphere -->
+      <div v-show="expanded" class="font-desc mt-3 space-y-3 text-[14px] leading-relaxed">
         <div v-if="space.atmosphereNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
             Atmosphere
           </h4>
-          <p class="text-body m-0">{{ space.atmosphereNotes }}</p>
+          <p class="text-ink m-0">{{ space.atmosphereNotes }}</p>
         </div>
 
-        <!-- Seating -->
         <div v-if="space.seatingNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Seating</h4>
-          <p class="text-body m-0">{{ space.seatingNotes }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Seating
+          </h4>
+          <p class="text-ink m-0">{{ space.seatingNotes }}</p>
         </div>
 
-        <!-- WiFi Notes -->
         <div v-if="space.wifiNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">WiFi</h4>
-          <p class="text-body m-0">{{ space.wifiNotes }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            WiFi
+          </h4>
+          <p class="text-ink m-0">{{ space.wifiNotes }}</p>
         </div>
 
-        <!-- Climate -->
         <div v-if="space.climateNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Climate</h4>
-          <p class="text-body m-0">{{ space.climateNotes }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Climate
+          </h4>
+          <p class="text-ink m-0">{{ space.climateNotes }}</p>
         </div>
 
-        <!-- Outlets -->
         <div>
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Outlets</h4>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Outlets
+          </h4>
           <p
             v-tippy="OUTLET_DESCRIPTIONS[space.hasOutlets]"
-            class="text-body m-0 inline-block cursor-help"
+            class="text-ink m-0 inline-block cursor-help"
           >
             {{ OUTLET_LABELS[space.hasOutlets] }}
           </p>
-          <p v-if="space.outletNotes" class="text-body m-0 mt-1 text-xs">
+          <p v-if="space.outletNotes" class="text-ink m-0 mt-1 text-xs">
             {{ space.outletNotes }}
           </p>
         </div>
 
-        <!-- Drinks -->
         <div v-if="space.drinkNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Drinks</h4>
-          <p class="text-body m-0">{{ space.drinkNotes }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Drinks
+          </h4>
+          <p class="text-ink m-0">{{ space.drinkNotes }}</p>
         </div>
 
-        <!-- Food -->
         <div v-if="space.foodNotes">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Food</h4>
-          <p class="text-body m-0">{{ space.foodNotes }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Food
+          </h4>
+          <p class="text-ink m-0">{{ space.foodNotes }}</p>
         </div>
 
-        <!-- Opening Hours -->
         <div v-if="space.openingHours">
-          <h4 class="text-muted m-0 mb-1 text-xs font-semibold tracking-wide uppercase">Hours</h4>
-          <p class="text-body m-0">{{ space.openingHours }}</p>
+          <h4 class="text-faint font-sans m-0 mb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase not-italic">
+            Hours
+          </h4>
+          <p class="font-mono text-ink m-0 text-xs not-italic">{{ space.openingHours }}</p>
         </div>
 
-        <!-- Update link for verified spaces -->
-        <div v-if="space.verified" class="border-rule mt-3 border-t pt-3">
+        <div v-if="space.verified" class="border-rule-soft mt-3 border-t pt-3">
           <a
             :href="updateUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-muted hover:text-rust focus-visible:ring-rust rounded text-xs hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            class="text-muted hover:text-rust focus-visible:ring-rust font-sans rounded text-xs not-italic hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Something wrong? Update this space →
           </a>
