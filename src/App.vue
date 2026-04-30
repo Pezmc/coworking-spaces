@@ -128,7 +128,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
           Coworking Cafes
         </h1>
         <p
-          class="font-desc text-muted m-0 max-w-md text-sm leading-snug sm:text-right sm:text-base"
+          class="font-desc text-muted m-0 max-w-xl text-sm leading-snug sm:text-right sm:text-base"
         >
           A small Leuven field guide to cafés where it's nice to open a laptop.
         </p>
