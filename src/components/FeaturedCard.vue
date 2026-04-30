@@ -79,10 +79,18 @@ function toggle() {
         :aria-hidden="flipped"
       >
         <div
-          class="h-full w-[110px] flex-shrink-0 sm:h-[120px] sm:w-full"
-          :style="{ background: photoGradient }"
+          class="relative h-full w-[110px] flex-shrink-0 overflow-hidden sm:h-[120px] sm:w-full"
+          :style="pick.space.imageUrl ? undefined : { background: photoGradient }"
           role="presentation"
-        />
+        >
+          <img
+            v-if="pick.space.imageUrl"
+            :src="pick.space.imageUrl"
+            :alt="pick.space.name"
+            loading="lazy"
+            class="h-full w-full object-cover"
+          />
+        </div>
         <div class="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-5">
           <span
             class="text-rust font-sans text-[9.5px] font-medium tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]"

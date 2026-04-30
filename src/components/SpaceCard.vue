@@ -35,10 +35,18 @@ const photoGradient = computed(() => {
     :class="{ 'opacity-70': !space.verified }"
   >
     <div
-      class="entry-photo h-[64px] w-[64px] flex-shrink-0 sm:h-[88px] sm:w-[88px]"
-      :style="{ background: photoGradient }"
+      class="entry-photo h-[64px] w-[64px] flex-shrink-0 overflow-hidden sm:h-[88px] sm:w-[88px]"
+      :style="space.imageUrl ? undefined : { background: photoGradient }"
       role="presentation"
-    />
+    >
+      <img
+        v-if="space.imageUrl"
+        :src="space.imageUrl"
+        :alt="space.name"
+        loading="lazy"
+        class="h-full w-full object-cover"
+      />
+    </div>
 
     <div class="min-w-0">
       <SpaceSummary :space="space">

@@ -51,6 +51,9 @@ export interface ICoworkingSpace {
 
   // Verification status
   verified: boolean // has this space been personally visited and verified?
+
+  // Optional photo (relative path under /photos/, scraped from the web)
+  imageUrl?: string
 }
 
 export interface IFilterState {
