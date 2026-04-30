@@ -1,35 +1,56 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Brand */
-  --color-primary: #1a365d;
-  --color-primary-hover: #15284a;
-  --color-primary-track: #2d4a7c;
-  --color-accent: #ed8936;
-  --color-accent-hover: #dd7826;
+  /* Type — registered as Tailwind font-* utilities */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Surfaces */
-  --color-cream: #fffaf0;
-  --color-cream-panel: #f5f0e6;
-  --color-cream-deep: #faf5eb;
+  --color-paper: #fffaf0;
+  --color-paper-deep: #faf5eb;
+  --color-rule: #d8c9ad;
+  --color-rule-soft: #ede2cc;
 
-  /* Borders */
-  --color-warm: #e2d9c8;
-  --color-cool: #cbd5e0;
+  /* Brand */
+  --color-navy: #1a365d;
+  --color-navy-hover: #15284a;
+  --color-rust: #c75f1c;
+  --color-rust-hover: #a64f10;
+  --color-moss: #5c6b3c;
 
   /* Text */
   --color-ink: #1a202c;
   --color-body: #4a5568;
-  --color-muted: #718096;
-  --color-faint: #a0aec0;
+  --color-muted: #5f6470;
+  --color-faint: #9da3ae;
+
+  /* Legacy aliases — retained until Phase 1 class-rename sweep completes */
+  --color-primary: #1a365d;
+  --color-primary-hover: #15284a;
+  --color-primary-track: #2d4a7c;
+  --color-accent: #c75f1c;
+  --color-accent-hover: #a64f10;
+  --color-cream: #fffaf0;
+  --color-cream-panel: #faf5eb;
+  --color-cream-deep: #faf5eb;
+  --color-warm: #d8c9ad;
+  --color-cool: #cbd5e0;
 }
 
 body {
-  font-family: 'Crimson Pro', Georgia, serif;
-  background-color: var(--color-cream);
+  font-family: 'Source Serif 4', Georgia, serif;
+  background-color: var(--color-paper);
   color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
 .font-display {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.font-desc {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
 }
