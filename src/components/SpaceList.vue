@@ -88,7 +88,7 @@ const filteredAndSortedSpaces = computed(() => {
     <!-- Empty state -->
     <div
       v-if="filteredAndSortedSpaces.length === 0"
-      class="border-cool bg-cream-panel rounded-lg border-2 border-dashed px-6 py-12 text-center"
+      class="border-rule bg-paper-deep rounded-lg border-2 border-dashed px-6 py-12 text-center"
     >
       <template v-if="isOnlyOpenNowActive">
         <p class="text-muted m-0 mb-2 text-lg">Nothing open right now</p>

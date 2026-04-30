@@ -34,10 +34,10 @@ const picks = computed(() => getFeaturedSpaces(props.spaces))
 <template>
   <section v-if="picks.length > 0" class="mb-6" aria-label="Today's featured coworking spaces">
     <div class="mb-3 flex items-center justify-between">
-      <h2 class="font-display text-primary m-0 text-lg font-bold sm:text-xl">Today's picks</h2>
+      <h2 class="font-display text-navy m-0 text-lg font-bold sm:text-xl">Today's picks</h2>
       <button
         type="button"
-        class="text-muted hover:text-primary focus-visible:ring-accent flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none"
+        class="text-muted hover:text-navy focus-visible:ring-rust flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none"
         :aria-expanded="!collapsed"
         :aria-label="collapsed ? 'Show today\'s picks' : 'Hide today\'s picks'"
         @click="collapsed = !collapsed"

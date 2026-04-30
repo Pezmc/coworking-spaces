@@ -16,6 +16,7 @@
   /* Brand */
   --color-navy: #1a365d;
   --color-navy-hover: #15284a;
+  --color-navy-track: #2d4a7c;
   --color-rust: #c75f1c;
   --color-rust-hover: #a64f10;
   --color-moss: #5c6b3c;
@@ -25,18 +26,6 @@
   --color-body: #4a5568;
   --color-muted: #5f6470;
   --color-faint: #9da3ae;
-
-  /* Legacy aliases — retained until Phase 1 class-rename sweep completes */
-  --color-primary: #1a365d;
-  --color-primary-hover: #15284a;
-  --color-primary-track: #2d4a7c;
-  --color-accent: #c75f1c;
-  --color-accent-hover: #a64f10;
-  --color-cream: #fffaf0;
-  --color-cream-panel: #faf5eb;
-  --color-cream-deep: #faf5eb;
-  --color-warm: #d8c9ad;
-  --color-cool: #cbd5e0;
 }
 
 body {

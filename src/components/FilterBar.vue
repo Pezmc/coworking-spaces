@@ -79,12 +79,12 @@ const sortOptions: { field: SortField; label: string }[] = [
 </script>
 
 <template>
-  <div class="border-primary bg-cream-panel mb-8 rounded-lg border-2 p-5">
+  <div class="border-navy bg-paper-deep mb-8 rounded-lg border-2 p-5">
     <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-      <h2 class="font-display text-primary m-0 text-xl font-bold">Filter Spaces</h2>
+      <h2 class="font-display text-navy m-0 text-xl font-bold">Filter Spaces</h2>
       <button
         v-if="hasActiveFilters"
-        class="text-accent hover:text-accent-hover focus-visible:ring-accent cursor-pointer rounded border-0 bg-transparent text-sm underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="text-rust hover:text-rust-hover focus-visible:ring-rust cursor-pointer rounded border-0 bg-transparent text-sm underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         @click="resetFilters"
       >
         Clear all filters
@@ -97,7 +97,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Noise </label>
         <select
           :value="filters.noiseLevel"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'noiseLevel',
@@ -117,7 +117,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> WiFi </label>
         <select
           :value="filters.wifiSpeed"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'wifiSpeed',
@@ -137,7 +137,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Climate </label>
         <select
           :value="filters.hasAC"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'hasAC',
@@ -157,7 +157,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Food </label>
         <select
           :value="filters.foodAvailability"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'foodAvailability',
@@ -177,7 +177,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Seating </label>
         <select
           :value="filters.seatingType"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'seatingType',
@@ -197,7 +197,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Outlets </label>
         <select
           :value="filters.hasOutlets"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'hasOutlets',
@@ -217,7 +217,7 @@ const sortOptions: { field: SortField; label: string }[] = [
         <label class="text-muted text-xs font-semibold tracking-wide uppercase"> Status </label>
         <select
           :value="filters.verified"
-          class="border-cool text-ink hover:border-accent focus-visible:ring-accent cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="border-rule text-ink hover:border-rust focus-visible:ring-rust cursor-pointer rounded border-2 bg-white px-3 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           @change="
             updateFilter(
               'verified',
@@ -233,17 +233,17 @@ const sortOptions: { field: SortField; label: string }[] = [
     </div>
 
     <!-- Sort -->
-    <div class="border-cool flex items-center gap-3 border-t pt-4">
+    <div class="border-rule flex items-center gap-3 border-t pt-4">
       <span class="text-muted text-xs font-semibold tracking-wide uppercase"> Sort by: </span>
       <div class="flex gap-2">
         <button
           v-for="option in sortOptions"
           :key="option.field"
-          class="focus-visible:ring-accent cursor-pointer rounded border-2 px-3 py-1.5 text-sm transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+          class="focus-visible:ring-rust cursor-pointer rounded border-2 px-3 py-1.5 text-sm transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
           :class="
             sort.field === option.field
-              ? 'border-primary bg-primary text-white'
-              : 'border-cool text-primary hover:border-primary bg-white'
+              ? 'border-navy bg-navy text-white'
+              : 'border-rule text-navy hover:border-navy bg-white'
           "
           @click="updateSort(option.field)"
         >

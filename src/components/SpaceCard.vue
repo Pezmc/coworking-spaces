@@ -17,11 +17,11 @@ const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
 
 <template>
   <article
-    class="border-warm hover:border-accent overflow-hidden rounded-lg border-2 bg-white transition-all duration-200 hover:shadow-lg motion-reduce:transition-none"
+    class="border-rule hover:border-rust overflow-hidden rounded-lg border-2 bg-white transition-all duration-200 hover:shadow-lg motion-reduce:transition-none"
     :class="{ 'opacity-70': !space.verified }"
   >
     <!-- Header with Summary -->
-    <div class="border-warm border-b p-5">
+    <div class="border-rule border-b p-5">
       <SpaceSummary :space="space">
         <template #title>
           <span :id="slugify(space.name)">{{ space.name }}</span>
@@ -32,7 +32,7 @@ const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
     <!-- Expandable Details -->
     <div class="px-5 py-3">
       <button
-        class="text-primary focus-visible:ring-accent flex w-full cursor-pointer items-center justify-between rounded border-0 bg-transparent py-1 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        class="text-navy focus-visible:ring-rust flex w-full cursor-pointer items-center justify-between rounded border-0 bg-transparent py-1 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         @click="expanded = !expanded"
       >
         <span>{{ expanded ? 'Hide details' : 'Show details' }}</span>
@@ -104,12 +104,12 @@ const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
         </div>
 
         <!-- Update link for verified spaces -->
-        <div v-if="space.verified" class="border-warm mt-3 border-t pt-3">
+        <div v-if="space.verified" class="border-rule mt-3 border-t pt-3">
           <a
             :href="updateUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-muted hover:text-accent focus-visible:ring-accent rounded text-xs hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            class="text-muted hover:text-rust focus-visible:ring-rust rounded text-xs hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Something wrong? Update this space →
           </a>

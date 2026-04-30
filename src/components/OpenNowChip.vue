@@ -41,10 +41,10 @@ const title = computed(() =>
     :title="title"
     :class="[
       'inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors motion-reduce:transition-none',
-      'focus-visible:ring-accent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+      'focus-visible:ring-rust focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
       active
-        ? 'border-primary bg-primary hover:bg-primary-hover text-white'
-        : 'border-primary text-primary hover:bg-cream-panel bg-white',
+        ? 'border-navy bg-navy hover:bg-navy-hover text-white'
+        : 'border-navy text-navy hover:bg-paper-deep bg-white',
       loading && 'cursor-wait opacity-70',
     ]"
     @click="emit('toggle')"
