@@ -125,7 +125,7 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         <h1
           class="font-display text-navy m-0 text-3xl leading-[1.05] font-bold tracking-tight sm:text-4xl md:text-5xl"
         >
-          Leuven Coworking Cafes
+          Coworking Cafes
         </h1>
         <p
           class="font-desc text-muted m-0 max-w-md text-sm leading-snug sm:text-right sm:text-base"
@@ -134,8 +134,8 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         </p>
       </header>
 
-      <!-- Today's picks: standalone subordinate section, list view only -->
-      <TodayView v-if="viewMode === 'list'" :spaces="spaces" />
+      <!-- Today's picks: standalone subordinate section, visible in both list and map views -->
+      <TodayView :spaces="spaces" />
 
       <!-- All spots: the main section with prominent List/Map toggle -->
       <div
