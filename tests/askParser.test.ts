@@ -154,6 +154,77 @@ describe('parseAsk', () => {
     expect(r.matches[0].value).toBe('fast')
   })
 
+  it('matches "I fancy a snack" → foodAvailability=light', () => {
+    const r = parseAsk('I fancy a snack')
+    expect(r.filterPatch).toEqual({ foodAvailability: 'light' })
+  })
+
+  it('matches "I\'m hungry" → foodAvailability=full', () => {
+    const r = parseAsk("I'm hungry")
+    expect(r.filterPatch).toEqual({ foodAvailability: 'full' })
+  })
+
+  it('matches "I want an energetic vibe" → noiseLevel=loud', () => {
+    const r = parseAsk('I want an energetic vibe')
+    expect(r.filterPatch).toEqual({ noiseLevel: 'loud' })
+  })
+
+  it('matches "my laptop is low on power" → hasOutlets=many', () => {
+    const r = parseAsk('my laptop is low on power')
+    expect(r.filterPatch).toEqual({ hasOutlets: 'many' })
+  })
+
+  it('matches "I need to charge my phone" → hasOutlets=many', () => {
+    const r = parseAsk('I need to charge my phone')
+    expect(r.filterPatch).toEqual({ hasOutlets: 'many' })
+  })
+
+  it('matches "it must be quiet" → noiseLevel=quiet', () => {
+    const r = parseAsk('it must be quiet')
+    expect(r.filterPatch).toEqual({ noiseLevel: 'quiet' })
+  })
+
+  it('matches "I have a headache" → noiseLevel=quiet', () => {
+    const r = parseAsk('I have a headache')
+    expect(r.filterPatch).toEqual({ noiseLevel: 'quiet' })
+  })
+
+  it('matches "migraine" → noiseLevel=quiet', () => {
+    const r = parseAsk('migraine today, somewhere chill?')
+    expect(r.filterPatch.noiseLevel).toBe('quiet')
+  })
+
+  it('matches "stuffy" → hasAC=yes', () => {
+    const r = parseAsk('feels stuffy in here')
+    expect(r.filterPatch).toEqual({ hasAC: 'yes' })
+  })
+
+  it('matches "low battery" → hasOutlets=many', () => {
+    const r = parseAsk('low battery, help')
+    expect(r.filterPatch).toEqual({ hasOutlets: 'many' })
+  })
+
+  it('matches "starving" → foodAvailability=full', () => {
+    const r = parseAsk('absolutely starving')
+    expect(r.filterPatch).toEqual({ foodAvailability: 'full' })
+  })
+
+  it('matches "good vibes" → noiseLevel=loud', () => {
+    const r = parseAsk('want somewhere with good vibes')
+    expect(r.filterPatch).toEqual({ noiseLevel: 'loud' })
+  })
+
+  it('matches "teams call" → wifiSpeed=fast', () => {
+    const r = parseAsk('have a teams call in 10')
+    expect(r.filterPatch).toEqual({ wifiSpeed: 'fast' })
+  })
+
+  it('"fan" inside "fancy" does not match (word boundary, fancy a snack wins)', () => {
+    const r = parseAsk('I fancy a snack')
+    // Should match "fancy a snack" (Snacks), not pick up some stray substring
+    expect(r.matches.map((m) => m.label)).toEqual(['Snacks'])
+  })
+
   it('truncates pathologically long input to 1000 chars', () => {
     const padding = 'x '.repeat(600) // ~1200 chars, beyond the cap
     const beyondCap = parseAsk(`${padding}fast wifi`)

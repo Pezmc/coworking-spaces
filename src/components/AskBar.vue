@@ -17,6 +17,12 @@ const EXAMPLES = [
   'Buzzy vibe with snacks and plugs…',
   'Fast wifi for a zoom call…',
   'Deep-work spot with plenty of outlets…',
+  'I have a headache, somewhere quiet…',
+  'My laptop is low on power…',
+  'I fancy a snack and good vibes…',
+  'Teams call in 10, need fast wifi…',
+  'Starving and need to charge my phone…',
+  'Stuffy out, looking for AC…',
 ]
 const placeholderIdx = ref(0)
 const placeholderText = computed(() => EXAMPLES[placeholderIdx.value])
