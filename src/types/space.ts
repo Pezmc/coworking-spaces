@@ -4,7 +4,7 @@ export const WIFI_SPEEDS = ['unknown', 'slow', 'medium', 'fast'] as const
 export const AC_OPTIONS = ['yes', 'no', 'unknown'] as const
 export const FOOD_AND_DRINK_OPTIONS = ['none', 'light', 'full'] as const
 export const SEATING_TYPES = ['individual', 'mixed', 'group'] as const
-export const OUTLET_OPTIONS = ['few', 'some', 'many', 'unknown'] as const
+export const OUTLET_OPTIONS = ['none', 'few', 'some', 'many', 'unknown'] as const
 export const VERIFIED_OPTIONS = ['all', 'verified', 'unverified'] as const
 
 export type NoiseLevel = (typeof NOISE_LEVELS)[number]
@@ -107,6 +107,7 @@ export const SEATING_LABELS: Record<SeatingType, string> = {
 }
 
 export const OUTLET_LABELS: Record<OutletAvailability, string> = {
+  none: 'No Outlets',
   few: 'Few Outlets',
   some: 'Some Outlets',
   many: 'Many Outlets',
@@ -140,6 +141,7 @@ export const SEATING_DESCRIPTIONS: Record<SeatingType, string> = {
 
 export const OUTLET_DESCRIPTIONS: Record<OutletAvailability, string> = {
   unknown: 'Outlet availability has not been checked yet',
+  none: 'No outlets available – bring a fully charged laptop',
   few: '1–2 outlets in the space – arrive early to claim one',
   some: 'Several outlets available – most seats have access',
   many: 'Outlets at every table or seat – no worries about power',
