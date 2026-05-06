@@ -91,7 +91,9 @@ function toggle() {
             class="h-full w-full object-cover"
           />
         </div>
-        <div class="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-5">
+        <div
+          class="relative flex flex-1 flex-col gap-1 overflow-hidden p-3 sm:gap-2 sm:p-5 sm:pb-[46px]"
+        >
           <span
             class="text-rust font-sans text-[9.5px] font-medium tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]"
           >
@@ -102,15 +104,15 @@ function toggle() {
           >
             {{ pick.space.name }}
           </h3>
-          <p class="font-desc text-muted m-0 hidden text-[12.5px] sm:block">{{ pick.hook }}</p>
+          <p class="font-desc text-muted m-0 text-[12.5px] max-sm:hidden">{{ pick.hook }}</p>
           <p
-            class="font-desc text-ink m-0 line-clamp-2 hidden text-[13.5px] leading-relaxed sm:block"
+            class="font-desc text-ink m-0 line-clamp-2 text-[13.5px] leading-relaxed max-sm:hidden"
           >
             {{ firstSentence }}
           </p>
 
           <div
-            class="border-rule-soft mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1.5 text-[9.5px] sm:gap-x-2.5 sm:border-t sm:pt-2 sm:text-[10px]"
+            class="border-rule-soft mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1.5 text-[9.5px] sm:absolute sm:right-5 sm:bottom-4 sm:left-5 sm:gap-x-2.5 sm:border-t sm:pt-2 sm:text-[10px]"
           >
             <template v-for="(pill, i) in pills" :key="pill.label">
               <span
@@ -121,12 +123,6 @@ function toggle() {
               </span>
               <span v-if="i < pills.length - 1" class="text-rule">·</span>
             </template>
-            <span
-              aria-hidden="true"
-              class="text-faint ml-auto hidden pl-2 font-mono text-[9px] tracking-wide sm:inline"
-            >
-              tap to flip ↻
-            </span>
           </div>
         </div>
       </div>
