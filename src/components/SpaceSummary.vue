@@ -68,7 +68,7 @@ function wifiIcon(speed: string): string {
             :class="[
               'font-display text-navy m-0 font-semibold tracking-tight',
               compact ? 'text-lg leading-tight' : 'text-xl leading-tight sm:text-[22px]',
-              visited && 'opacity-60',
+              visited && 'line-through decoration-rust/40 decoration-[1.5px]',
             ]"
           >
             <slot name="title">{{ space.name }}</slot>
@@ -128,7 +128,6 @@ function wifiIcon(speed: string): string {
       :class="[
         'font-desc text-ink m-0',
         compact ? 'mt-2 text-sm' : 'mt-2 text-[15px] leading-relaxed',
-        visited && 'opacity-70',
       ]"
     >
       {{ space.description }}

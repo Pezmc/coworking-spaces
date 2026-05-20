@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { type ICoworkingSpace, OUTLET_LABELS, OUTLET_DESCRIPTIONS } from '../types/space'
 import { slugify } from '../utils/slug'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
+import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import SpaceSummary from './SpaceSummary.vue'
 
 interface Props {
@@ -13,6 +14,9 @@ const props = defineProps<Props>()
 
 const expanded = ref(false)
 const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
+
+const { isVisited } = useVisitedSpaces()
+const visited = computed(() => isVisited(props.space.name))
 
 // Deterministic gradient placeholder until imageUrl exists.
 const photoGradient = computed(() => {
@@ -31,8 +35,8 @@ const photoGradient = computed(() => {
 
 <template>
   <article
-    class="entry border-rule-soft hover:bg-rust/[0.03] grid grid-cols-[64px_1fr] gap-3 border-b px-3 py-5 transition-colors motion-reduce:transition-none sm:grid-cols-[88px_1fr] sm:gap-5 sm:px-4"
-    :class="{ 'opacity-70': !space.verified }"
+    class="entry border-rule-soft hover:bg-rust/[0.03] grid grid-cols-[64px_1fr] gap-3 border-b px-3 py-5 transition-all duration-200 motion-reduce:transition-none sm:grid-cols-[88px_1fr] sm:gap-5 sm:px-4"
+    :class="{ 'opacity-45 grayscale hover:opacity-100 hover:grayscale-0': visited }"
   >
     <div
       class="entry-photo h-[64px] w-[64px] flex-shrink-0 overflow-hidden sm:h-[88px] sm:w-[88px]"
