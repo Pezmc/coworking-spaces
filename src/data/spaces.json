@@ -2,7 +2,7 @@
   {
     "name": "MadMum Tiensestraat",
     "address": "Tiensestraat 38, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=madmum%20Tiensestraat%2038%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJSQ1B8JFhwUcRxNao2qSt9kI",
     "coordinates": { "lat": 50.87803, "lng": 4.70373 },
     "noiseLevel": "loud",
     "wifiSpeed": "slow",
@@ -71,7 +71,7 @@
   {
     "name": "MadMum Erasmushuis",
     "address": "Erasmusplein 1, 3000 Leuven",
-    "googleMapsUrl": "https://maps.app.goo.gl/LGvnfVha83zuDiaT7",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ49nJkWFhwUcRvX8ust6JwDE",
     "coordinates": { "lat": 50.877409, "lng": 4.709678 },
     "noiseLevel": "medium",
     "wifiSpeed": "unknown",
@@ -94,7 +94,7 @@
   {
     "name": "Bar Berlin",
     "address": "Brusselsestraat 115, Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bar%20Berlin%20Brusselsestraat%20115%2C%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/Bar+Berlin/@50.8807215,4.6925915,17z/data=!3m1!4b1!4m6!3m5!1s0x47c160de68fe0459:0x8e4971d112b3fa0e!8m2!3d50.8807215!4d4.6925915!16s%2Fg%2F11c45nzqq9",
     "coordinates": { "lat": 50.880666, "lng": 4.692622 },
     "noiseLevel": "quiet",
     "wifiSpeed": "fast",
@@ -117,7 +117,7 @@
   {
     "name": "Noir Coffeebar",
     "address": "Naamsestraat 49, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Noir%20Coffeebar%20Naamsestraat%2049%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJUbRoytZgwUcRUPMjambAoBQ",
     "coordinates": { "lat": 50.876664, "lng": 4.700779 },
     "noiseLevel": "quiet",
     "wifiSpeed": "medium",
@@ -140,7 +140,7 @@
   {
     "name": "Blanco Coffeebar",
     "address": "Leopold Vanderkelenstraat 27, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Blanco%20Coffeebar%20Leopold%20Vanderkelenstraat%2027%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ5ZmpANNhwUcRxfq83gID_XI",
     "coordinates": { "lat": 50.879839, "lng": 4.702827 },
     "noiseLevel": "quiet",
     "wifiSpeed": "medium",
@@ -276,10 +276,10 @@
     "imageUrl": "/photos/ricki.jpg"
   },
   {
-    "name": "IZY Coffee (Diestsestraat)",
+    "name": "IzyCoffee Leuven",
     "address": "Diestsestraat 74, 3000 Leuven",
-    "googleMapsUrl": "https://maps.app.goo.gl/kiWN8cRCPsV3W33s5",
-    "coordinates": { "lat": 50.8804579, "lng": 4.7018493 },
+    "googleMapsUrl": "https://maps.app.goo.gl/sxUaiVMpihW7SV358",
+    "coordinates": { "lat": 50.88055938132936, "lng": 4.706655821082029 },
     "noiseLevel": "unknown",
     "wifiSpeed": "unknown",
     "hasAC": "unknown",
@@ -297,29 +297,6 @@
     "outletNotes": "",
     "verified": false,
     "imageUrl": "/photos/izy-coffee-diestsestraat.jpg"
-  },
-  {
-    "name": "IZY Coffee (Brusselsestraat)",
-    "address": "Brusselsestraat 5, 3000 Leuven",
-    "googleMapsUrl": "https://maps.app.goo.gl/zY9mkKbBJNofz8Jc6",
-    "coordinates": { "lat": 50.8793795, "lng": 4.6952347 },
-    "noiseLevel": "unknown",
-    "wifiSpeed": "unknown",
-    "hasAC": "unknown",
-    "foodAndDrinkAvailability": "light",
-    "seatingType": "unknown",
-    "hasOutlets": "unknown",
-    "description": "Coffee bar on Brusselsestraat. Reportedly enforces a no-laptops policy during weekday lunch hours and all weekend.",
-    "openingHours": "",
-    "atmosphereNotes": "",
-    "wifiNotes": "",
-    "climateNotes": "",
-    "foodNotes": "",
-    "drinkNotes": "Coffee.",
-    "seatingNotes": "",
-    "outletNotes": "",
-    "verified": false,
-    "imageUrl": "/photos/izy-coffee-brusselsestraat.jpg"
   },
   {
     "name": "Koffiehuis Java",
@@ -508,7 +485,7 @@
   {
     "name": "Fika Lab",
     "address": "Brusselsestraat 202, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Fika%20Lab%20Brusselsestraat%20202%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJtQLFafBpwUcRNUlKxmya7o8",
     "coordinates": { "lat": 50.8812809, "lng": 4.6905262 },
     "noiseLevel": "quiet",
     "wifiSpeed": "medium",
@@ -531,7 +508,7 @@
   {
     "name": "Noordoever",
     "address": "Vaartkom 17A, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Noordoever%20Vaartkom%2017A%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJw2NBPsVgwUcR4dlXAIXKLlI",
     "coordinates": { "lat": 50.8880603, "lng": 4.7026536 },
     "noiseLevel": "quiet",
     "wifiSpeed": "unknown",
@@ -554,7 +531,7 @@
   {
     "name": "Komfort",
     "address": "Engels Plein 12, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Komfort%20Engels%20Plein%2012%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ9xTZgjthwUcRU_BQQrStCEc",
     "coordinates": { "lat": 50.8884892, "lng": 4.7021344 },
     "noiseLevel": "quiet",
     "wifiSpeed": "fast",
@@ -598,10 +575,10 @@
     "imageUrl": "/photos/hygge-leuven.jpg"
   },
   {
-    "name": "Bar Stan",
+    "name": "bar Stan",
     "address": "Constantin Meunierstraat 2, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bar%20Stan%20Constantin%20Meunierstraat%202%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.87103, "lng": 4.70882 },
+    "googleMapsUrl": "https://maps.app.goo.gl/1imhfsb7BxTkBrCdA",
+    "coordinates": { "lat": 50.871415835208424, "lng": 4.702668900000036 },
     "noiseLevel": "loud",
     "wifiSpeed": "medium",
     "hasAC": "unknown",
@@ -621,10 +598,10 @@
     "imageUrl": "/photos/bar-stan.jpg"
   },
   {
-    "name": "Hal 5",
+    "name": "HAL 5",
     "address": "Diestsesteenweg 104, 3010 Kessel-Lo",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hal%205%20Diestsesteenweg%20104%2C%203010%20Kessel-Lo",
-    "coordinates": { "lat": 50.8829, "lng": 4.7175 },
+    "googleMapsUrl": "https://maps.app.goo.gl/F3tMVz7dtsgy1NtB9",
+    "coordinates": { "lat": 50.88305261537221, "lng": 4.722338019659682 },
     "noiseLevel": "loud",
     "wifiSpeed": "medium",
     "hasAC": "no",
@@ -646,7 +623,7 @@
   {
     "name": "Stadscafe Van de Velde (Tweebronnen)",
     "address": "Rijschoolstraat 4, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Stadscafe%20Van%20de%20Velde%20Rijschoolstraat%204%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/Van+de+Velde+Stadscafe/@50.8804437,4.7035198,17z/data=!3m1!4b1!4m6!3m5!1s0x47c160d7521f1f4f:0xb575b24b49b7eed1!8m2!3d50.8804437!4d4.7035198!16s%2Fg%2F11j8lnkrlj",
     "coordinates": { "lat": 50.880791, "lng": 4.703607 },
     "noiseLevel": "medium",
     "wifiSpeed": "medium",
@@ -667,10 +644,10 @@
     "imageUrl": "/photos/bibliotheek-tweebronnen.jpg"
   },
   {
-    "name": "Wasbar Leuven",
-    "address": "Tiensestraat 65, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Wasbar%20Leuven%20Tiensestraat%2065%2C%203000%20Leuven",
-    "coordinates": { "lat": 50.8774, "lng": 4.7045 },
+    "name": "WASBAR Leuven",
+    "address": "Tiensestraat 7, 3000 Leuven",
+    "googleMapsUrl": "https://maps.app.goo.gl/m3oWYy16D72mwLzM8",
+    "coordinates": { "lat": 50.87878637882894, "lng": 4.703217238673715 },
     "noiseLevel": "loud",
     "wifiSpeed": "slow",
     "hasAC": "unknown",
@@ -692,7 +669,7 @@
   {
     "name": "Elisa by JAVA Coffee",
     "address": "Brusselsestraat 134, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Elisa%20by%20JAVA%20Coffee%20Brusselsestraat%20134%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJUwpFSVlhwUcRRNb8oZf9yDI",
     "coordinates": { "lat": 50.879, "lng": 4.693 },
     "noiseLevel": "quiet",
     "wifiSpeed": "medium",
@@ -738,7 +715,7 @@
   {
     "name": "Café Entrepot",
     "address": "Vaartkom 4, 3000 Leuven",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Caf%C3%A9%20Entrepot%20Vaartkom%204%2C%203000%20Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/place/Caf%C3%A9+Entrepot/@50.887711,4.7002991,17z/data=!3m1!4b1!4m6!3m5!1s0x47c160c4dce48dfb:0x6f55cfdf88b4de9a!8m2!3d50.887711!4d4.7002991!16s%2Fg%2F11cn9gkdwx",
     "coordinates": { "lat": 50.88765, "lng": 4.6999 },
     "noiseLevel": "medium",
     "wifiSpeed": "fast",
