@@ -82,10 +82,11 @@ function getMarkerIcon(space: ICoworkingSpace) {
       style="height: 100%; width: 100%"
     >
       <LTileLayer
-        url="https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank" rel="noopener noreferrer">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank" rel="noopener noreferrer">Stamen Design</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        :subdomains="['a', 'b', 'c', 'd']"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>'
         layer-type="base"
-        name="Stamen Toner Lite"
+        name="CARTO Positron"
       />
 
       <LMarker
