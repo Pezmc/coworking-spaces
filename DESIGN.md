@@ -298,7 +298,7 @@ Custom Leaflet markers (replacing the default blue droplets). Implementation: `L
 | Active pin      | 28×28 same circle + 3px outer rust ring `box-shadow: 0 0 0 3px rgba(199,95,28,0.25)`. |
 | Cluster pin     | 34×34 same shape, count rendered inside in Plex Sans 600 11px paper. No center dot. |
 | Popup           | 1px navy hairline border, paper bg, navy diamond pointer at the bottom. Inside: mono "NN · Name" (rust caption), Fraunces 600 17px navy name, mono small-caps meta strip, rust-underlined "Show details →" link. |
-| Tile layer      | Light grayscale OSM (or Stadia Stamen Toner Lite). Avoid color-saturated default OSM tiles — they fight the cream paper feel. |
+| Tile layer      | Light grayscale OSM via CARTO Positron (`light_all`). Avoid color-saturated default OSM tiles — they fight the cream paper feel. |
 
 Mobile: list panel hidden (`display: none`), the map takes `min-height: 460px` and `height: 70vh`. Spec also: a bottom sheet pattern for the selected pin's details on mobile (defer until building).
 
