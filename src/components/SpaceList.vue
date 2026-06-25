@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
+import type {
+  ICoworkingSpace,
+  IFilterState,
+  ISortState,
+  WifiSpeed,
+  NoiseLevel,
+} from '../types/space'
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
 import { matchesFilters, formatMinutes, hasActiveFilters } from '../utils/filters'
@@ -14,8 +20,8 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const WIFI_SPEED_ORDER = { unknown: 0, slow: 1, medium: 2, fast: 3 }
-const NOISE_LEVEL_ORDER = { quiet: 0, medium: 1, loud: 2 }
+const WIFI_SPEED_ORDER: Record<WifiSpeed, number> = { unknown: 0, slow: 1, medium: 2, fast: 3 }
+const NOISE_LEVEL_ORDER: Record<NoiseLevel, number> = { quiet: 0, medium: 1, loud: 2 }
 
 // True when no "More filters" panel selection is active (a time filter may still
 // be on). Reuses the central predicate so this can't drift if a panel filter is added.
