@@ -14,7 +14,8 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,vue,css}\" \"scripts/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,vue,css}\" \"scripts/**/*.ts\"",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "dependencies": {
     "@vue-leaflet/vue-leaflet": "^0.10.1",
