@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
-import { matchesFilters, formatMinutes } from '../utils/filters'
+import { matchesFilters, formatMinutes, hasActiveFilters } from '../utils/filters'
 
 interface Props {
   spaces: ICoworkingSpace[]
@@ -16,19 +16,9 @@ const props = defineProps<Props>()
 const WIFI_SPEED_ORDER = { unknown: 0, slow: 1, medium: 2, fast: 3 }
 const NOISE_LEVEL_ORDER = { quiet: 0, medium: 1, loud: 2 }
 
-// True when no "More filters" panel selection is active (a time filter may still be on).
-const noPanelFiltersActive = computed(() => {
-  const f = props.filters
-  return (
-    f.noiseLevel === 'all' &&
-    f.wifiSpeed === 'all' &&
-    f.hasAC === 'all' &&
-    f.foodAvailability === 'all' &&
-    f.seatingType === 'all' &&
-    f.hasOutlets === 'all' &&
-    f.verified === 'all'
-  )
-})
+// True when no "More filters" panel selection is active (a time filter may still
+// be on). Reuses the central predicate so this can't drift if a panel filter is added.
+const noPanelFiltersActive = computed(() => !hasActiveFilters(props.filters))
 
 const openAtLabel = computed(() =>
   props.filters.openAt !== null ? formatMinutes(props.filters.openAt) : null,
