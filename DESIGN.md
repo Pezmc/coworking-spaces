@@ -220,6 +220,7 @@ No focus state on the cards themselves — interactive elements *inside* cards c
 **Toolbar layout.** The header is now a multi-row composition:
 
 - **Section header row** for "All spots": `flex items-baseline justify-between` with the `<h2>All spots <span class="count">47</span></h2>` on the left and the `<view-segmented>` toggle on the right. On mobile (≤700px), `flex-direction: column-reverse` so the segmented toggle sits full-width above the heading.
+- **Toolbar row** (`flex flex-wrap items-center gap-2 sm:gap-3`): the time chips, then the Filters disclosure. The two time chips (`OpenNowChip` + `OpenAtChip`) are wrapped in their own **When? cluster** — a `<div role="group" aria-label="When">` with the same `gap-2 sm:gap-3` — so screen readers announce them as one labelled group and they wrap together as a unit. The cluster always leads the row, the Filters disclosure button follows.
 - **Filter tabs row**: `flex flex-wrap items-center gap-0` with text-tab buttons separated by hairline divider spans. No `flex-nowrap`.
 - **AskBar row**: stacked. `<label class="ask-label">` on top in mono; underlined `<input>` below; matched-chips row below the input when there are matches.
 
