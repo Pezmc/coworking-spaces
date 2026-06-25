@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   deriveWifiSpeed,
   formatWifiSpeed,
+  resolveWifiSpeed,
   validateWifiSpeedMbps,
-  wifiSpeedMatchesMeasurement,
 } from '../src/utils/wifiSpeed'
 
 describe('deriveWifiSpeed', () => {
@@ -33,17 +33,16 @@ describe('formatWifiSpeed', () => {
   })
 })
 
-describe('wifiSpeedMatchesMeasurement (drift guard)', () => {
-  it('a null measurement always matches — the bucket may be a qualitative judgement', () => {
-    expect(wifiSpeedMatchesMeasurement('medium', null)).toBe(true)
-    expect(wifiSpeedMatchesMeasurement('unknown', null)).toBe(true)
+describe('resolveWifiSpeed', () => {
+  it('derives from the measurement when present (the measurement wins)', () => {
+    expect(resolveWifiSpeed(null, { down: 400, up: 120 })).toBe('fast')
+    expect(resolveWifiSpeed('slow', { down: 400, up: 120 })).toBe('fast')
   })
-  it('treats undefined like null (no measurement → matches any bucket)', () => {
-    expect(wifiSpeedMatchesMeasurement('medium', undefined as unknown as null)).toBe(true)
+  it('uses the stored bucket when unmeasured', () => {
+    expect(resolveWifiSpeed('medium', null)).toBe('medium')
   })
-  it('a measurement must equal the bucket it derives', () => {
-    expect(wifiSpeedMatchesMeasurement('fast', { down: 400, up: 120 })).toBe(true)
-    expect(wifiSpeedMatchesMeasurement('medium', { down: 400, up: 120 })).toBe(false)
+  it('falls back to unknown when there is neither', () => {
+    expect(resolveWifiSpeed(null, null)).toBe('unknown')
   })
 })
 

@@ -15,7 +15,7 @@ import {
 } from '../types/space'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
-import { formatWifiSpeed } from '../utils/wifiSpeed'
+import { formatWifiSpeed, resolveWifiSpeed } from '../utils/wifiSpeed'
 import AppIcon from './AppIcon.vue'
 
 interface Props {
@@ -27,9 +27,11 @@ const props = defineProps<Props>()
 
 const verifyUrl = computed(() => buildUpdateSpaceUrl(props.space, 'verify'))
 
-// Tooltip shows the bucket's description, plus the measured speed when we have one.
+const wifiBucket = computed(() =>
+  resolveWifiSpeed(props.space.wifiSpeed, props.space.wifiSpeedMbps),
+)
 const wifiTooltip = computed(() => {
-  const base = WIFI_SPEED_DESCRIPTIONS[props.space.wifiSpeed]
+  const base = WIFI_SPEED_DESCRIPTIONS[wifiBucket.value]
   const measured = formatWifiSpeed(props.space.wifiSpeedMbps)
   return measured ? `${base} — measured ${measured}` : base
 })
@@ -149,8 +151,8 @@ function wifiIcon(speed: string): string {
       ]"
     >
       <span v-tippy="wifiTooltip" class="inline-flex cursor-help items-center gap-1">
-        <AppIcon :name="wifiIcon(space.wifiSpeed)" size="sm" />
-        {{ WIFI_SPEED_LABELS[space.wifiSpeed] }} wifi
+        <AppIcon :name="wifiIcon(wifiBucket)" size="sm" />
+        {{ WIFI_SPEED_LABELS[wifiBucket] }} wifi
       </span>
       <span class="text-rule">·</span>
       <span

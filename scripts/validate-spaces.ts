@@ -1,12 +1,8 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
-import {
-  validateWifiSpeedMbps,
-  wifiSpeedMatchesMeasurement,
-  deriveWifiSpeed,
-} from '../src/utils/wifiSpeed'
-import type { IWifiSpeedMbps, WifiSpeed } from '../src/types/space'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
+import { WIFI_SPEEDS, type WifiSpeed } from '../src/types/space'
 
 const YELLOW = '\x1b[33m'
 const RED = '\x1b[31m'
@@ -89,23 +85,27 @@ for (const space of spaces) {
     errors.push({ spaceId, spaceName: name, issue })
   }
 
-  // Structured wi-fi speed: valid measurement or null, and it must agree with
-  // the wifiSpeed bucket when a measurement is present.
+  // wifiSpeed must be null when wifiSpeedMbps is set (derived), else a stored bucket.
   const wifiMbps = (space as { wifiSpeedMbps?: unknown }).wifiSpeedMbps
   const wifiIssues = validateWifiSpeedMbps(wifiMbps)
   for (const issue of wifiIssues) {
     errors.push({ spaceId, spaceName: name, issue })
   }
-  if (
-    wifiIssues.length === 0 &&
-    typeof space.wifiSpeed === 'string' &&
-    !wifiSpeedMatchesMeasurement(space.wifiSpeed as WifiSpeed, wifiMbps as IWifiSpeedMbps | null)
-  ) {
-    errors.push({
-      spaceId,
-      spaceName: name,
-      issue: `wifiSpeed "${space.wifiSpeed}" disagrees with wifiSpeedMbps (derives ${deriveWifiSpeed(wifiMbps as IWifiSpeedMbps)})`,
-    })
+  if (wifiIssues.length === 0) {
+    const ws = (space as { wifiSpeed?: unknown }).wifiSpeed
+    if (wifiMbps !== null && ws !== null) {
+      errors.push({
+        spaceId,
+        spaceName: name,
+        issue: 'wifiSpeed must be null when wifiSpeedMbps is set',
+      })
+    } else if (wifiMbps === null && !WIFI_SPEEDS.includes(ws as WifiSpeed)) {
+      errors.push({
+        spaceId,
+        spaceName: name,
+        issue: `wifiSpeed must be ${WIFI_SPEEDS.join('|')} when there is no measurement`,
+      })
+    }
   }
 }
 

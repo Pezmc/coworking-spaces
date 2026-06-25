@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest'
 import spaces from '../src/data/spaces.json'
 import { validateSpaceShape } from '../scripts/space-validator'
 import { buildSchedule, validateWeeklyHours } from '../src/utils/hoursBasic'
-import { validateWifiSpeedMbps, wifiSpeedMatchesMeasurement } from '../src/utils/wifiSpeed'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
 import type { ICoworkingSpace } from '../src/types/space'
 
 const data = spaces as unknown as ICoworkingSpace[]
@@ -44,14 +44,15 @@ describe('spaces.json data integrity', () => {
     }
   })
 
-  it('every space has valid wifiSpeedMbps that agrees with its wifiSpeed bucket', () => {
+  it('wifiSpeedMbps is valid and wifiSpeed is null exactly when measured', () => {
     const bad = data
       .map((s) => ({
         name: s.name,
         errs: validateWifiSpeedMbps(s.wifiSpeedMbps),
-        drift: !wifiSpeedMatchesMeasurement(s.wifiSpeed, s.wifiSpeedMbps),
+        // measured → wifiSpeed must be null; unmeasured → must be a stored bucket
+        violation: s.wifiSpeedMbps ? s.wifiSpeed !== null : s.wifiSpeed === null,
       }))
-      .filter((x) => x.errs.length > 0 || x.drift)
+      .filter((x) => x.errs.length > 0 || x.violation)
     expect(bad).toEqual([])
   })
 })

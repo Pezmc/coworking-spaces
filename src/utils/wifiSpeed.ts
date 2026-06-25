@@ -1,21 +1,11 @@
 import type { IWifiSpeedMbps, WifiSpeed } from '../types/space'
 
-// Thresholds match WIFI_SPEED_DESCRIPTIONS: slow <25, medium 25–100, fast >100 Mbps.
 const MEDIUM_FLOOR_MBPS = 25
 const FAST_THRESHOLD_MBPS = 100
-
-// Sanity bounds for validation — a home/café line above 10 Gbps or a latency
-// over 100s is almost certainly a data-entry error, not a real measurement.
 const MAX_MBPS = 10_000
 const MAX_LATENCY_MS = 100_000
 
-/**
- * Derive the `wifiSpeed` bucket from a measurement, keyed on download speed
- * (the number that matters for laptop work). `null` (unmeasured) → "unknown".
- * down > 100 → "fast", 25–100 → "medium", < 25 → "slow". Non-finite or
- * non-positive `down` → "unknown" (defensive: never confidently mislabel garbage
- * as "slow" if a caller bypasses validateWifiSpeedMbps).
- */
+// down >100 → fast, 25–100 → medium, <25 → slow; null/garbage → unknown.
 export function deriveWifiSpeed(mbps: IWifiSpeedMbps | null): WifiSpeed {
   if (!mbps || !Number.isFinite(mbps.down) || mbps.down <= 0) return 'unknown'
   if (mbps.down > FAST_THRESHOLD_MBPS) return 'fast'
@@ -23,33 +13,22 @@ export function deriveWifiSpeed(mbps: IWifiSpeedMbps | null): WifiSpeed {
   return 'slow'
 }
 
-/**
- * Human-readable measurement, e.g. "400 ↓ / 120 ↑ Mbps" (with " · 33 ms" when
- * latency is known). Returns '' when unmeasured (null) so callers can `v-if` it.
- */
+// The effective bucket: derived from a measurement when present, else the stored judgement.
+export function resolveWifiSpeed(
+  wifiSpeed: WifiSpeed | null,
+  mbps: IWifiSpeedMbps | null,
+): WifiSpeed {
+  return mbps ? deriveWifiSpeed(mbps) : (wifiSpeed ?? 'unknown')
+}
+
+// "400 ↓ / 120 ↑ Mbps" (· 33 ms when known); '' when unmeasured.
 export function formatWifiSpeed(mbps: IWifiSpeedMbps | null): string {
   if (!mbps) return ''
   const base = `${mbps.down} ↓ / ${mbps.up} ↑ Mbps`
   return mbps.latencyMs !== undefined ? `${base} · ${mbps.latencyMs} ms` : base
 }
 
-/**
- * The drift guard: a measurement and the `wifiSpeed` bucket are consistent when
- * there is no measurement, or the bucket equals what the measurement derives.
- */
-export function wifiSpeedMatchesMeasurement(
-  wifiSpeed: WifiSpeed,
-  mbps: IWifiSpeedMbps | null,
-): boolean {
-  return !mbps || deriveWifiSpeed(mbps) === wifiSpeed
-}
-
-/**
- * Structural validation for a space's `wifiSpeedMbps` field. Returns
- * human-readable problems (empty array = valid). `null` is valid (unmeasured).
- * Does NOT check consistency with `wifiSpeed` — that needs both fields and lives
- * with the space-level validator (it calls wifiSpeedMatchesMeasurement).
- */
+// Problems with a wifiSpeedMbps value ([] = valid). null = unmeasured.
 export function validateWifiSpeedMbps(value: unknown): string[] {
   if (value === null) return []
   if (typeof value !== 'object' || Array.isArray(value)) {

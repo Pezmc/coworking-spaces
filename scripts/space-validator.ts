@@ -7,15 +7,10 @@ import {
   SEATING_TYPES,
   OUTLET_OPTIONS,
   type ICoworkingSpace,
-  type IWifiSpeedMbps,
   type WifiSpeed,
 } from '../src/types/space'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
-import {
-  validateWifiSpeedMbps,
-  wifiSpeedMatchesMeasurement,
-  deriveWifiSpeed,
-} from '../src/utils/wifiSpeed'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
 
 // Allowed ENUM replacements when filling "unknown" on non-verified spaces.
 // "unknown" itself is not a valid replacement target.
@@ -256,22 +251,25 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     })
   }
 
-  // Structured wi-fi speed: IWifiSpeedMbps object or null. When a measurement is
-  // present, the wifiSpeed bucket must equal what it derives (no drift).
+  // wifiSpeedMbps valid or null; wifiSpeed must be null when measured (derived), else a bucket.
   const wifiErrors = validateWifiSpeedMbps(s.wifiSpeedMbps)
   for (const reason of wifiErrors) {
     errors.push({ spaceName: label, field: 'wifiSpeedMbps', reason })
   }
-  if (
-    wifiErrors.length === 0 &&
-    typeof s.wifiSpeed === 'string' &&
-    !wifiSpeedMatchesMeasurement(s.wifiSpeed as WifiSpeed, s.wifiSpeedMbps as IWifiSpeedMbps | null)
-  ) {
-    errors.push({
-      spaceName: label,
-      field: 'wifiSpeed',
-      reason: `"${s.wifiSpeed}" disagrees with the measurement (${deriveWifiSpeed(s.wifiSpeedMbps as IWifiSpeedMbps)} per wifiSpeedMbps)`,
-    })
+  if (wifiErrors.length === 0) {
+    if (s.wifiSpeedMbps !== null && s.wifiSpeed !== null) {
+      errors.push({
+        spaceName: label,
+        field: 'wifiSpeed',
+        reason: 'must be null when wifiSpeedMbps is set (it is derived)',
+      })
+    } else if (s.wifiSpeedMbps === null && !WIFI_SPEEDS.includes(s.wifiSpeed as WifiSpeed)) {
+      errors.push({
+        spaceName: label,
+        field: 'wifiSpeed',
+        reason: `must be ${WIFI_SPEEDS.join('|')} when there is no measurement`,
+      })
+    }
   }
 
   if (typeof s.verified !== 'boolean') {
@@ -295,6 +293,7 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
   }
 
   for (const f of ENUM_FIELD_NAMES) {
+    if (f === 'wifiSpeed') continue // nullable; validated in the wi-fi block above
     if (typeof s[f] !== 'string') {
       errors.push({ spaceName: label, field: f, reason: `Expected string, got ${typeof s[f]}` })
     }

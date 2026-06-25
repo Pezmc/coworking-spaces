@@ -58,21 +58,7 @@ export interface IOpeningInterval {
  */
 export type WeeklyHours = Record<DayOfWeek, IOpeningInterval[]>
 
-// Structured wi-fi speed ----------------------------------------------------
-// The measured Mbps used to live only inside the free-text `wifiNotes` prose
-// (e.g. "Fast (400 Mbps down, 120 Mbps up)") while the filterable `wifiSpeed`
-// bucket was hand-set separately — the two could silently disagree. The number
-// is now structured. `wifiSpeed` stays the bucket (it also covers qualitative,
-// number-less assessments), but when a measurement IS present it must equal
-// deriveWifiSpeed(it), enforced by validation so they can't drift (see
-// utils/wifiSpeed.ts).
-
-/**
- * A measured wi-fi speed test, in Mbps, plus optional latency. `wifiSpeedMbps:
- * null` on a space means no measurement (the `wifiSpeed` bucket may still be a
- * qualitative judgement). `up` may exceed `down` — that's what some venues
- * actually measure.
- */
+// A measured wi-fi speed test in Mbps; up may exceed down.
 export interface IWifiSpeedMbps {
   down: number
   up: number
@@ -88,8 +74,9 @@ export interface ICoworkingSpace {
 
   // Standardized fields for filtering
   noiseLevel: NoiseLevel
-  wifiSpeed: WifiSpeed // bucket: derived from wifiSpeedMbps when measured, else a qualitative judgement
-  wifiSpeedMbps: IWifiSpeedMbps | null // measured speed test (Mbps); null = unmeasured
+  // null when wifiSpeedMbps is set (derived); a stored bucket only for unmeasured venues.
+  wifiSpeed: WifiSpeed | null
+  wifiSpeedMbps: IWifiSpeedMbps | null
   hasAC: HasAC
   foodAndDrinkAvailability: FoodAndDrinkAvailability
   seatingType: SeatingType
@@ -106,7 +93,7 @@ export interface ICoworkingSpace {
 
   // Descriptive fields for standardised options
   atmosphereNotes: string // detail on the vibe/feeling/noise (noiseLevel)
-  wifiNotes: string // human colour on the wifi (reliability, peak-time dips); the number lives in wifiSpeedMbps
+  wifiNotes: string // free-text colour; the number is in wifiSpeedMbps
   climateNotes: string // heating/cooling info (hasAC)
   foodNotes: string // notes about food (foodAndDrinkAvailability)
   drinkNotes: string // notes about drinks (foodAndDrinkAvailability)
@@ -179,8 +166,7 @@ export const OUTLET_LABELS: Record<OutletAvailability, string> = {
   unknown: 'Unknown',
 }
 
-// The Mbps figures here mirror MEDIUM_FLOOR_MBPS (25) and FAST_THRESHOLD_MBPS
-// (100) in utils/wifiSpeed.ts (deriveWifiSpeed). Change them together.
+// Mbps figures mirror the thresholds in utils/wifiSpeed.ts — change together.
 export const WIFI_SPEED_DESCRIPTIONS: Record<WifiSpeed, string> = {
   unknown: 'WiFi speed has not been tested yet',
   slow: 'Under 25 Mbps – suitable for browsing and email',

@@ -24,6 +24,7 @@
 
 import type { ICoworkingSpace, IFilterState } from '../types/space'
 import { isOpenAt, buildSchedule } from './hoursBasic'
+import { resolveWifiSpeed } from './wifiSpeed'
 
 // Valid minutes-since-midnight range for an openAt value (any time of day).
 // The chip menu only offers 06:00–23:00, but NL parsing can produce any minute,
@@ -90,7 +91,11 @@ export function formatMinutes(minutes: number): string {
  */
 export function matchesFilters(space: ICoworkingSpace, f: IFilterState, now: Date): boolean {
   if (f.noiseLevel !== 'all' && space.noiseLevel !== f.noiseLevel) return false
-  if (f.wifiSpeed !== 'all' && space.wifiSpeed !== f.wifiSpeed) return false
+  if (
+    f.wifiSpeed !== 'all' &&
+    resolveWifiSpeed(space.wifiSpeed, space.wifiSpeedMbps) !== f.wifiSpeed
+  )
+    return false
   if (f.hasAC !== 'all' && space.hasAC !== f.hasAC) return false
   if (f.foodAvailability !== 'all' && space.foodAndDrinkAvailability !== f.foodAvailability)
     return false
