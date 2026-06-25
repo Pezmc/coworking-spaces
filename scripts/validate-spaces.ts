@@ -1,5 +1,6 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
+import { validateWeeklyHours } from '../src/utils/hoursBasic'
 
 const YELLOW = '\x1b[33m'
 const RESET = '\x1b[0m'
@@ -69,6 +70,11 @@ for (const space of spaces) {
       spaceName: name,
       issue: 'Missing Google Maps URL',
     })
+  }
+
+  // Structured opening hours must be a valid WeeklyHours object or null.
+  for (const issue of validateWeeklyHours((space as { hours?: unknown }).hours)) {
+    warnings.push({ spaceId, spaceName: name, issue })
   }
 }
 

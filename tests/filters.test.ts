@@ -8,7 +8,23 @@ import {
   formatMinutes,
   brusselsParts,
 } from '../src/utils/filters'
-import type { ICoworkingSpace, IFilterState } from '../src/types/space'
+import { DAYS_OF_WEEK } from '../src/types/space'
+import type { ICoworkingSpace, IFilterState, WeeklyHours } from '../src/types/space'
+
+/** Same hours every day. */
+function everyDay(open: string, close: string): WeeklyHours {
+  const out = {} as WeeklyHours
+  for (const d of DAYS_OF_WEEK) out[d] = [{ open, close }]
+  return out
+}
+
+/** Open Monday only; closed the rest of the week. */
+function mondayOnly(open: string, close: string): WeeklyHours {
+  const out = {} as WeeklyHours
+  for (const d of DAYS_OF_WEEK) out[d] = []
+  out.monday = [{ open, close }]
+  return out
+}
 
 function space(overrides: Partial<ICoworkingSpace> = {}): ICoworkingSpace {
   return {
@@ -23,7 +39,7 @@ function space(overrides: Partial<ICoworkingSpace> = {}): ICoworkingSpace {
     seatingType: 'mixed',
     hasOutlets: 'many',
     description: '',
-    openingHours: 'Mon-Sun 09:00-17:00',
+    hours: everyDay('09:00', '17:00'),
     atmosphereNotes: '',
     wifiNotes: '',
     climateNotes: '',
@@ -149,7 +165,7 @@ describe('matchesFilters', () => {
   })
 
   describe('openAt', () => {
-    const s = space({ openingHours: 'Mon-Sun 09:00-17:00' })
+    const s = space({ hours: everyDay('09:00', '17:00') })
     it('open during hours', () => {
       expect(matchesFilters(s, { ...NONE, openAt: 600 }, MON)).toBe(true) // 10:00
     })
@@ -159,15 +175,15 @@ describe('matchesFilters', () => {
     it('before opening', () => {
       expect(matchesFilters(s, { ...NONE, openAt: 480 }, MON)).toBe(false) // 08:00
     })
-    it('blank hours are excluded (unknown ≠ open)', () => {
-      expect(matchesFilters(space({ openingHours: '' }), { ...NONE, openAt: 600 }, MON)).toBe(false)
+    it('unknown hours are excluded (unknown ≠ open)', () => {
+      expect(matchesFilters(space({ hours: null }), { ...NONE, openAt: 600 }, MON)).toBe(false)
     })
     it('ANDs with a panel select', () => {
       expect(matchesFilters(s, { ...NONE, openAt: 600, noiseLevel: 'quiet' }, MON)).toBe(true)
       expect(matchesFilters(s, { ...NONE, openAt: 600, noiseLevel: 'loud' }, MON)).toBe(false)
     })
     it('uses the Brussels day-of-week', () => {
-      const monOnly = space({ openingHours: 'Mon 09:00-17:00, Tue-Sun closed' })
+      const monOnly = space({ hours: mondayOnly('09:00', '17:00') })
       expect(matchesFilters(monOnly, { ...NONE, openAt: 600 }, MON)).toBe(true)
       expect(matchesFilters(monOnly, { ...NONE, openAt: 600 }, TUE)).toBe(false)
     })
@@ -176,17 +192,15 @@ describe('matchesFilters', () => {
   // Regression: openNow filtering moved out of App/SpaceList into matchesFilters
   // and switched from the visitor's local clock to Europe/Brussels.
   describe('openNow', () => {
-    const monOnly = space({ openingHours: 'Mon 09:00-17:00, Tue-Sun closed' })
+    const monOnly = space({ hours: mondayOnly('09:00', '17:00') })
     it('passes when Brussels-now is inside hours', () => {
       expect(matchesFilters(monOnly, { ...NONE, openNow: true }, MON)).toBe(true) // Mon 12:00
     })
     it('fails when closed at Brussels-now', () => {
       expect(matchesFilters(monOnly, { ...NONE, openNow: true }, TUE)).toBe(false) // Tue
     })
-    it('excludes blank-hours spaces', () => {
-      expect(matchesFilters(space({ openingHours: '' }), { ...NONE, openNow: true }, MON)).toBe(
-        false,
-      )
+    it('excludes unknown-hours spaces', () => {
+      expect(matchesFilters(space({ hours: null }), { ...NONE, openNow: true }, MON)).toBe(false)
     })
   })
 })

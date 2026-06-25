@@ -58,7 +58,7 @@ HARD RULES:
   (VisitLeuven, Nomadlist, etc.), leave it as "unknown". Guessing is wrong.
 - Do NOT change any field that is not currently "unknown".
 - Do NOT reword description, atmosphereNotes, wifiNotes, climateNotes, foodNotes,
-  drinkNotes, seatingNotes, outletNotes, openingHours, address, googleMapsUrl.
+  drinkNotes, seatingNotes, outletNotes, hours, hoursNote, address, googleMapsUrl.
   Preserve them byte-for-byte.
 - Preserve ALL existing keys and their current values.
 - Preserve coordinates exactly.

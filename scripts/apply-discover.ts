@@ -16,6 +16,7 @@ import {
   colors,
   PROXIMITY_DUPE_METRES,
 } from './space-validator'
+import { formatHours } from '../src/utils/hoursBasic'
 import type { ICoworkingSpace } from '../src/types/space'
 
 const REPO_ROOT = join(import.meta.dir, '..')
@@ -182,7 +183,9 @@ if (AUTO_YES) {
     console.log(
       `  ${colors.dim}enums:${colors.reset}   noise=${space.noiseLevel} wifi=${space.wifiSpeed} ac=${space.hasAC} food=${space.foodAndDrinkAvailability} seat=${space.seatingType} outlets=${space.hasOutlets}`,
     )
-    console.log(`  ${colors.dim}hours:${colors.reset}   ${space.openingHours}`)
+    console.log(
+      `  ${colors.dim}hours:${colors.reset}   ${formatHours(space.hours) || '(unknown)'}${space.hoursNote ? ` — ${space.hoursNote}` : ''}`,
+    )
     console.log(`  ${colors.dim}desc:${colors.reset}    ${space.description}`)
     if (notes.length > 0) {
       console.log(`  ${colors.yellow}notes:${colors.reset}   ${notes.join(', ')}`)

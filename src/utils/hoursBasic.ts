@@ -1,13 +1,4 @@
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
-const DAY_INDEX: Record<string, number> = {
-  Sun: 0,
-  Mon: 1,
-  Tue: 2,
-  Wed: 3,
-  Thu: 4,
-  Fri: 5,
-  Sat: 6,
-}
+import { DAYS_OF_WEEK, type DayOfWeek, type WeeklyHours } from '../types/space'
 
 export interface TimeRange {
   start: number
@@ -16,79 +7,82 @@ export interface TimeRange {
 
 export type DaySchedule = Record<number, TimeRange[]>
 
-function normalizeDashes(s: string): string {
-  return s.replace(/[–—−]/g, '-')
+const MINUTES_PER_DAY = 24 * 60
+
+// DaySchedule is keyed by JS Date.getDay() (0 = Sun … 6 = Sat); WeeklyHours is
+// keyed by day name. This maps each name to its getDay() index.
+const DAY_TO_INDEX: Record<DayOfWeek, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
 }
 
-function parseHHMM(s: string): number | null {
+// Mon-first display order + abbreviations used by formatHours.
+const DAY_ABBR: Record<DayOfWeek, string> = {
+  monday: 'Mon',
+  tuesday: 'Tue',
+  wednesday: 'Wed',
+  thursday: 'Thu',
+  friday: 'Fri',
+  saturday: 'Sat',
+  sunday: 'Sun',
+}
+
+/**
+ * "HH:MM" → minutes since midnight (0–1440). Accepts "00:00"–"24:00". Returns
+ * null on any malformed value so bad data is caught by validation rather than
+ * silently treated as midnight.
+ */
+export function clockToMinutes(s: string): number | null {
   const m = /^(\d{1,2}):(\d{2})$/.exec(s.trim())
   if (!m || m[1] === undefined || m[2] === undefined) return null
   const h = parseInt(m[1], 10)
   const mm = parseInt(m[2], 10)
   if (h < 0 || h > 24 || mm < 0 || mm >= 60) return null
-  return h * 60 + mm
-}
-
-function parseDayList(daysPart: string): number[] | null {
-  const parts = daysPart.split('-').map((s) => s.trim())
-  if (parts.length === 1) {
-    const key = parts[0]
-    if (!key) return null
-    const d = DAY_INDEX[key]
-    return d === undefined ? null : [d]
-  }
-  if (parts.length !== 2) return null
-  const keyA = parts[0]
-  const keyB = parts[1]
-  if (!keyA || !keyB) return null
-  const a = DAY_INDEX[keyA]
-  const b = DAY_INDEX[keyB]
-  if (a === undefined || b === undefined) return null
-  const result: number[] = []
-  let i = a
-  while (true) {
-    result.push(i)
-    if (i === b) break
-    i = (i + 1) % 7
-    if (result.length > 7) return null
-  }
-  return result
+  const total = h * 60 + mm
+  if (total > MINUTES_PER_DAY) return null // rejects 24:01–24:59
+  return total
 }
 
 function emptySchedule(): DaySchedule {
   return { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }
 }
 
-export function parseOpeningHours(raw: string): DaySchedule | null {
-  if (!raw || !raw.trim()) return null
-  const normalized = normalizeDashes(raw)
+/**
+ * Convert structured WeeklyHours into the minutes-based DaySchedule the
+ * open-checks run against. Returns null when hours are unknown (null in).
+ *
+ * Overnight handling: when an interval's close is at or before its open, it
+ * runs past midnight — the slice after midnight is attributed to the NEXT day.
+ * So `{ tuesday: [{ open: "15:00", close: "01:00" }] }` reads as open at
+ * Wed 00:30. A close of "00:00"/"24:00" is exactly midnight and does not spill.
+ *
+ * Malformed times are skipped defensively (validateWeeklyHours is the real gate).
+ */
+export function buildSchedule(hours: WeeklyHours | null): DaySchedule | null {
+  if (!hours) return null
   const schedule = emptySchedule()
 
-  for (const segment of normalized
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)) {
-    const firstSpace = segment.indexOf(' ')
-    if (firstSpace === -1) return null
-    const daysPart = segment.slice(0, firstSpace)
-    const rest = segment.slice(firstSpace + 1).trim()
-    const days = parseDayList(daysPart)
-    if (!days) return null
-
-    if (rest.toLowerCase() === 'closed') continue
-
-    const timeMatch = /^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/.exec(rest)
-    if (!timeMatch || timeMatch[1] === undefined || timeMatch[2] === undefined) return null
-    const start = parseHHMM(timeMatch[1])
-    const end = parseHHMM(timeMatch[2])
-    if (start === null || end === null) return null
-    const effectiveEnd = end === 0 ? 24 * 60 : end
-    const isOvernight = effectiveEnd <= start
-    const clampedEnd = isOvernight ? 24 * 60 : effectiveEnd
-
-    for (const d of days) {
-      const dayRanges = schedule[d]
-      if (dayRanges) dayRanges.push({ start, end: clampedEnd })
+  for (const day of DAYS_OF_WEEK) {
+    const intervals = hours[day]
+    if (!intervals) continue
+    const idx = DAY_TO_INDEX[day]
+    for (const { open, close } of intervals) {
+      const start = clockToMinutes(open)
+      let end = clockToMinutes(close)
+      if (start === null || end === null) continue
+      if (end === 0) end = MINUTES_PER_DAY // a "00:00" close means end-of-day
+      if (end <= start) {
+        // Wraps past midnight: [start, 24:00] today, [00:00, end] tomorrow.
+        schedule[idx]!.push({ start, end: MINUTES_PER_DAY })
+        if (end > 0) schedule[(idx + 1) % 7]!.push({ start: 0, end })
+      } else {
+        schedule[idx]!.push({ start, end })
+      }
     }
   }
 
@@ -101,7 +95,7 @@ export function parseOpeningHours(raw: string): DaySchedule | null {
  *   minutes >= start && minutes < end   ← END-EXCLUSIVE
  *   opens 17:00 → open at 1020 ✓   closes 17:00 → NOT open at 1020 ✗
  *
- * Returns `null` when hours are unknown (unparseable), `false` on a day with
+ * Returns `null` when hours are unknown (schedule null), `false` on a day with
  * no ranges, otherwise whether `minutes` falls inside any range for `day`.
  */
 export function isOpenAt(
@@ -119,4 +113,82 @@ export function isOpen(schedule: DaySchedule | null, at: Date): boolean | null {
   return isOpenAt(schedule, at.getDay(), at.getHours() * 60 + at.getMinutes())
 }
 
-export const __TEST_ONLY__ = { DAYS, DAY_INDEX, normalizeDashes, parseHHMM, parseDayList }
+/**
+ * Human-readable schedule derived from structured hours, e.g.
+ * "Mon–Fri 08:30–18:00, Sat 09:00–17:00, Sun closed". Consecutive days with
+ * identical hours collapse into a range; split shifts join with " & ". Returns
+ * '' for unknown hours (null) and 'Closed' when every day is empty. Does NOT
+ * include `hoursNote` — callers render that separately.
+ */
+export function formatHours(hours: WeeklyHours | null): string {
+  if (!hours) return ''
+
+  const signature = (day: DayOfWeek): string => {
+    const intervals = hours[day] ?? []
+    if (intervals.length === 0) return 'closed'
+    return intervals.map((i) => `${i.open}–${i.close}`).join(' & ')
+  }
+
+  // Collapse consecutive same-signature days, in Mon-first order.
+  const groups: { start: DayOfWeek; end: DayOfWeek; sig: string }[] = []
+  for (const day of DAYS_OF_WEEK) {
+    const sig = signature(day)
+    const last = groups[groups.length - 1]
+    if (last && last.sig === sig) last.end = day
+    else groups.push({ start: day, end: day, sig })
+  }
+
+  if (groups.length === 1 && groups[0]!.sig === 'closed') return 'Closed'
+
+  return groups
+    .map((g) => {
+      const label =
+        g.start === g.end ? DAY_ABBR[g.start] : `${DAY_ABBR[g.start]}–${DAY_ABBR[g.end]}`
+      return `${label} ${g.sig}`
+    })
+    .join(', ')
+}
+
+/**
+ * Structural validation for a space's `hours` field. Returns human-readable
+ * problems (empty array = valid). `null` is valid (unknown hours). Shared by
+ * the build-time data validator and the LLM-enrichment pipeline so the rules
+ * live in exactly one place.
+ */
+export function validateWeeklyHours(hours: unknown): string[] {
+  if (hours === null) return []
+  if (typeof hours !== 'object' || Array.isArray(hours)) {
+    return ['hours must be an object keyed by weekday, or null']
+  }
+  const errors: string[] = []
+  const h = hours as Record<string, unknown>
+
+  for (const day of DAYS_OF_WEEK) {
+    const intervals = h[day]
+    if (!Array.isArray(intervals)) {
+      errors.push(`hours.${day} must be an array ([] = closed)`)
+      continue
+    }
+    intervals.forEach((iv, i) => {
+      if (!iv || typeof iv !== 'object') {
+        errors.push(`hours.${day}[${i}] must be an { open, close } object`)
+        return
+      }
+      const { open, close } = iv as Record<string, unknown>
+      if (typeof open !== 'string' || clockToMinutes(open) === null) {
+        errors.push(`hours.${day}[${i}].open is not a valid "HH:MM" time`)
+      }
+      if (typeof close !== 'string' || clockToMinutes(close) === null) {
+        errors.push(`hours.${day}[${i}].close is not a valid "HH:MM" time`)
+      }
+    })
+  }
+
+  for (const key of Object.keys(h)) {
+    if (!(DAYS_OF_WEEK as readonly string[]).includes(key)) {
+      errors.push(`hours has unexpected key "${key}"`)
+    }
+  }
+
+  return errors
+}

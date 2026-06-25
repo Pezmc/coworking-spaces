@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { parseOpeningHours, isOpen, isOpenAt } from '../src/utils/hoursBasic'
+import {
+  buildSchedule,
+  clockToMinutes,
+  formatHours,
+  isOpen,
+  isOpenAt,
+  validateWeeklyHours,
+} from '../src/utils/hoursBasic'
+import { DAYS_OF_WEEK, type IOpeningInterval, type WeeklyHours } from '../src/types/space'
 
 const DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 } as const
 
@@ -12,76 +20,100 @@ function at(dow: keyof typeof DOW, hh: number, mm = 0): Date {
   return d
 }
 
-describe('parseOpeningHours — dash normalization', () => {
-  it('parses hyphen (U+002D) day ranges', () => {
-    const s = parseOpeningHours('Mon-Fri 09:00-18:00')
-    expect(s).not.toBeNull()
-    expect(s![DOW.Mon]).toEqual([{ start: 540, end: 1080 }])
-    expect(s![DOW.Fri]).toEqual([{ start: 540, end: 1080 }])
-  })
+/** Build a full WeeklyHours from a partial; unspecified days are closed ([]). */
+function wh(partial: Partial<Record<keyof WeeklyHours, IOpeningInterval[]>>): WeeklyHours {
+  const out = {} as WeeklyHours
+  for (const day of DAYS_OF_WEEK) out[day] = partial[day] ?? []
+  return out
+}
 
-  it('parses en-dash (U+2013) day ranges identically', () => {
-    const s = parseOpeningHours('Mon\u2013Fri 09:00\u201318:00')
-    expect(s).not.toBeNull()
-    expect(s![DOW.Mon]).toEqual([{ start: 540, end: 1080 }])
-    expect(s![DOW.Fri]).toEqual([{ start: 540, end: 1080 }])
+describe('clockToMinutes', () => {
+  it('parses HH:MM to minutes since midnight', () => {
+    expect(clockToMinutes('00:00')).toBe(0)
+    expect(clockToMinutes('08:30')).toBe(510)
+    expect(clockToMinutes('17:00')).toBe(1020)
+    expect(clockToMinutes('24:00')).toBe(1440)
   })
-
-  it('treats mixed dash styles in one string correctly', () => {
-    const s = parseOpeningHours('Mon-Fri 09:00\u201318:00, Sat\u2013Sun 10:00-17:00')
-    expect(s).not.toBeNull()
-    expect(s![DOW.Mon]).toEqual([{ start: 540, end: 1080 }])
-    expect(s![DOW.Sat]).toEqual([{ start: 600, end: 1020 }])
-    expect(s![DOW.Sun]).toEqual([{ start: 600, end: 1020 }])
+  it('rejects malformed values with null', () => {
+    expect(clockToMinutes('')).toBeNull()
+    expect(clockToMinutes('9')).toBeNull()
+    expect(clockToMinutes('9:5')).toBeNull()
+    expect(clockToMinutes('25:00')).toBeNull()
+    expect(clockToMinutes('12:60')).toBeNull()
+    expect(clockToMinutes('24:01')).toBeNull()
+    expect(clockToMinutes('noon')).toBeNull()
   })
 })
 
-describe('parseOpeningHours — empty/invalid', () => {
-  it('returns null for empty string', () => {
-    expect(parseOpeningHours('')).toBeNull()
+describe('buildSchedule', () => {
+  it('returns null for unknown hours', () => {
+    expect(buildSchedule(null)).toBeNull()
   })
-  it('returns null for whitespace-only', () => {
-    expect(parseOpeningHours('   ')).toBeNull()
-  })
-  it('returns null for garbage', () => {
-    expect(parseOpeningHours('sometimes open')).toBeNull()
-  })
-})
 
-describe('parseOpeningHours — closed days', () => {
-  it('excludes days marked closed', () => {
-    const s = parseOpeningHours('Mon-Thu 09:00-17:00, Fri 09:00-15:00, Sat-Sun closed')
-    expect(s).not.toBeNull()
-    expect(s![DOW.Mon]).toEqual([{ start: 540, end: 1020 }])
-    expect(s![DOW.Fri]).toEqual([{ start: 540, end: 900 }])
-    expect(s![DOW.Sat]).toEqual([])
-    expect(s![DOW.Sun]).toEqual([])
+  it('maps weekday names to JS getDay() indices', () => {
+    const s = buildSchedule(wh({ monday: [{ open: '09:00', close: '18:00' }] }))!
+    expect(s[DOW.Mon]).toEqual([{ start: 540, end: 1080 }])
+    expect(s[DOW.Tue]).toEqual([])
+    expect(s[DOW.Sun]).toEqual([])
   })
-})
 
-describe('parseOpeningHours — day wrapping', () => {
-  it('handles Sun-Mon (wraps through week)', () => {
-    const s = parseOpeningHours('Sun-Mon closed, Tue-Thu 11:00-18:00')
-    expect(s).not.toBeNull()
-    expect(s![DOW.Sun]).toEqual([])
-    expect(s![DOW.Mon]).toEqual([])
-    expect(s![DOW.Tue]).toEqual([{ start: 660, end: 1080 }])
+  it('keeps closed days empty', () => {
+    const s = buildSchedule(wh({ friday: [{ open: '09:00', close: '15:00' }] }))!
+    expect(s[DOW.Sat]).toEqual([])
+    expect(s[DOW.Sun]).toEqual([])
   })
-})
 
-describe('parseOpeningHours — midnight and overnight', () => {
-  it('treats 00:00 end as end-of-day (24:00)', () => {
-    const s = parseOpeningHours('Mon-Fri 10:00-00:00')
-    expect(s![DOW.Mon]).toEqual([{ start: 600, end: 1440 }])
+  it('supports split shifts (multiple intervals per day)', () => {
+    const s = buildSchedule(
+      wh({
+        monday: [
+          { open: '09:00', close: '12:00' },
+          { open: '14:00', close: '18:00' },
+        ],
+      }),
+    )!
+    expect(s[DOW.Mon]).toEqual([
+      { start: 540, end: 720 },
+      { start: 840, end: 1080 },
+    ])
   })
-  it('treats overnight as closing at midnight of same day (W1 pragmatic)', () => {
-    const s = parseOpeningHours('Sat 13:00-03:00')
-    expect(s![DOW.Sat]).toEqual([{ start: 780, end: 1440 }])
+
+  it('treats a "00:00" close as end-of-day, no spill', () => {
+    const s = buildSchedule(wh({ monday: [{ open: '10:00', close: '00:00' }] }))!
+    expect(s[DOW.Mon]).toEqual([{ start: 600, end: 1440 }])
+    expect(s[DOW.Tue]).toEqual([])
+  })
+
+  it('treats a "24:00" close as end-of-day, no spill', () => {
+    const s = buildSchedule(wh({ saturday: [{ open: '17:00', close: '24:00' }] }))!
+    expect(s[DOW.Sat]).toEqual([{ start: 1020, end: 1440 }])
+    expect(s[DOW.Sun]).toEqual([])
+  })
+
+  // The core overnight fix: a post-midnight close spills into the NEXT day.
+  it('splits an overnight interval across midnight into the next day', () => {
+    const s = buildSchedule(wh({ tuesday: [{ open: '15:00', close: '01:00' }] }))!
+    expect(s[DOW.Tue]).toEqual([{ start: 900, end: 1440 }]) // Tue 15:00 → midnight
+    expect(s[DOW.Wed]).toEqual([{ start: 0, end: 60 }]) // Wed 00:00 → 01:00
+  })
+
+  it('wraps Sunday overnight into Monday', () => {
+    const s = buildSchedule(wh({ sunday: [{ open: '20:00', close: '02:00' }] }))!
+    expect(s[DOW.Sun]).toEqual([{ start: 1200, end: 1440 }])
+    expect(s[DOW.Mon]).toEqual([{ start: 0, end: 120 }])
   })
 })
 
 describe('isOpen', () => {
-  const monFri9to18 = parseOpeningHours('Mon-Fri 09:00-18:00, Sat-Sun closed')
+  const monFri9to18 = buildSchedule(
+    wh({
+      monday: [{ open: '09:00', close: '18:00' }],
+      tuesday: [{ open: '09:00', close: '18:00' }],
+      wednesday: [{ open: '09:00', close: '18:00' }],
+      thursday: [{ open: '09:00', close: '18:00' }],
+      friday: [{ open: '09:00', close: '18:00' }],
+    }),
+  )
 
   it('returns true during open hours', () => {
     expect(isOpen(monFri9to18, at('Tue', 14, 20))).toBe(true)
@@ -100,23 +132,32 @@ describe('isOpen', () => {
   })
 })
 
-describe('isOpen — real spaces.json samples', () => {
-  it('M-Tribe: open Tue 14:20 (Mon-Fri 08:30-18:00)', () => {
-    const s = parseOpeningHours('Mon-Fri 08:30-18:00, Sat 08:30-18:00, Sun 09:00-17:00')
-    expect(isOpen(s, at('Tue', 14, 20))).toBe(true)
+describe('isOpen — overnight venue reads open after midnight', () => {
+  // Café Entrepot-style: open Mon–Sat 09:30 until 01:00 the next morning.
+  const overnight = buildSchedule(
+    wh({
+      monday: [{ open: '09:30', close: '01:00' }],
+      tuesday: [{ open: '09:30', close: '01:00' }],
+    }),
+  )
+  it('open just after midnight on the following day (the bug this fixes)', () => {
+    expect(isOpen(overnight, at('Tue', 0, 30))).toBe(true)
   })
-  it('Stadsbibliotheek-style: closed Sunday', () => {
-    const s = parseOpeningHours('Mon\u2013Fri 09:00\u201318:00, Sat 10:00\u201318:00, Sun closed')
-    expect(isOpen(s, at('Sun', 11, 0))).toBe(false)
-  })
-  it('Bar Permeke-style: open Sat 13:00 (overnight range)', () => {
-    const s = parseOpeningHours('Mon-Fri 10:00-03:00, Sat 13:00-03:00, Sun 17:00-02:00')
-    expect(isOpen(s, at('Sat', 14, 0))).toBe(true)
+  it('closed at the post-midnight closing minute (end exclusive)', () => {
+    expect(isOpen(overnight, at('Tue', 1, 0))).toBe(false)
   })
 })
 
 describe('isOpenAt — pure time-of-day check (powers openAt + openNow)', () => {
-  const monFri = parseOpeningHours('Mon-Fri 09:00-17:00, Sat-Sun closed')
+  const monFri = buildSchedule(
+    wh({
+      monday: [{ open: '09:00', close: '17:00' }],
+      tuesday: [{ open: '09:00', close: '17:00' }],
+      wednesday: [{ open: '09:00', close: '17:00' }],
+      thursday: [{ open: '09:00', close: '17:00' }],
+      friday: [{ open: '09:00', close: '17:00' }],
+    }),
+  )
 
   it('returns null when hours are unknown', () => {
     expect(isOpenAt(null, 2, 600)).toBeNull()
@@ -133,12 +174,77 @@ describe('isOpenAt — pure time-of-day check (powers openAt + openNow)', () => 
   it('open one minute before close', () => {
     expect(isOpenAt(monFri, 2, 1019)).toBe(true) // Tue 16:59
   })
-  it('not open before opening', () => {
-    expect(isOpenAt(monFri, 2, 539)).toBe(false) // Tue 08:59
+})
+
+describe('formatHours', () => {
+  it('returns empty string for unknown hours', () => {
+    expect(formatHours(null)).toBe('')
   })
-  it('overnight range clamps to midnight (W1 pragmatic)', () => {
-    const s = parseOpeningHours('Sat 13:00-03:00')
-    expect(isOpenAt(s, 6, 1020)).toBe(true) // Sat 17:00 inside 13:00–24:00
-    expect(isOpenAt(s, 6, 120)).toBe(false) // Sat 02:00 not covered (clamped at midnight)
+
+  it('collapses consecutive identical days into a range', () => {
+    const text = formatHours(
+      wh({
+        monday: [{ open: '08:30', close: '18:00' }],
+        tuesday: [{ open: '08:30', close: '18:00' }],
+        wednesday: [{ open: '08:30', close: '18:00' }],
+        thursday: [{ open: '08:30', close: '18:00' }],
+        friday: [{ open: '08:30', close: '18:00' }],
+        saturday: [{ open: '09:00', close: '17:00' }],
+      }),
+    )
+    expect(text).toBe('Mon–Fri 08:30–18:00, Sat 09:00–17:00, Sun closed')
+  })
+
+  it('renders a single open day with the rest closed', () => {
+    expect(formatHours(wh({ monday: [{ open: '09:00', close: '17:00' }] }))).toBe(
+      'Mon 09:00–17:00, Tue–Sun closed',
+    )
+  })
+
+  it('joins split shifts with " & "', () => {
+    const text = formatHours(
+      wh({
+        monday: [
+          { open: '09:00', close: '12:00' },
+          { open: '14:00', close: '18:00' },
+        ],
+      }),
+    )
+    expect(text).toBe('Mon 09:00–12:00 & 14:00–18:00, Tue–Sun closed')
+  })
+
+  it('returns "Closed" when every day is empty', () => {
+    expect(formatHours(wh({}))).toBe('Closed')
+  })
+
+  it('does not include the hoursNote (callers render it separately)', () => {
+    // formatHours takes only the structured grid; bar Stan's caveat lives in hoursNote.
+    expect(formatHours(wh({ monday: [{ open: '08:00', close: '23:30' }] }))).not.toContain('brunch')
+  })
+})
+
+describe('validateWeeklyHours', () => {
+  it('accepts null (unknown hours)', () => {
+    expect(validateWeeklyHours(null)).toEqual([])
+  })
+  it('accepts a well-formed week', () => {
+    expect(validateWeeklyHours(wh({ monday: [{ open: '09:00', close: '17:00' }] }))).toEqual([])
+  })
+  it('rejects a non-object', () => {
+    expect(validateWeeklyHours('Mon-Fri 9-5').length).toBeGreaterThan(0)
+    expect(validateWeeklyHours([]).length).toBeGreaterThan(0)
+  })
+  it('flags a missing weekday', () => {
+    const partial = { ...wh({}) } as Record<string, unknown>
+    delete partial.sunday
+    expect(validateWeeklyHours(partial).some((e) => e.includes('sunday'))).toBe(true)
+  })
+  it('flags a malformed time', () => {
+    const bad = wh({ monday: [{ open: '9am', close: '17:00' }] })
+    expect(validateWeeklyHours(bad).some((e) => e.includes('open'))).toBe(true)
+  })
+  it('flags an unexpected key', () => {
+    const extra = { ...wh({}), funday: [] } as Record<string, unknown>
+    expect(validateWeeklyHours(extra).some((e) => e.includes('funday'))).toBe(true)
   })
 })

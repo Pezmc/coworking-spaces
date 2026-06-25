@@ -3,8 +3,8 @@
 ## Weekend 1: Open Now + Weather-aware filter chip ✅ Shipped
 
 - [x] Vitest installed, `"test": "vitest"` script, `tests/` dir
-- [x] `src/utils/hoursBasic.ts` — parses `openingHours`, normalizes Unicode dashes (`[–—−] → -`), exports `parseOpeningHours()` + `isOpen(schedule, date)`
-- [x] `tests/hoursBasic.test.ts` — 18 tests: hyphen/en-dash/mixed, empty, closed days, overnight, week-wrap, real spaces.json samples
+- [x] `src/utils/hoursBasic.ts` — opening-hours engine. _(Later refactored to structured `WeeklyHours`: `buildSchedule()` builds a minutes-based day schedule with overnight spillover, plus `isOpen()`/`isOpenAt()`, `formatHours()`, and `validateWeeklyHours()`.)_
+- [x] `tests/hoursBasic.test.ts` — covers clock parsing, closed days, split shifts, overnight-across-midnight, end-exclusive checks, formatting, and validation
 - [x] `src/utils/weather.ts` — open-meteo fetch for Leuven, sessionStorage 30-min cache, `useWeather()` singleton composable, never throws
 - [x] `src/utils/weatherEmoji.ts` — condition + temp → ☀️/⛅/🌧️/❄️/🌫️/⏳/⏰
 - [x] `src/components/OpenNowChip.vue` — `<button aria-pressed>` with loading/failed/active/focus states, `min-h-[44px]` touch target
@@ -72,6 +72,6 @@ Skipped — low ROI without a user-reported issue:
 
 ### Known limitations surfaced shipping the open-at-time filter (all pre-existing)
 
-- **Overnight hours after midnight** — `hoursBasic.ts` clamps a close-after-midnight range (e.g. Café Entrepot `Mon-Sat 09:30-01:00`) to end at midnight, so an `openAt`/`openNow` query for 00:30 wrongly excludes it. Affects "Open now" too. The time chip only offers 06:00–23:00 so the UI path can't reach it, but the URL/`?openAt=` and Ask-bar paths can. Fix needs a day-spillover model in `parseOpeningHours`.
-- **Parenthetical notes break hours parsing** — a non-conforming `openingHours` like `"Sat-Sun closed (except occasional Sunday brunch)"` (bar Stan) makes `parseOpeningHours` return `null`, so the venue is silently dropped from every time filter even on its valid weekday hours. Fix: clean the data string, or let the parser tolerate a trailing parenthetical.
+- [x] **Overnight hours after midnight** — ~~`hoursBasic.ts` clamps a close-after-midnight range (e.g. Café Entrepot `Mon-Sat 09:30-01:00`) to end at midnight, so an `openAt`/`openNow` query for 00:30 wrongly excludes it.~~ Resolved by the structured-hours migration: `buildSchedule()` splits an overnight interval (`close <= open`) across midnight into the next day, so a 00:30 query now matches.
+- [x] **Parenthetical notes break hours parsing** — ~~a non-conforming `openingHours` like `"Sat-Sun closed (except occasional Sunday brunch)"` (bar Stan) makes `parseOpeningHours` return `null`, so the venue is silently dropped from every time filter.~~ Resolved: free-form `openingHours` is gone. Hours are structured `WeeklyHours` (the source of truth) and caveats live in the optional `hoursNote` (bar Stan: `"Occasional Sunday brunch"`), so the venue keeps its valid weekday hours.
 - **Reactive clock for time filters** — `matchesFilters` and the list/map computeds capture `new Date()` at evaluation time with no live tick, so a page left open across midnight shows stale "open now"/"open at" results until some other reactive change fires. A shared `useNow()` (vueuse) ticking each minute would fix it.

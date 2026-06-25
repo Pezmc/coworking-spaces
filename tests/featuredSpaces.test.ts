@@ -15,7 +15,7 @@ function mkSpace(overrides: Partial<ICoworkingSpace> & { name: string }): ICowor
     seatingType: 'mixed',
     hasOutlets: 'some',
     description: `Description of ${overrides.name}`,
-    openingHours: 'Mon-Sun 09:00-18:00',
+    hours: null,
     atmosphereNotes: '',
     wifiNotes: '',
     climateNotes: '',
