@@ -16,6 +16,11 @@ describe('deriveWifiSpeed', () => {
     expect(deriveWifiSpeed({ down: 101, up: 20 })).toBe('fast') // > 100
     expect(deriveWifiSpeed({ down: 400, up: 120 })).toBe('fast')
   })
+  it('treats non-finite or non-positive down as unknown (defensive against bad input)', () => {
+    expect(deriveWifiSpeed({ down: NaN, up: 5 })).toBe('unknown')
+    expect(deriveWifiSpeed({ down: 0, up: 5 })).toBe('unknown')
+    expect(deriveWifiSpeed({ down: -10, up: 5 })).toBe('unknown')
+  })
 })
 
 describe('formatWifiSpeed', () => {
@@ -32,6 +37,9 @@ describe('wifiSpeedMatchesMeasurement (drift guard)', () => {
   it('a null measurement always matches — the bucket may be a qualitative judgement', () => {
     expect(wifiSpeedMatchesMeasurement('medium', null)).toBe(true)
     expect(wifiSpeedMatchesMeasurement('unknown', null)).toBe(true)
+  })
+  it('treats undefined like null (no measurement → matches any bucket)', () => {
+    expect(wifiSpeedMatchesMeasurement('medium', undefined as unknown as null)).toBe(true)
   })
   it('a measurement must equal the bucket it derives', () => {
     expect(wifiSpeedMatchesMeasurement('fast', { down: 400, up: 120 })).toBe(true)
@@ -63,5 +71,27 @@ describe('validateWifiSpeedMbps', () => {
     expect(
       validateWifiSpeedMbps({ down: 50, up: 10, jitter: 5 }).some((e) => e.includes('jitter')),
     ).toBe(true)
+  })
+  it('rejects down/up above the sanity cap (data-entry error guard)', () => {
+    expect(validateWifiSpeedMbps({ down: 10001, up: 10 }).some((e) => e.includes('down'))).toBe(
+      true,
+    )
+    expect(validateWifiSpeedMbps({ down: 50, up: 99999 }).some((e) => e.includes('up'))).toBe(true)
+  })
+  it('rejects latency above the sanity cap', () => {
+    expect(
+      validateWifiSpeedMbps({ down: 50, up: 10, latencyMs: 100001 }).some((e) =>
+        e.includes('latency'),
+      ),
+    ).toBe(true)
+  })
+  it('rejects NaN / Infinity (reachable from unknown LLM-pipeline input)', () => {
+    expect(validateWifiSpeedMbps({ down: Infinity, up: 10 }).length).toBeGreaterThan(0)
+    expect(validateWifiSpeedMbps({ down: NaN, up: 10 }).length).toBeGreaterThan(0)
+  })
+  it('rejects a non-number down/up (e.g. a stringified speed)', () => {
+    expect(validateWifiSpeedMbps({ down: '400', up: 10 }).some((e) => e.includes('down'))).toBe(
+      true,
+    )
   })
 })

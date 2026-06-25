@@ -2,7 +2,7 @@ import type { IWifiSpeedMbps, WifiSpeed } from '../types/space'
 
 // Thresholds match WIFI_SPEED_DESCRIPTIONS: slow <25, medium 25–100, fast >100 Mbps.
 const MEDIUM_FLOOR_MBPS = 25
-const FAST_FLOOR_MBPS = 100
+const FAST_THRESHOLD_MBPS = 100
 
 // Sanity bounds for validation — a home/café line above 10 Gbps or a latency
 // over 100s is almost certainly a data-entry error, not a real measurement.
@@ -12,11 +12,13 @@ const MAX_LATENCY_MS = 100_000
 /**
  * Derive the `wifiSpeed` bucket from a measurement, keyed on download speed
  * (the number that matters for laptop work). `null` (unmeasured) → "unknown".
- * down > 100 → "fast", 25–100 → "medium", < 25 → "slow".
+ * down > 100 → "fast", 25–100 → "medium", < 25 → "slow". Non-finite or
+ * non-positive `down` → "unknown" (defensive: never confidently mislabel garbage
+ * as "slow" if a caller bypasses validateWifiSpeedMbps).
  */
 export function deriveWifiSpeed(mbps: IWifiSpeedMbps | null): WifiSpeed {
-  if (!mbps) return 'unknown'
-  if (mbps.down > FAST_FLOOR_MBPS) return 'fast'
+  if (!mbps || !Number.isFinite(mbps.down) || mbps.down <= 0) return 'unknown'
+  if (mbps.down > FAST_THRESHOLD_MBPS) return 'fast'
   if (mbps.down >= MEDIUM_FLOOR_MBPS) return 'medium'
   return 'slow'
 }
@@ -39,7 +41,7 @@ export function wifiSpeedMatchesMeasurement(
   wifiSpeed: WifiSpeed,
   mbps: IWifiSpeedMbps | null,
 ): boolean {
-  return mbps === null || deriveWifiSpeed(mbps) === wifiSpeed
+  return !mbps || deriveWifiSpeed(mbps) === wifiSpeed
 }
 
 /**

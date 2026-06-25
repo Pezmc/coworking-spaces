@@ -7,6 +7,8 @@ import {
   SEATING_TYPES,
   OUTLET_OPTIONS,
   type ICoworkingSpace,
+  type IWifiSpeedMbps,
+  type WifiSpeed,
 } from '../src/types/space'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
 import {
@@ -14,7 +16,6 @@ import {
   wifiSpeedMatchesMeasurement,
   deriveWifiSpeed,
 } from '../src/utils/wifiSpeed'
-import type { IWifiSpeedMbps, WifiSpeed } from '../src/types/space'
 
 // Allowed ENUM replacements when filling "unknown" on non-verified spaces.
 // "unknown" itself is not a valid replacement target.

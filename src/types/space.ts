@@ -179,6 +179,8 @@ export const OUTLET_LABELS: Record<OutletAvailability, string> = {
   unknown: 'Unknown',
 }
 
+// The Mbps figures here mirror MEDIUM_FLOOR_MBPS (25) and FAST_THRESHOLD_MBPS
+// (100) in utils/wifiSpeed.ts (deriveWifiSpeed). Change them together.
 export const WIFI_SPEED_DESCRIPTIONS: Record<WifiSpeed, string> = {
   unknown: 'WiFi speed has not been tested yet',
   slow: 'Under 25 Mbps – suitable for browsing and email',
