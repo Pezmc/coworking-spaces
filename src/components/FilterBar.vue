@@ -109,6 +109,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option v-for="level in NOISE_LEVELS" :key="level" :value="level">
             {{ NOISE_LEVEL_LABELS[level] }}
           </option>
+          <option value="unknown">Unknown</option>
         </select>
       </label>
 
@@ -128,6 +129,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option v-for="speed in WIFI_SPEEDS" :key="speed" :value="speed">
             {{ WIFI_SPEED_LABELS[speed] }}
           </option>
+          <option value="unknown">Unknown</option>
         </select>
       </label>
 
@@ -147,6 +149,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option v-for="opt in AC_OPTIONS" :key="opt" :value="opt">
             {{ AC_LABELS[opt] }}
           </option>
+          <option value="unknown">Unknown</option>
         </select>
       </label>
 
@@ -185,6 +188,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option v-for="opt in SEATING_TYPES" :key="opt" :value="opt">
             {{ SEATING_LABELS[opt] }}
           </option>
+          <option value="unknown">Unknown</option>
         </select>
       </label>
 
@@ -204,6 +208,7 @@ const sortOptions: { field: SortField; label: string }[] = [
           <option v-for="opt in OUTLET_OPTIONS" :key="opt" :value="opt">
             {{ OUTLET_LABELS[opt] }}
           </option>
+          <option value="unknown">Unknown</option>
         </select>
       </label>
 

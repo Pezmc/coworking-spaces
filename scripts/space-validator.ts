@@ -10,32 +10,35 @@ import {
 } from '../src/types/space'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
 
-// Allowed ENUM replacements when filling "unknown" on non-verified spaces.
-// "unknown" itself is not a valid replacement target.
+// Allowed concrete values per enum field. "Unknown / not yet researched" is NOT
+// a member of any of these — it's represented by `null` on the space. So this
+// table doubles as (a) the legal replacement values when enriching a null field
+// (apply-enrich) and (b) the membership set when validating stored data
+// (validateEnumValues). A stored string outside its set — e.g. a stray
+// "unknown" — is invalid.
 export const ENUM_FIELDS = {
   noiseLevel: NOISE_LEVELS, // quiet | medium | loud
-  wifiSpeed: WIFI_SPEEDS.filter((v) => v !== 'unknown'), // slow | medium | fast
-  hasAC: AC_OPTIONS.filter((v) => v !== 'unknown'), // yes | no
+  wifiSpeed: WIFI_SPEEDS, // slow | medium | fast
+  hasAC: AC_OPTIONS, // yes | no
   foodAndDrinkAvailability: FOOD_AND_DRINK_OPTIONS, // none | light | full
   seatingType: SEATING_TYPES, // individual | mixed | group
-  hasOutlets: OUTLET_OPTIONS.filter((v) => v !== 'unknown'), // few | some | many
-} as const
-
-// Full enum sets including 'unknown' where the source type permits it.
-// Used by validateEnumValues to decide whether 'unknown' is a legal value
-// for the field at all (vs. a hallucination on e.g. noiseLevel).
-const ENUM_FIELDS_FULL = {
-  noiseLevel: NOISE_LEVELS,
-  wifiSpeed: WIFI_SPEEDS,
-  hasAC: AC_OPTIONS,
-  foodAndDrinkAvailability: FOOD_AND_DRINK_OPTIONS,
-  seatingType: SEATING_TYPES,
-  hasOutlets: OUTLET_OPTIONS,
+  hasOutlets: OUTLET_OPTIONS, // none | few | some | many
 } as const
 
 export type EnumFieldName = keyof typeof ENUM_FIELDS
 
 export const ENUM_FIELD_NAMES = Object.keys(ENUM_FIELDS) as EnumFieldName[]
+
+// Enum fields that may be `null` (unknown / not yet researched) — every
+// standardized field except foodAndDrinkAvailability, which is always
+// determinable. Used by validateSpaceShape to allow null only where the type does.
+export const NULLABLE_ENUM_FIELDS: readonly EnumFieldName[] = [
+  'noiseLevel',
+  'wifiSpeed',
+  'hasAC',
+  'seatingType',
+  'hasOutlets',
+]
 
 // Whitelist of fields persisted into spaces.json. Anything else in an
 // LLM response is dropped on the floor by pickKnownSpaceFields.
@@ -113,23 +116,23 @@ export const LEUVEN_BBOX = {
 export const PROXIMITY_DUPE_METRES = 50
 
 /**
- * Returns the list of enum fields whose value is not in the allowed set
- * for that field. Used by apply-discover.ts to reject LLM hallucinations
- * before they reach spaces.json. apply-enrich.ts has its own per-transition
- * check (only allows unknown -> valid enum on non-verified spaces).
+ * Returns the list of enum fields whose (non-null) value is not in the allowed
+ * set for that field. Used by apply-discover.ts to reject LLM hallucinations
+ * before they reach spaces.json, and by the data-integrity gates (the test and
+ * the build validator). apply-enrich.ts has its own per-transition check (only
+ * allows null -> valid enum on non-verified spaces).
  *
- * 'unknown' is allowed only for fields whose source type includes it
- * (wifiSpeed, hasAC, hasOutlets). Fields like noiseLevel and seatingType
- * have no 'unknown' in the type, so an LLM returning 'unknown' there is
- * a hallucination and gets rejected.
+ * `null` means unknown / not yet researched and is always allowed (skipped
+ * here). Any concrete string outside the allowed set — including a stray
+ * "unknown" — is rejected.
  */
 export function validateEnumValues(candidate: Record<string, unknown>): IValidationError[] {
   const errors: IValidationError[] = []
   const label = (candidate.name as string) ?? '(unnamed)'
   for (const field of ENUM_FIELD_NAMES) {
     const value = candidate[field]
-    if (typeof value !== 'string') continue // shape validator handles type errors
-    const allowed = ENUM_FIELDS_FULL[field] as readonly string[]
+    if (typeof value !== 'string') continue // null (unknown) / type errors handled by shape validator
+    const allowed = ENUM_FIELDS[field] as readonly string[]
     if (!allowed.includes(value)) {
       errors.push({
         spaceName: label,
@@ -204,9 +207,9 @@ export interface IValidationError {
 }
 
 /**
- * Validates a single space object has the required shape.
- * Returns errors for missing/invalid fields. Does not enforce enum membership
- * on fields that currently hold "unknown" in live data.
+ * Validates a single space object has the required shape (types/presence).
+ * Enum fields must be a string or, for the nullable ones, `null` (unknown).
+ * Membership of concrete enum values is checked separately by validateEnumValues.
  */
 export function validateSpaceShape(candidate: unknown, label: string): IValidationError[] {
   const errors: IValidationError[] = []
@@ -267,9 +270,25 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     }
   }
 
+  // Enum fields: a concrete string, or `null` (unknown) for the nullable ones.
   for (const f of ENUM_FIELD_NAMES) {
-    if (typeof s[f] !== 'string') {
-      errors.push({ spaceName: label, field: f, reason: `Expected string, got ${typeof s[f]}` })
+    const v = s[f]
+    if (v === null) {
+      if (!NULLABLE_ENUM_FIELDS.includes(f)) {
+        errors.push({
+          spaceName: label,
+          field: f,
+          reason: 'null not allowed (field has no unknown state)',
+        })
+      }
+      continue
+    }
+    if (typeof v !== 'string') {
+      errors.push({
+        spaceName: label,
+        field: f,
+        reason: `Expected string or null, got ${typeof v}`,
+      })
     }
   }
 

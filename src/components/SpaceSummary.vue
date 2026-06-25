@@ -2,16 +2,18 @@
 import { ref, computed } from 'vue'
 import {
   type ICoworkingSpace,
-  NOISE_LEVEL_LABELS,
-  WIFI_SPEED_LABELS,
+  type NoiseLevel,
+  type WifiSpeed,
   FOOD_LABELS,
-  SEATING_LABELS,
-  NOISE_LEVEL_DESCRIPTIONS,
-  WIFI_SPEED_DESCRIPTIONS,
   FOOD_DESCRIPTIONS,
-  SEATING_DESCRIPTIONS,
   AC_DESCRIPTIONS,
   VERIFIED_DESCRIPTIONS,
+  noiseLevelLabel,
+  noiseLevelDescription,
+  wifiSpeedLabel,
+  wifiSpeedDescription,
+  seatingTypeLabel,
+  seatingTypeDescription,
 } from '../types/space'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
@@ -41,14 +43,14 @@ function handleToggleVisited() {
   }
 }
 
-function noiseIcon(level: string): string {
+function noiseIcon(level: NoiseLevel | null): string {
   if (level === 'quiet') return 'volume-quiet'
   if (level === 'loud') return 'volume-loud'
   return 'volume-mid'
 }
 
-function wifiIcon(speed: string): string {
-  return speed === 'unknown' ? 'wifi-off' : 'wifi'
+function wifiIcon(speed: WifiSpeed | null): string {
+  return speed == null ? 'wifi-off' : 'wifi'
 }
 </script>
 
@@ -141,34 +143,31 @@ function wifiIcon(speed: string): string {
       ]"
     >
       <span
-        v-tippy="WIFI_SPEED_DESCRIPTIONS[space.wifiSpeed]"
+        v-tippy="wifiSpeedDescription(space.wifiSpeed)"
         class="inline-flex cursor-help items-center gap-1"
       >
         <AppIcon :name="wifiIcon(space.wifiSpeed)" size="sm" />
-        {{ WIFI_SPEED_LABELS[space.wifiSpeed] }} wifi
+        {{ wifiSpeedLabel(space.wifiSpeed) }} wifi
       </span>
       <span class="text-rule">·</span>
       <span
-        v-tippy="NOISE_LEVEL_DESCRIPTIONS[space.noiseLevel]"
+        v-tippy="noiseLevelDescription(space.noiseLevel)"
         class="inline-flex cursor-help items-center gap-1"
       >
         <AppIcon :name="noiseIcon(space.noiseLevel)" size="sm" />
-        {{ NOISE_LEVEL_LABELS[space.noiseLevel] }}
+        {{ noiseLevelLabel(space.noiseLevel) }}
       </span>
       <span class="text-rule">·</span>
       <span
-        v-tippy="SEATING_DESCRIPTIONS[space.seatingType]"
+        v-tippy="seatingTypeDescription(space.seatingType)"
         class="inline-flex cursor-help items-center gap-1"
       >
         <AppIcon name="armchair" size="sm" />
-        {{ SEATING_LABELS[space.seatingType] }}
+        {{ seatingTypeLabel(space.seatingType) }}
       </span>
       <template v-if="space.hasAC === 'yes'">
         <span class="text-rule">·</span>
-        <span
-          v-tippy="AC_DESCRIPTIONS[space.hasAC]"
-          class="inline-flex cursor-help items-center gap-1"
-        >
+        <span v-tippy="AC_DESCRIPTIONS.yes" class="inline-flex cursor-help items-center gap-1">
           <AppIcon name="snowflake" size="sm" />
           AC
         </span>

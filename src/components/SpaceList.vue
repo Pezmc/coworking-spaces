@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
+import type {
+  ICoworkingSpace,
+  IFilterState,
+  ISortState,
+  NoiseLevel,
+  WifiSpeed,
+} from '../types/space'
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
 import { matchesFilters, formatMinutes, hasActiveFilters } from '../utils/filters'
@@ -13,8 +19,14 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const WIFI_SPEED_ORDER = { unknown: 0, slow: 1, medium: 2, fast: 3 }
-const NOISE_LEVEL_ORDER = { quiet: 0, medium: 1, loud: 2 }
+const WIFI_SPEED_ORDER: Record<WifiSpeed, number> = { slow: 0, medium: 1, fast: 2 }
+const NOISE_LEVEL_ORDER: Record<NoiseLevel, number> = { quiet: 0, medium: 1, loud: 2 }
+
+// null (unknown / not yet researched) sorts ahead of every known value in
+// ascending order — matching how unknown wifi ranked before the null migration,
+// and fixing the NaN comparisons unknown noise levels used to produce here.
+const rank = <T extends string>(order: Record<T, number>, v: T | null): number =>
+  v == null ? -1 : order[v]
 
 // True when no "More filters" panel selection is active (a time filter may still
 // be on). Reuses the central predicate so this can't drift if a panel filter is added.
@@ -36,9 +48,14 @@ const filteredAndSortedSpaces = computed(() => {
       case 'name':
         return direction * a.name.localeCompare(b.name)
       case 'wifiSpeed':
-        return direction * (WIFI_SPEED_ORDER[a.wifiSpeed] - WIFI_SPEED_ORDER[b.wifiSpeed])
+        return (
+          direction * (rank(WIFI_SPEED_ORDER, a.wifiSpeed) - rank(WIFI_SPEED_ORDER, b.wifiSpeed))
+        )
       case 'noiseLevel':
-        return direction * (NOISE_LEVEL_ORDER[a.noiseLevel] - NOISE_LEVEL_ORDER[b.noiseLevel])
+        return (
+          direction *
+          (rank(NOISE_LEVEL_ORDER, a.noiseLevel) - rank(NOISE_LEVEL_ORDER, b.noiseLevel))
+        )
       default:
         return 0
     }

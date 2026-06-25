@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { type ICoworkingSpace, OUTLET_LABELS, OUTLET_DESCRIPTIONS } from '../types/space'
+import {
+  type ICoworkingSpace,
+  outletAvailabilityLabel,
+  outletAvailabilityDescription,
+} from '../types/space'
 import { slugify } from '../utils/slug'
 import { formatHours } from '../utils/hoursBasic'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
@@ -121,10 +125,10 @@ const photoGradient = computed(() => {
             Outlets
           </h4>
           <p
-            v-tippy="OUTLET_DESCRIPTIONS[space.hasOutlets]"
+            v-tippy="outletAvailabilityDescription(space.hasOutlets)"
             class="text-ink m-0 inline-block cursor-help"
           >
-            {{ OUTLET_LABELS[space.hasOutlets] }}
+            {{ outletAvailabilityLabel(space.hasOutlets) }}
           </p>
           <p v-if="space.outletNotes" class="text-ink m-0 mt-1 text-xs">
             {{ space.outletNotes }}

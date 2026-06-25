@@ -5,7 +5,7 @@
 // card renders garbage). See tests/hoursBasic.test.ts for the engine itself.
 import { describe, it, expect } from 'vitest'
 import spaces from '../src/data/spaces.json'
-import { validateSpaceShape } from '../scripts/space-validator'
+import { validateSpaceShape, validateEnumValues } from '../scripts/space-validator'
 import { buildSchedule, validateWeeklyHours } from '../src/utils/hoursBasic'
 import type { ICoworkingSpace } from '../src/types/space'
 
@@ -18,6 +18,13 @@ describe('spaces.json data integrity', () => {
 
   it('every space passes the shape validator (name, coords, enums, hours)', () => {
     const errors = data.flatMap((s) => validateSpaceShape(s, s.name))
+    expect(errors).toEqual([])
+  })
+
+  it('every enum field holds a valid value or null (no stray "unknown" etc.)', () => {
+    const errors = data.flatMap((s) =>
+      validateEnumValues(s as unknown as Record<string, unknown>),
+    )
     expect(errors).toEqual([])
   })
 

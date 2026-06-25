@@ -164,6 +164,37 @@ describe('matchesFilters', () => {
     ).toBe(true)
   })
 
+  // null = unknown (not yet researched). The 'unknown' filter token matches only
+  // null-valued spaces; a concrete selection excludes them; 'all' keeps them.
+  describe("the 'unknown' token (null match)", () => {
+    it('matches a space whose value is null', () => {
+      expect(
+        matchesFilters(space({ noiseLevel: null }), { ...NONE, noiseLevel: 'unknown' }, MON),
+      ).toBe(true)
+    })
+    it('does not match a space with a concrete value', () => {
+      expect(
+        matchesFilters(space({ noiseLevel: 'quiet' }), { ...NONE, noiseLevel: 'unknown' }, MON),
+      ).toBe(false)
+    })
+    it('a concrete selection excludes null-valued spaces', () => {
+      expect(
+        matchesFilters(space({ noiseLevel: null }), { ...NONE, noiseLevel: 'quiet' }, MON),
+      ).toBe(false)
+    })
+    it("'all' keeps null-valued spaces", () => {
+      expect(matchesFilters(space({ noiseLevel: null }), NONE, MON)).toBe(true)
+    })
+    it('works for another nullable field (wifiSpeed)', () => {
+      expect(
+        matchesFilters(space({ wifiSpeed: null }), { ...NONE, wifiSpeed: 'unknown' }, MON),
+      ).toBe(true)
+      expect(
+        matchesFilters(space({ wifiSpeed: 'fast' }), { ...NONE, wifiSpeed: 'unknown' }, MON),
+      ).toBe(false)
+    })
+  })
+
   describe('openAt', () => {
     const s = space({ hours: everyDay('09:00', '17:00') })
     it('open during hours', () => {

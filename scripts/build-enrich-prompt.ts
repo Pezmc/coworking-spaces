@@ -11,24 +11,24 @@ const OUT_FILE = join(OUT_DIR, 'enrich-prompt.txt')
 const all = spaces as ICoworkingSpace[]
 
 function hasUnknown(s: ICoworkingSpace): boolean {
-  return ENUM_FIELD_NAMES.some((f) => (s as Record<string, unknown>)[f] === 'unknown')
+  return ENUM_FIELD_NAMES.some((f) => (s as Record<string, unknown>)[f] === null)
 }
 
 const candidates = all.filter((s) => !s.verified && hasUnknown(s))
 
 const rubric = `FIELD RUBRICS (use EXACT string values, lowercase):
 
-- noiseLevel: "quiet" | "medium" | "loud" | "unknown"
+- noiseLevel: "quiet" | "medium" | "loud" | null
   - quiet = library-level, no conversation audible
   - medium = background chatter, some music, focus-able with headphones
   - loud = busy cafe, hard to take calls
 
-- wifiSpeed: "slow" | "medium" | "fast" | "unknown"
+- wifiSpeed: "slow" | "medium" | "fast" | null
   - slow = under 25 Mbps or widely reported as bad
   - medium = 25-100 Mbps, fine for browsing and calls
   - fast = over 100 Mbps or advertised as fiber/pro-grade
 
-- hasAC: "yes" | "no" | "unknown"
+- hasAC: "yes" | "no" | null
   - Treat "yes" as present AND functional in summer, not just installed
 
 - foodAndDrinkAvailability: "none" | "light" | "full"
@@ -36,27 +36,27 @@ const rubric = `FIELD RUBRICS (use EXACT string values, lowercase):
   - light = snacks, sandwiches, pastries
   - full = proper meals
 
-- seatingType: "individual" | "mixed" | "group"
+- seatingType: "individual" | "mixed" | "group" | null
   - individual = mostly 1-2 person tables
   - group = mostly 4+ person tables or communal benches
   - mixed = both
 
-- hasOutlets: "few" | "some" | "many" | "unknown"
+- hasOutlets: "few" | "some" | "many" | null
   - few = 1-3 outlets, first-come-first-served
   - some = outlets at most tables but not all
   - many = every table has an outlet OR abundant multi-gang strips`
 
 const prompt = `You are researching laptop-friendly coworking cafes in Leuven, Belgium.
 
-TASK: For each space below, use web search to fill fields currently set to "unknown".
-Return the SAME JSON structure with "unknown" replaced only where high-confidence
-evidence exists.
+TASK: For each space below, use web search to fill fields currently set to null
+(null = unknown / not yet researched). Return the SAME JSON structure with null
+replaced only where high-confidence evidence exists.
 
 HARD RULES:
 - If you cannot verify a field against (a) an official website, (b) a Google Maps
   review that names the attribute, or (c) a published tourism/coworking listing
-  (VisitLeuven, Nomadlist, etc.), leave it as "unknown". Guessing is wrong.
-- Do NOT change any field that is not currently "unknown".
+  (VisitLeuven, Nomadlist, etc.), leave it as null. Guessing is wrong.
+- Do NOT change any field that is not currently null.
 - Do NOT reword description, atmosphereNotes, wifiNotes, climateNotes, foodNotes,
   drinkNotes, seatingNotes, outletNotes, hours, hoursNote, address, googleMapsUrl.
   Preserve them byte-for-byte.
@@ -69,13 +69,13 @@ HARD RULES:
 
 ${rubric}
 
-SPACES (${candidates.length} candidates, all currently non-verified with at least one "unknown"):
+SPACES (${candidates.length} candidates, all currently non-verified with at least one null field):
 
 \`\`\`json
 ${JSON.stringify(candidates, null, 2)}
 \`\`\`
 
-Return the same array with unknowns filled where supported by web evidence.
+Return the same array with null fields filled where supported by web evidence.
 `
 
 mkdirSync(OUT_DIR, { recursive: true })
@@ -91,7 +91,7 @@ const unknownCounts: Record<EnumFieldName, number> = {
 }
 for (const s of candidates) {
   for (const f of ENUM_FIELD_NAMES) {
-    if ((s as Record<string, unknown>)[f] === 'unknown') unknownCounts[f]++
+    if ((s as Record<string, unknown>)[f] === null) unknownCounts[f]++
   }
 }
 
