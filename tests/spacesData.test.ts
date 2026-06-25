@@ -7,6 +7,7 @@ import { describe, it, expect } from 'vitest'
 import spaces from '../src/data/spaces.json'
 import { validateSpaceShape, validateEnumValues } from '../scripts/space-validator'
 import { buildSchedule, validateWeeklyHours } from '../src/utils/hoursBasic'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
 import type { ICoworkingSpace } from '../src/types/space'
 
 const data = spaces as unknown as ICoworkingSpace[]
@@ -22,9 +23,7 @@ describe('spaces.json data integrity', () => {
   })
 
   it('every enum field holds a valid value or null (no stray "unknown" etc.)', () => {
-    const errors = data.flatMap((s) =>
-      validateEnumValues(s as unknown as Record<string, unknown>),
-    )
+    const errors = data.flatMap((s) => validateEnumValues(s as unknown as Record<string, unknown>))
     expect(errors).toEqual([])
   })
 
@@ -48,5 +47,16 @@ describe('spaces.json data integrity', () => {
         expect((s.hoursNote ?? '').trim().length).toBeGreaterThan(0)
       }
     }
+  })
+
+  it('wifiSpeedMbps is valid or null, and wifiSpeed is null wherever it is set', () => {
+    const bad = data
+      .map((s) => ({
+        name: s.name,
+        errs: validateWifiSpeedMbps(s.wifiSpeedMbps),
+        derivedClash: s.wifiSpeedMbps != null && s.wifiSpeed !== null,
+      }))
+      .filter((x) => x.errs.length > 0 || x.derivedClash)
+    expect(bad).toEqual([])
   })
 })
