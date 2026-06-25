@@ -35,8 +35,14 @@ const filteredAndSortedSpaces = computed(() => {
     switch (props.sort.field) {
       case 'name':
         return direction * a.name.localeCompare(b.name)
-      case 'wifiSpeed':
-        return direction * (WIFI_SPEED_ORDER[a.wifiSpeed] - WIFI_SPEED_ORDER[b.wifiSpeed])
+      case 'wifiSpeed': {
+        const bucket = WIFI_SPEED_ORDER[a.wifiSpeed] - WIFI_SPEED_ORDER[b.wifiSpeed]
+        if (bucket !== 0) return direction * bucket
+        // Same bucket → finer order by measured download speed (unmeasured last).
+        const ad = a.wifiSpeedMbps?.down ?? -1
+        const bd = b.wifiSpeedMbps?.down ?? -1
+        return direction * (ad - bd)
+      }
       case 'noiseLevel':
         return direction * (NOISE_LEVEL_ORDER[a.noiseLevel] - NOISE_LEVEL_ORDER[b.noiseLevel])
       default:

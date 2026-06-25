@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { type ICoworkingSpace, OUTLET_LABELS, OUTLET_DESCRIPTIONS } from '../types/space'
 import { slugify } from '../utils/slug'
 import { formatHours } from '../utils/hoursBasic'
+import { formatWifiSpeed } from '../utils/wifiSpeed'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import SpaceSummary from './SpaceSummary.vue'
@@ -16,6 +17,7 @@ const props = defineProps<Props>()
 const expanded = ref(false)
 const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
 const hoursText = computed(() => formatHours(props.space.hours))
+const wifiSpeedText = computed(() => formatWifiSpeed(props.space.wifiSpeedMbps))
 
 const { isVisited } = useVisitedSpaces()
 const visited = computed(() => isVisited(props.space.name))
@@ -96,13 +98,16 @@ const photoGradient = computed(() => {
           <p class="text-ink m-0">{{ space.seatingNotes }}</p>
         </div>
 
-        <div v-if="space.wifiNotes">
+        <div v-if="wifiSpeedText || space.wifiNotes">
           <h4
             class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
           >
             WiFi
           </h4>
-          <p class="text-ink m-0">{{ space.wifiNotes }}</p>
+          <p v-if="wifiSpeedText" class="text-ink m-0 font-mono text-xs not-italic">
+            {{ wifiSpeedText }}
+          </p>
+          <p v-if="space.wifiNotes" class="text-ink m-0">{{ space.wifiNotes }}</p>
         </div>
 
         <div v-if="space.climateNotes">

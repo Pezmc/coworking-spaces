@@ -1,6 +1,12 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
+import {
+  validateWifiSpeedMbps,
+  wifiSpeedMatchesMeasurement,
+  deriveWifiSpeed,
+} from '../src/utils/wifiSpeed'
+import type { IWifiSpeedMbps, WifiSpeed } from '../src/types/space'
 
 const YELLOW = '\x1b[33m'
 const RED = '\x1b[31m'
@@ -81,6 +87,25 @@ for (const space of spaces) {
   // Structured opening hours must be a valid WeeklyHours object or null.
   for (const issue of validateWeeklyHours((space as { hours?: unknown }).hours)) {
     errors.push({ spaceId, spaceName: name, issue })
+  }
+
+  // Structured wi-fi speed: valid measurement or null, and it must agree with
+  // the wifiSpeed bucket when a measurement is present.
+  const wifiMbps = (space as { wifiSpeedMbps?: unknown }).wifiSpeedMbps
+  const wifiIssues = validateWifiSpeedMbps(wifiMbps)
+  for (const issue of wifiIssues) {
+    errors.push({ spaceId, spaceName: name, issue })
+  }
+  if (
+    wifiIssues.length === 0 &&
+    typeof space.wifiSpeed === 'string' &&
+    !wifiSpeedMatchesMeasurement(space.wifiSpeed as WifiSpeed, wifiMbps as IWifiSpeedMbps | null)
+  ) {
+    errors.push({
+      spaceId,
+      spaceName: name,
+      issue: `wifiSpeed "${space.wifiSpeed}" disagrees with wifiSpeedMbps (derives ${deriveWifiSpeed(wifiMbps as IWifiSpeedMbps)})`,
+    })
   }
 }
 

@@ -9,6 +9,12 @@ import {
   type ICoworkingSpace,
 } from '../src/types/space'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
+import {
+  validateWifiSpeedMbps,
+  wifiSpeedMatchesMeasurement,
+  deriveWifiSpeed,
+} from '../src/utils/wifiSpeed'
+import type { IWifiSpeedMbps, WifiSpeed } from '../src/types/space'
 
 // Allowed ENUM replacements when filling "unknown" on non-verified spaces.
 // "unknown" itself is not a valid replacement target.
@@ -46,6 +52,7 @@ export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
   'coordinates',
   'noiseLevel',
   'wifiSpeed',
+  'wifiSpeedMbps',
   'hasAC',
   'foodAndDrinkAvailability',
   'seatingType',
@@ -89,6 +96,7 @@ export const IMMUTABLE_FIELDS = [
   'description',
   'hours',
   'hoursNote',
+  'wifiSpeedMbps',
   'atmosphereNotes',
   'wifiNotes',
   'climateNotes',
@@ -247,6 +255,24 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     })
   }
 
+  // Structured wi-fi speed: IWifiSpeedMbps object or null. When a measurement is
+  // present, the wifiSpeed bucket must equal what it derives (no drift).
+  const wifiErrors = validateWifiSpeedMbps(s.wifiSpeedMbps)
+  for (const reason of wifiErrors) {
+    errors.push({ spaceName: label, field: 'wifiSpeedMbps', reason })
+  }
+  if (
+    wifiErrors.length === 0 &&
+    typeof s.wifiSpeed === 'string' &&
+    !wifiSpeedMatchesMeasurement(s.wifiSpeed as WifiSpeed, s.wifiSpeedMbps as IWifiSpeedMbps | null)
+  ) {
+    errors.push({
+      spaceName: label,
+      field: 'wifiSpeed',
+      reason: `"${s.wifiSpeed}" disagrees with the measurement (${deriveWifiSpeed(s.wifiSpeedMbps as IWifiSpeedMbps)} per wifiSpeedMbps)`,
+    })
+  }
+
   if (typeof s.verified !== 'boolean') {
     errors.push({
       spaceName: label,
@@ -328,6 +354,10 @@ export function stringifySpaces(arr: unknown[]): string {
       // a weekday's non-empty interval array onto one line
       .replace(/\[\s+(\{ "open":[\s\S]*?\})\s+\]/g, (_m, inner: string) => {
         return `[${inner.replace(/,\s+/g, ', ')}]`
+      })
+      // wifiSpeedMbps { "down": 400, "up": 120 } onto one line (null stays null)
+      .replace(/"wifiSpeedMbps": \{\s+([\s\S]*?)\s+\}/g, (_m, inner: string) => {
+        return `"wifiSpeedMbps": { ${inner.replace(/\s+/g, ' ').trim()} }`
       })
   )
 }

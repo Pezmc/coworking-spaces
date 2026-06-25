@@ -34,6 +34,7 @@ function space(overrides: Partial<ICoworkingSpace> = {}): ICoworkingSpace {
     coordinates: { lat: 0, lng: 0 },
     noiseLevel: 'quiet',
     wifiSpeed: 'fast',
+    wifiSpeedMbps: null,
     hasAC: 'yes',
     foodAndDrinkAvailability: 'full',
     seatingType: 'mixed',

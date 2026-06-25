@@ -22,6 +22,10 @@ const rubric = `FIELD RUBRICS (use EXACT string values):
 
 - noiseLevel: "quiet" | "medium" | "loud" (avoid "unknown" for new spaces)
 - wifiSpeed: "slow" | "medium" | "fast" | "unknown"
+- wifiSpeedMbps: object { "down": number, "up": number, "latencyMs"?: number } in
+  Mbps when a speed test is known, otherwise null. When set, it MUST agree with
+  wifiSpeed (down >100 → "fast", 25–100 → "medium", <25 → "slow"); a number-less
+  reputation ("reported to have decent wifi") stays null with a hand-set wifiSpeed.
 - hasAC: "yes" | "no" | "unknown"
 - foodAndDrinkAvailability: "none" | "light" | "full"
 - seatingType: "individual" | "mixed" | "group"

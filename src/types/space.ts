@@ -58,6 +58,27 @@ export interface IOpeningInterval {
  */
 export type WeeklyHours = Record<DayOfWeek, IOpeningInterval[]>
 
+// Structured wi-fi speed ----------------------------------------------------
+// The measured Mbps used to live only inside the free-text `wifiNotes` prose
+// (e.g. "Fast (400 Mbps down, 120 Mbps up)") while the filterable `wifiSpeed`
+// bucket was hand-set separately — the two could silently disagree. The number
+// is now structured. `wifiSpeed` stays the bucket (it also covers qualitative,
+// number-less assessments), but when a measurement IS present it must equal
+// deriveWifiSpeed(it), enforced by validation so they can't drift (see
+// utils/wifiSpeed.ts).
+
+/**
+ * A measured wi-fi speed test, in Mbps, plus optional latency. `wifiSpeedMbps:
+ * null` on a space means no measurement (the `wifiSpeed` bucket may still be a
+ * qualitative judgement). `up` may exceed `down` — that's what some venues
+ * actually measure.
+ */
+export interface IWifiSpeedMbps {
+  down: number
+  up: number
+  latencyMs?: number
+}
+
 export interface ICoworkingSpace {
   // Basic info
   name: string
@@ -67,7 +88,8 @@ export interface ICoworkingSpace {
 
   // Standardized fields for filtering
   noiseLevel: NoiseLevel
-  wifiSpeed: WifiSpeed
+  wifiSpeed: WifiSpeed // bucket: derived from wifiSpeedMbps when measured, else a qualitative judgement
+  wifiSpeedMbps: IWifiSpeedMbps | null // measured speed test (Mbps); null = unmeasured
   hasAC: HasAC
   foodAndDrinkAvailability: FoodAndDrinkAvailability
   seatingType: SeatingType
@@ -84,7 +106,7 @@ export interface ICoworkingSpace {
 
   // Descriptive fields for standardised options
   atmosphereNotes: string // detail on the vibe/feeling/noise (noiseLevel)
-  wifiNotes: string // speed test results if available (wifiSpeed)
+  wifiNotes: string // human colour on the wifi (reliability, peak-time dips); the number lives in wifiSpeedMbps
   climateNotes: string // heating/cooling info (hasAC)
   foodNotes: string // notes about food (foodAndDrinkAvailability)
   drinkNotes: string // notes about drinks (foodAndDrinkAvailability)
