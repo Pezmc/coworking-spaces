@@ -62,7 +62,8 @@ need to write it out. Two rules worth knowing:
 | `fast` | Over 100 Mbps – great for large uploads and multiple devices |
 | `unknown` | WiFi speed has not been tested yet |
 
-- **wifiNotes**: Actual speed test results if available
+- **wifiSpeedMbps**: A measured speed test as `{ "down": 150, "up": 50 }` (Mbps; add `"latencyMs"` if known), or `null` if not measured. When set it must agree with `wifiSpeed`, which is derived from `down`: under 25 → slow, 25–100 → medium, over 100 → fast.
+- **wifiNotes**: Free-text colour on the wifi (reliability, peak-time dips). The number lives in `wifiSpeedMbps`.
 
 **Tip:** Use [fast.com](https://fast.com) or [speedtest.net](https://speedtest.net) to measure.
 
@@ -118,6 +119,7 @@ need to write it out. Two rules worth knowing:
   "coordinates": { "lat": 50.8798, "lng": 4.7005 },
   "noiseLevel": "medium",
   "wifiSpeed": "fast",
+  "wifiSpeedMbps": { "down": 150, "up": 50 },
   "hasAC": "yes",
   "foodAndDrinkAvailability": "light",
   "seatingType": "mixed",
@@ -133,7 +135,7 @@ need to write it out. Two rules worth knowing:
     "sunday": []
   },
   "atmosphereNotes": "Bright and airy with good natural light. Chill music, gets busier around lunch",
-  "wifiNotes": "150 Mbps down, 50 Mbps up",
+  "wifiNotes": "Fast and stable, holds up at peak times",
   "climateNotes": "Good AC, can get chilly near the vents",
   "foodNotes": "Pastries, sandwiches until 2pm",
   "drinkNotes": "Specialty coffee, tea, fresh juices",
