@@ -164,4 +164,21 @@ describe('matchesFilters', () => {
       expect(matchesFilters(monOnly, { ...NONE, openAt: 600 }, TUE)).toBe(false)
     })
   })
+
+  // Regression: openNow filtering moved out of App/SpaceList into matchesFilters
+  // and switched from the visitor's local clock to Europe/Brussels.
+  describe('openNow', () => {
+    const monOnly = space({ openingHours: 'Mon 09:00-17:00, Tue-Sun closed' })
+    it('passes when Brussels-now is inside hours', () => {
+      expect(matchesFilters(monOnly, { ...NONE, openNow: true }, MON)).toBe(true) // Mon 12:00
+    })
+    it('fails when closed at Brussels-now', () => {
+      expect(matchesFilters(monOnly, { ...NONE, openNow: true }, TUE)).toBe(false) // Tue
+    })
+    it('excludes blank-hours spaces', () => {
+      expect(matchesFilters(space({ openingHours: '' }), { ...NONE, openNow: true }, MON)).toBe(
+        false,
+      )
+    })
+  })
 })

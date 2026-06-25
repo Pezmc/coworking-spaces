@@ -278,4 +278,10 @@ describe('parseAsk — "open at <time>" (dynamic time phrase)', () => {
   it('later time wins', () => {
     expect(parseAsk('open at 9am or open at 6pm').filterPatch.openAt).toBe(1080)
   })
+  it('rejects hour > 12 with am/pm ("13pm")', () => {
+    expect(parseAsk('open at 13pm').filterPatch.openAt).toBeUndefined()
+  })
+  it('rejects minute > 59 ("9:75")', () => {
+    expect(parseAsk('open at 9:75').filterPatch.openAt).toBeUndefined()
+  })
 })
