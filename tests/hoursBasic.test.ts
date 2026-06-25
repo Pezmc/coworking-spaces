@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseOpeningHours, isOpen } from '../src/utils/hoursBasic'
+import { parseOpeningHours, isOpen, isOpenAt } from '../src/utils/hoursBasic'
 
 const DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 } as const
 
@@ -112,5 +112,33 @@ describe('isOpen — real spaces.json samples', () => {
   it('Bar Permeke-style: open Sat 13:00 (overnight range)', () => {
     const s = parseOpeningHours('Mon-Fri 10:00-03:00, Sat 13:00-03:00, Sun 17:00-02:00')
     expect(isOpen(s, at('Sat', 14, 0))).toBe(true)
+  })
+})
+
+describe('isOpenAt — pure time-of-day check (powers openAt + openNow)', () => {
+  const monFri = parseOpeningHours('Mon-Fri 09:00-17:00, Sat-Sun closed')
+
+  it('returns null when hours are unknown', () => {
+    expect(isOpenAt(null, 2, 600)).toBeNull()
+  })
+  it('returns false on a closed day', () => {
+    expect(isOpenAt(monFri, 0, 600)).toBe(false) // Sunday
+  })
+  it('open at the opening minute (start inclusive)', () => {
+    expect(isOpenAt(monFri, 2, 540)).toBe(true) // Tue 09:00
+  })
+  it('NOT open at the closing minute (end exclusive)', () => {
+    expect(isOpenAt(monFri, 2, 1020)).toBe(false) // Tue 17:00
+  })
+  it('open one minute before close', () => {
+    expect(isOpenAt(monFri, 2, 1019)).toBe(true) // Tue 16:59
+  })
+  it('not open before opening', () => {
+    expect(isOpenAt(monFri, 2, 539)).toBe(false) // Tue 08:59
+  })
+  it('overnight range clamps to midnight (W1 pragmatic)', () => {
+    const s = parseOpeningHours('Sat 13:00-03:00')
+    expect(isOpenAt(s, 6, 1020)).toBe(true) // Sat 17:00 inside 13:00–24:00
+    expect(isOpenAt(s, 6, 120)).toBe(false) // Sat 02:00 not covered (clamped at midnight)
   })
 })
