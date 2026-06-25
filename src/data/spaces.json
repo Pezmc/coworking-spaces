@@ -1039,6 +1039,7 @@
     "coordinates": { "lat": 50.8805171, "lng": 4.6966618 },
     "noiseLevel": "quiet",
     "wifiSpeed": "fast",
+    "wifiSpeedMbps": null,
     "hasAC": "yes",
     "foodAndDrinkAvailability": "full",
     "seatingType": "mixed",
