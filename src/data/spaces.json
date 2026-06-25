@@ -997,5 +997,36 @@
     "outletNotes": "",
     "verified": false,
     "imageUrl": "/photos/de-hoorn.jpg"
+  },
+  {
+    "name": "Timory",
+    "address": "Brusselsestraat 76, 3000 Leuven",
+    "googleMapsUrl": "https://maps.app.goo.gl/SQRxPUX2VzGuYMUE9",
+    "coordinates": { "lat": 50.8805171, "lng": 4.6966618 },
+    "noiseLevel": "quiet",
+    "wifiSpeed": "fast",
+    "hasAC": "yes",
+    "foodAndDrinkAvailability": "full",
+    "seatingType": "mixed",
+    "hasOutlets": "few",
+    "description": "Traditional Belgian brasserie with AC, a huge dining space and cushioned seats.",
+    "hours": {
+      "monday": [{ "open": "11:30", "close": "22:00" }],
+      "tuesday": [{ "open": "11:30", "close": "22:00" }],
+      "wednesday": [{ "open": "11:30", "close": "22:00" }],
+      "thursday": [{ "open": "11:30", "close": "22:00" }],
+      "friday": [{ "open": "11:30", "close": "22:00" }],
+      "saturday": [{ "open": "11:30", "close": "22:00" }],
+      "sunday": [{ "open": "12:00", "close": "22:00" }]
+    },
+    "atmosphereNotes": "Empty between meal times.",
+    "wifiNotes": "",
+    "climateNotes": "",
+    "foodNotes": "",
+    "drinkNotes": "",
+    "seatingNotes": "",
+    "outletNotes": "Only 3 power outlets.",
+    "verified": false,
+    "imageUrl": "/photos/timory.jpg"
   }
 ]
