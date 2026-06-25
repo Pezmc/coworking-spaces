@@ -58,8 +58,8 @@ HARD RULES:
   (VisitLeuven, Nomadlist, etc.), leave it as null. Guessing is wrong.
 - Do NOT change any field that is not currently null.
 - Do NOT reword description, atmosphereNotes, wifiNotes, climateNotes, foodNotes,
-  drinkNotes, seatingNotes, outletNotes, hours, hoursNote, address, googleMapsUrl.
-  Preserve them byte-for-byte.
+  drinkNotes, seatingNotes, outletNotes, hours, hoursNote, wifiSpeedMbps, address,
+  googleMapsUrl. Preserve them byte-for-byte.
 - Preserve ALL existing keys and their current values.
 - Preserve coordinates exactly.
 - Preserve "verified" exactly (will always be false for these candidates).
