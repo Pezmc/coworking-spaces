@@ -7,13 +7,14 @@ import SpaceList from './components/SpaceList.vue'
 import MapView from './components/MapView.vue'
 import VisitProgress from './components/VisitProgress.vue'
 import OpenNowChip from './components/OpenNowChip.vue'
+import OpenAtChip from './components/OpenAtChip.vue'
 import TodayView from './components/TodayView.vue'
 import AskBar from './components/AskBar.vue'
 import IconDefs from './components/IconDefs.vue'
 import ViewSegmented from './components/ViewSegmented.vue'
 import CoworkingGroupCallout from './components/CoworkingGroupCallout.vue'
 import SiteFooter from './components/SiteFooter.vue'
-import { parseOpeningHours, isOpen } from './utils/hoursBasic'
+import { matchesFilters, countActiveFilters, parseOpenAt, serializeOpenAt } from './utils/filters'
 import spacesData from './data/spaces.json'
 
 const spaces = spacesData as ICoworkingSpace[]
@@ -27,6 +28,7 @@ const DEFAULT_FILTERS: IFilterState = {
   hasOutlets: 'all',
   verified: 'all',
   openNow: false,
+  openAt: null,
 }
 
 const urlParams = useUrlSearchParams<Record<string, string>>('history')
@@ -42,7 +44,14 @@ const filters = ref<IFilterState>({
   hasOutlets: (urlParams.hasOutlets as IFilterState['hasOutlets']) || DEFAULT_FILTERS.hasOutlets,
   verified: (urlParams.verified as IFilterState['verified']) || DEFAULT_FILTERS.verified,
   openNow: urlParams.openNow === '1',
+  openAt: parseOpenAt(urlParams.openAt),
 })
+
+// Decision 5: openNow and openAt are mutually exclusive. A stale or hand-crafted
+// URL could carry both — openAt is the more specific intent, so it wins on load.
+if (filters.value.openNow && filters.value.openAt !== null) {
+  filters.value.openNow = false
+}
 
 watch(
   filters,
@@ -52,10 +61,17 @@ watch(
     } else {
       delete urlParams.openNow
     }
-    const selectKeys = Object.keys(DEFAULT_FILTERS).filter((k) => k !== 'openNow') as Exclude<
-      keyof IFilterState,
-      'openNow'
-    >[]
+    // openAt is number|null, not an 'all'-sentinel string — serialize it
+    // explicitly (like openNow) and keep it out of the generic select loop below.
+    const openAtParam = serializeOpenAt(newFilters.openAt)
+    if (openAtParam !== null) {
+      urlParams.openAt = openAtParam
+    } else {
+      delete urlParams.openAt
+    }
+    const selectKeys = Object.keys(DEFAULT_FILTERS).filter(
+      (k) => k !== 'openNow' && k !== 'openAt',
+    ) as Exclude<keyof IFilterState, 'openNow' | 'openAt'>[]
     for (const key of selectKeys) {
       if (newFilters[key] !== 'all') {
         urlParams[key] = newFilters[key]
@@ -77,40 +93,34 @@ const viewMode = ref<ViewMode>('list')
 
 const showFilters = ref(false)
 
-const activeFilterCount = computed(() => {
-  const { openNow: _ignored, ...rest } = filters.value
-  return Object.values(rest).filter((v) => v !== 'all').length
-})
+const activeFilterCount = computed(() => countActiveFilters(filters.value))
 
 const filteredSpaces = computed(() => {
   const now = new Date()
-  return spaces.filter((space) => {
-    const activeFilters = filters.value
-
-    if (activeFilters.openNow) {
-      if (isOpen(parseOpeningHours(space.openingHours), now) !== true) return false
-    }
-
-    return (
-      (activeFilters.noiseLevel === 'all' || space.noiseLevel === activeFilters.noiseLevel) &&
-      (activeFilters.wifiSpeed === 'all' || space.wifiSpeed === activeFilters.wifiSpeed) &&
-      (activeFilters.hasAC === 'all' || space.hasAC === activeFilters.hasAC) &&
-      (activeFilters.foodAvailability === 'all' ||
-        space.foodAndDrinkAvailability === activeFilters.foodAvailability) &&
-      (activeFilters.seatingType === 'all' || space.seatingType === activeFilters.seatingType) &&
-      (activeFilters.hasOutlets === 'all' || space.hasOutlets === activeFilters.hasOutlets) &&
-      (activeFilters.verified === 'all' ||
-        (activeFilters.verified === 'verified' ? space.verified : !space.verified))
-    )
-  })
+  return spaces.filter((space) => matchesFilters(space, filters.value, now))
 })
 
 function toggleOpenNow() {
-  filters.value = { ...filters.value, openNow: !filters.value.openNow }
+  const openNow = !filters.value.openNow
+  // Decision 5: turning on "Open now" clears any chosen openAt time.
+  filters.value = { ...filters.value, openNow, openAt: openNow ? null : filters.value.openAt }
+}
+
+function setOpenAt(minutes: number | null) {
+  // Decision 5: choosing a time clears "Open now"; "Any time" (null) just clears openAt.
+  filters.value = {
+    ...filters.value,
+    openAt: minutes,
+    openNow: minutes !== null ? false : filters.value.openNow,
+  }
 }
 
 function applyAskPatch(patch: Partial<IFilterState>) {
-  filters.value = { ...filters.value, ...patch }
+  const next = { ...filters.value, ...patch }
+  // Decision 5: a phrase can set only one of now/at — the one in this patch wins.
+  if (patch.openAt !== undefined && patch.openAt !== null) next.openNow = false
+  else if (patch.openNow) next.openAt = null
+  filters.value = next
 }
 </script>
 
@@ -153,9 +163,12 @@ function applyAskPatch(patch: Partial<IFilterState>) {
         <ViewSegmented v-model="viewMode" />
       </div>
 
-      <!-- Toolbar: Open now + filters disclosure -->
+      <!-- Toolbar: When? cluster (open now / open at) + filters disclosure -->
       <div class="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
-        <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
+        <div role="group" aria-label="When" class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <OpenNowChip :active="filters.openNow" @toggle="toggleOpenNow" />
+          <OpenAtChip :minutes="filters.openAt" @select="setOpenAt" />
+        </div>
         <button
           type="button"
           class="text-ink hover:text-rust focus-visible:ring-rust inline-flex cursor-pointer items-center gap-1.5 border-0 border-b-2 border-transparent bg-transparent px-1 pb-0.5 font-sans text-xs font-medium tracking-[0.04em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"

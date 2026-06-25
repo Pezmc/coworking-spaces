@@ -233,3 +233,55 @@ describe('parseAsk', () => {
     expect(beforeCap.filterPatch).toEqual({ wifiSpeed: 'fast' })
   })
 })
+
+describe('parseAsk — "open at <time>" (dynamic time phrase)', () => {
+  it('open at 5pm → 17:00', () => {
+    const r = parseAsk('somewhere open at 5pm')
+    expect(r.filterPatch.openAt).toBe(1020)
+    expect(r.matches.map((m) => m.label)).toContain('Open at 17:00')
+  })
+  it('open at 9am → 09:00', () => {
+    expect(parseAsk('open at 9am').filterPatch.openAt).toBe(540)
+  })
+  it('12pm is noon, 12am is midnight', () => {
+    expect(parseAsk('open at 12pm').filterPatch.openAt).toBe(720)
+    expect(parseAsk('open at 12am').filterPatch.openAt).toBe(0)
+  })
+  it('24h with colon: open at 17:00 → 1020', () => {
+    expect(parseAsk('open at 17:00').filterPatch.openAt).toBe(1020)
+  })
+  it('minutes: open at 9:30pm → 21:30', () => {
+    expect(parseAsk('open at 9:30pm').filterPatch.openAt).toBe(1290)
+  })
+  it('bare ambiguous hour is ignored (5 = 05:00 or 17:00?)', () => {
+    expect(parseAsk('open at 5').filterPatch.openAt).toBeUndefined()
+  })
+  it('invalid hour ignored', () => {
+    expect(parseAsk('open at 25:00').filterPatch.openAt).toBeUndefined()
+  })
+  it('must be anchored on "open" — "meeting at 5pm" sets wifi, not openAt', () => {
+    const r = parseAsk('meeting at 5pm')
+    expect(r.filterPatch.openAt).toBeUndefined()
+    expect(r.filterPatch.wifiSpeed).toBe('fast')
+  })
+  it('combines with other filters', () => {
+    expect(parseAsk('quiet and open at 6pm').filterPatch).toEqual({
+      noiseLevel: 'quiet',
+      openAt: 1080,
+    })
+  })
+  it('openAt supersedes "open now" (mutually exclusive)', () => {
+    const r = parseAsk('open now, actually open at 5pm')
+    expect(r.filterPatch.openAt).toBe(1020)
+    expect(r.filterPatch.openNow).toBeUndefined()
+  })
+  it('later time wins', () => {
+    expect(parseAsk('open at 9am or open at 6pm').filterPatch.openAt).toBe(1080)
+  })
+  it('rejects hour > 12 with am/pm ("13pm")', () => {
+    expect(parseAsk('open at 13pm').filterPatch.openAt).toBeUndefined()
+  })
+  it('rejects minute > 59 ("9:75")', () => {
+    expect(parseAsk('open at 9:75').filterPatch.openAt).toBeUndefined()
+  })
+})

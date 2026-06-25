@@ -1,4 +1,5 @@
 import type { IFilterState } from '../types/space'
+import { formatMinutes } from './filters'
 
 export interface IAskMatch {
   phrase: string
@@ -310,6 +311,49 @@ function isWordBoundary(ch: string | undefined): boolean {
 
 const MAX_QUERY_LENGTH = 1000
 
+// ── Dynamic time phrase: "open at 5pm" → openAt minutes ──────────────────────
+// The static table maps phrase→fixed value; a time is a parsed number, so it
+// gets its own regex pass. Anchored on "open" so "meeting at 5pm" never matches.
+const TIME_RE = /\bopen(?:ing)?\s+(?:at|from|after|by)?\s*(\d{1,2})(:(\d{2}))?\s*(am|pm)?\b/gi
+
+interface ITimeMatch {
+  minutes: number
+  start: number
+  end: number
+  text: string
+}
+
+function timeToMinutes(m: RegExpExecArray): number | null {
+  const hour = parseInt(m[1] ?? '', 10)
+  const hasColon = m[2] !== undefined
+  const minute = m[3] !== undefined ? parseInt(m[3], 10) : 0
+  const ampm = m[4]?.toLowerCase()
+  if (Number.isNaN(hour) || minute > 59) return null
+  if (ampm) {
+    if (hour < 1 || hour > 12) return null // "13pm" is nonsense
+    return ((hour % 12) + (ampm === 'pm' ? 12 : 0)) * 60 + minute
+  }
+  if (hour > 23) return null
+  // A bare 1–12 with no colon and no am/pm is ambiguous (5 = 05:00 or 17:00?) — skip it.
+  if (!hasColon && hour >= 1 && hour <= 12) return null
+  return hour * 60 + minute
+}
+
+// Later position wins, matching the per-filter rule for the static phrases.
+function lastTimeMatch(normalized: string): ITimeMatch | null {
+  TIME_RE.lastIndex = 0
+  let last: ITimeMatch | null = null
+  let m: RegExpExecArray | null
+  while ((m = TIME_RE.exec(normalized)) !== null) {
+    const minutes = timeToMinutes(m)
+    if (minutes !== null) {
+      last = { minutes, start: m.index, end: m.index + m[0].length, text: m[0] }
+    }
+    if (m.index === TIME_RE.lastIndex) TIME_RE.lastIndex++ // guard against zero-width loop
+  }
+  return last
+}
+
 export function parseAsk(query: string): IAskResult {
   const normalized = query.slice(0, MAX_QUERY_LENGTH).toLowerCase()
   const rawMatches: IRawMatch[] = []
@@ -358,18 +402,40 @@ export function parseAsk(query: string): IAskResult {
     }
   }
 
-  // Emit chips in query order
-  const winners = [...byFilter.values()].sort((a, b) => a.start - b.start)
-  const matches: IAskMatch[] = []
-  const filterPatch: Partial<IFilterState> = {}
-  for (const m of winners) {
-    matches.push({
+  // Build emittable chips (static winners + the dynamic time match), query order.
+  const emittable: { start: number; match: IAskMatch }[] = [...byFilter.values()].map((m) => ({
+    start: m.start,
+    match: {
       phrase: m.entry.phrase,
       filter: m.entry.filter,
       value: m.entry.value,
       label: m.entry.label,
+    },
+  }))
+
+  const timeMatch = lastTimeMatch(normalized)
+  if (timeMatch) {
+    // Decision 5: openAt and openNow are mutually exclusive — a parsed time
+    // supersedes any "open now" phrase, so drop the openNow chip/patch.
+    for (let i = emittable.length - 1; i >= 0; i--) {
+      if (emittable[i]?.match.filter === 'openNow') emittable.splice(i, 1)
+    }
+    emittable.push({
+      start: timeMatch.start,
+      match: {
+        phrase: timeMatch.text,
+        filter: 'openAt',
+        value: timeMatch.minutes,
+        label: `Open at ${formatMinutes(timeMatch.minutes)}`,
+      },
     })
-    ;(filterPatch as Record<string, unknown>)[m.entry.filter] = m.entry.value
+  }
+
+  emittable.sort((a, b) => a.start - b.start)
+  const matches: IAskMatch[] = emittable.map((e) => e.match)
+  const filterPatch: Partial<IFilterState> = {}
+  for (const e of emittable) {
+    ;(filterPatch as Record<string, unknown>)[e.match.filter] = e.match.value
   }
 
   return { matches, filterPatch }

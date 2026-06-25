@@ -2,6 +2,7 @@
 import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import type { IFilterState } from '../types/space'
 import { parseAsk, type IAskMatch } from '../utils/askParser'
+import AppIcon from './AppIcon.vue'
 
 const emit = defineEmits<{
   (e: 'apply', patch: Partial<IFilterState>): void
@@ -44,6 +45,7 @@ let lastAppliedKeys = new Set<keyof IFilterState>()
 
 function defaultFor(key: keyof IFilterState): IFilterState[keyof IFilterState] {
   if (key === 'openNow') return false
+  if (key === 'openAt') return null
   return 'all'
 }
 
@@ -125,6 +127,7 @@ onBeforeUnmount(() => {
         :aria-label="`Remove ${m.label} filter`"
         @click="removeChip(m)"
       >
+        <AppIcon v-if="m.filter === 'openAt'" name="clock" />
         <span>{{ m.label }}</span>
         <span aria-hidden="true" class="text-muted text-xs">×</span>
       </button>

@@ -65,6 +65,7 @@ export interface IFilterState {
   hasOutlets: OutletAvailability | 'all'
   verified: VerifiedFilter
   openNow: boolean
+  openAt: number | null // minutes since midnight (Europe/Brussels), e.g. 1020 = 17:00; null = off
 }
 
 export type SortField = 'name' | 'wifiSpeed' | 'noiseLevel'
