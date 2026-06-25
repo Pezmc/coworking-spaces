@@ -11,7 +11,7 @@ const OUT_FILE = join(OUT_DIR, 'enrich-prompt.txt')
 const all = spaces as ICoworkingSpace[]
 
 function hasUnknown(s: ICoworkingSpace): boolean {
-  return ENUM_FIELD_NAMES.some((f) => (s as Record<string, unknown>)[f] === null)
+  return ENUM_FIELD_NAMES.some((f) => s[f] === null)
 }
 
 const candidates = all.filter((s) => !s.verified && hasUnknown(s))
@@ -91,7 +91,7 @@ const unknownCounts: Record<EnumFieldName, number> = {
 }
 for (const s of candidates) {
   for (const f of ENUM_FIELD_NAMES) {
-    if ((s as Record<string, unknown>)[f] === null) unknownCounts[f]++
+    if (s[f] === null) unknownCounts[f]++
   }
 }
 

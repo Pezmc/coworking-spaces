@@ -70,7 +70,7 @@ export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
 export function pickKnownSpaceFields(c: Record<string, unknown>): ICoworkingSpace {
   const out: Record<string, unknown> = {}
   for (const k of KNOWN_SPACE_KEYS) out[k] = c[k]
-  return out as ICoworkingSpace
+  return out as unknown as ICoworkingSpace
 }
 
 // Atomic file replacement: write to .tmp then rename. POSIX rename is atomic,
