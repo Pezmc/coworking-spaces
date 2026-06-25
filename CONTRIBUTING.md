@@ -62,7 +62,8 @@ need to write it out. Two rules worth knowing:
 | `fast` | Over 100 Mbps – great for large uploads and multiple devices |
 | `unknown` | WiFi speed has not been tested yet |
 
-- **wifiSpeedMbps**: A measured speed test as `{ "down": 150, "up": 50 }` (Mbps; add `"latencyMs"` if known), or `null` if not measured. When set it must agree with `wifiSpeed`, which is derived from `down`: under 25 → slow, 25–100 → medium, over 100 → fast.
+- **wifiSpeedMbps**: A measured speed test as `{ "down": 150, "up": 50 }` (Mbps; add `"latencyMs"` if known), or `null` if not measured.
+- **wifiSpeed**: Set to `null` when `wifiSpeedMbps` is given — the bucket above is derived from `down` (under 25 → slow, 25–100 → medium, over 100 → fast). Only set a bucket (or `unknown`) when there's no measurement.
 - **wifiNotes**: Free-text colour on the wifi (reliability, peak-time dips). The number lives in `wifiSpeedMbps`.
 
 **Tip:** Use [fast.com](https://fast.com) or [speedtest.net](https://speedtest.net) to measure.
@@ -118,7 +119,7 @@ need to write it out. Two rules worth knowing:
   "googleMapsUrl": "https://maps.google.com/?q=Example+Cafe+Leuven",
   "coordinates": { "lat": 50.8798, "lng": 4.7005 },
   "noiseLevel": "medium",
-  "wifiSpeed": "fast",
+  "wifiSpeed": null,
   "wifiSpeedMbps": { "down": 150, "up": 50 },
   "hasAC": "yes",
   "foodAndDrinkAvailability": "light",
