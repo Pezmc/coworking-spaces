@@ -69,3 +69,9 @@ Skipped — low ROI without a user-reported issue:
 
 - **Novelty cache for Today's Picks** — track recently-shown spaces in `localStorage` so the daily roll doesn't repeat last week's picks. Worth building if users mention seeing the same cards every day.
 - **AskBar/FilterBar conflict resolver** — currently if a user manually toggles a filter while a matching phrase still sits in the Ask input, the next debounced re-parse silently re-applies the Ask value. Add `AskBar` watching the parent `filters` ref and skip re-emitting filters whose value was externally changed. Only worth it if a user reports confusion.
+
+### Known limitations surfaced shipping the open-at-time filter (all pre-existing)
+
+- **Overnight hours after midnight** — `hoursBasic.ts` clamps a close-after-midnight range (e.g. Café Entrepot `Mon-Sat 09:30-01:00`) to end at midnight, so an `openAt`/`openNow` query for 00:30 wrongly excludes it. Affects "Open now" too. The time chip only offers 06:00–23:00 so the UI path can't reach it, but the URL/`?openAt=` and Ask-bar paths can. Fix needs a day-spillover model in `parseOpeningHours`.
+- **Parenthetical notes break hours parsing** — a non-conforming `openingHours` like `"Sat-Sun closed (except occasional Sunday brunch)"` (bar Stan) makes `parseOpeningHours` return `null`, so the venue is silently dropped from every time filter even on its valid weekday hours. Fix: clean the data string, or let the parser tolerate a trailing parenthetical.
+- **Reactive clock for time filters** — `matchesFilters` and the list/map computeds capture `new Date()` at evaluation time with no live tick, so a page left open across midnight shows stale "open now"/"open at" results until some other reactive change fires. A shared `useNow()` (vueuse) ticking each minute would fix it.
