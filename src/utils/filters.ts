@@ -24,6 +24,7 @@
 
 import type { ICoworkingSpace, IFilterState } from '../types/space'
 import { isOpenAt, buildSchedule } from './hoursBasic'
+import { resolveWifiSpeed } from './wifiSpeed'
 
 // Valid minutes-since-midnight range for an openAt value (any time of day).
 // The chip menu only offers 06:00–23:00, but NL parsing can produce any minute,
@@ -101,7 +102,8 @@ function matchesEnum<T extends string>(value: T | null, filter: T | 'unknown' | 
  */
 export function matchesFilters(space: ICoworkingSpace, f: IFilterState, now: Date): boolean {
   if (!matchesEnum(space.noiseLevel, f.noiseLevel)) return false
-  if (!matchesEnum(space.wifiSpeed, f.wifiSpeed)) return false
+  if (!matchesEnum(resolveWifiSpeed(space.wifiSpeed, space.wifiSpeedMbps), f.wifiSpeed))
+    return false
   if (!matchesEnum(space.hasAC, f.hasAC)) return false
   if (!matchesEnum(space.foodAndDrinkAvailability, f.foodAvailability)) return false
   if (!matchesEnum(space.seatingType, f.seatingType)) return false

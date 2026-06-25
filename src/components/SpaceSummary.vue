@@ -17,6 +17,7 @@ import {
 } from '../types/space'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
+import { resolveWifiSpeed, formatWifiSpeed } from '../utils/wifiSpeed'
 import AppIcon from './AppIcon.vue'
 
 interface Props {
@@ -28,6 +29,15 @@ const props = defineProps<Props>()
 
 const verifyUrl = computed(() => buildUpdateSpaceUrl(props.space, 'verify'))
 const neighbourhood = computed(() => props.space.address.split(',')[0]?.trim() ?? '')
+
+const wifiBucket = computed(() =>
+  resolveWifiSpeed(props.space.wifiSpeed, props.space.wifiSpeedMbps),
+)
+const wifiTooltip = computed(() => {
+  const base = wifiSpeedDescription(wifiBucket.value)
+  const measured = formatWifiSpeed(props.space.wifiSpeedMbps)
+  return measured ? `${base} — measured ${measured}` : base
+})
 
 const { isVisited, toggleVisited } = useVisitedSpaces()
 const visited = computed(() => isVisited(props.space.name))
@@ -142,12 +152,9 @@ function wifiIcon(speed: WifiSpeed | null): string {
         compact ? 'mt-2 gap-x-2 gap-y-1' : 'mt-3 gap-x-2.5 gap-y-1.5',
       ]"
     >
-      <span
-        v-tippy="wifiSpeedDescription(space.wifiSpeed)"
-        class="inline-flex cursor-help items-center gap-1"
-      >
-        <AppIcon :name="wifiIcon(space.wifiSpeed)" size="sm" />
-        {{ wifiSpeedLabel(space.wifiSpeed) }} wifi
+      <span v-tippy="wifiTooltip" class="inline-flex cursor-help items-center gap-1">
+        <AppIcon :name="wifiIcon(wifiBucket)" size="sm" />
+        {{ wifiSpeedLabel(wifiBucket) }} wifi
       </span>
       <span class="text-rule">·</span>
       <span

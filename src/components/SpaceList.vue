@@ -10,6 +10,7 @@ import type {
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
 import { matchesFilters, formatMinutes, hasActiveFilters } from '../utils/filters'
+import { resolveWifiSpeed } from '../utils/wifiSpeed'
 
 interface Props {
   spaces: ICoworkingSpace[]
@@ -47,10 +48,15 @@ const filteredAndSortedSpaces = computed(() => {
     switch (props.sort.field) {
       case 'name':
         return direction * a.name.localeCompare(b.name)
-      case 'wifiSpeed':
-        return (
-          direction * (rank(WIFI_SPEED_ORDER, a.wifiSpeed) - rank(WIFI_SPEED_ORDER, b.wifiSpeed))
-        )
+      case 'wifiSpeed': {
+        const ar = rank(WIFI_SPEED_ORDER, resolveWifiSpeed(a.wifiSpeed, a.wifiSpeedMbps))
+        const br = rank(WIFI_SPEED_ORDER, resolveWifiSpeed(b.wifiSpeed, b.wifiSpeedMbps))
+        if (ar !== br) return direction * (ar - br)
+        // Same bucket → finer order by measured download speed (unmeasured last).
+        const ad = a.wifiSpeedMbps?.down ?? -1
+        const bd = b.wifiSpeedMbps?.down ?? -1
+        return direction * (ad - bd)
+      }
       case 'noiseLevel':
         return (
           direction *
