@@ -101,8 +101,8 @@ for (let i = 0; i < parsed.length; i++) {
 
   // Non-verified: immutable fields must not change.
   for (const field of IMMUTABLE_FIELDS) {
-    const before = (current as Record<string, unknown>)[field]
-    const after = (candidate as Record<string, unknown>)[field]
+    const before = current[field]
+    const after = candidate[field]
     if (JSON.stringify(before) !== JSON.stringify(after)) {
       rejected.push({
         spaceName: current.name,
@@ -116,8 +116,8 @@ for (let i = 0; i < parsed.length; i++) {
 
   // Non-verified: enum fields may only transition null (unknown) -> allowed value.
   for (const field of ENUM_FIELD_NAMES) {
-    const before = (current as Record<string, unknown>)[field] as string | null
-    const after = (candidate as Record<string, unknown>)[field] as string | null
+    const before = current[field] as string | null
+    const after = candidate[field] as string | null
     if (before === after) continue
     if (before !== null) {
       rejected.push({
@@ -230,7 +230,7 @@ const updated = allSpaces.map((s) => {
   if (!changes) return s
   const copy: Record<string, unknown> = { ...s }
   for (const c of changes) copy[c.field] = c.newValue
-  return copy as ICoworkingSpace
+  return copy as unknown as ICoworkingSpace
 })
 
 atomicWriteFile(SPACES_FILE, stringifySpaces(updated) + '\n')
