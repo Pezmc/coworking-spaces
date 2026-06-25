@@ -25,7 +25,15 @@ const rubric = `FIELD RUBRICS (use EXACT string values):
 - hasAC: "yes" | "no" | "unknown"
 - foodAndDrinkAvailability: "none" | "light" | "full"
 - seatingType: "individual" | "mixed" | "group"
-- hasOutlets: "few" | "some" | "many" | "unknown"`
+- hasOutlets: "few" | "some" | "many" | "unknown"
+- hours: object with keys monday..sunday (all seven required), each an array of
+  { "open": "HH:MM", "close": "HH:MM" } in 24-hour time. Use [] for a day the
+  venue is closed. If a venue closes after midnight, set close to the
+  post-midnight time (e.g. "01:00") — it is attributed to the next day. Use a
+  close of "24:00" for "open until midnight". Set hours to null only if you
+  genuinely cannot find any opening hours.
+- hoursNote (optional): a short free-text caveat that doesn't fit the grid, e.g.
+  "Occasional Sunday brunch". Omit the key entirely when there is none.`
 
 const prompt = `You are researching laptop-friendly coworking cafes in Leuven, Belgium.
 

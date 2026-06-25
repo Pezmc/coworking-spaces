@@ -8,6 +8,7 @@ import {
   OUTLET_OPTIONS,
   type ICoworkingSpace,
 } from '../src/types/space'
+import { validateWeeklyHours } from '../src/utils/hoursBasic'
 
 // Allowed ENUM replacements when filling "unknown" on non-verified spaces.
 // "unknown" itself is not a valid replacement target.
@@ -50,7 +51,8 @@ export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
   'seatingType',
   'hasOutlets',
   'description',
-  'openingHours',
+  'hours',
+  'hoursNote',
   'atmosphereNotes',
   'wifiNotes',
   'climateNotes',
@@ -85,7 +87,8 @@ export const IMMUTABLE_FIELDS = [
   'googleMapsUrl',
   'coordinates',
   'description',
-  'openingHours',
+  'hours',
+  'hoursNote',
   'atmosphereNotes',
   'wifiNotes',
   'climateNotes',
@@ -218,7 +221,6 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     'address',
     'googleMapsUrl',
     'description',
-    'openingHours',
     'atmosphereNotes',
     'wifiNotes',
     'climateNotes',
@@ -231,6 +233,18 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     if (typeof s[f] !== 'string') {
       errors.push({ spaceName: label, field: f, reason: `Expected string, got ${typeof s[f]}` })
     }
+  }
+
+  // Structured opening hours: WeeklyHours object or null. hoursNote optional string.
+  for (const reason of validateWeeklyHours(s.hours)) {
+    errors.push({ spaceName: label, field: 'hours', reason })
+  }
+  if (s.hoursNote !== undefined && typeof s.hoursNote !== 'string') {
+    errors.push({
+      spaceName: label,
+      field: 'hoursNote',
+      reason: `Expected string, got ${typeof s.hoursNote}`,
+    })
   }
 
   if (typeof s.verified !== 'boolean') {
@@ -297,13 +311,24 @@ export function normalizeName(n: string): string {
 
 /**
  * Stringify the spaces array matching the existing file's convention:
- * 2-space indent, but `coordinates` inlined as a single line.
+ * 2-space indent, but `coordinates` inlined and each `hours` weekday collapsed
+ * to a single line (an open grid is far easier to scan and diff than ~40 lines
+ * of expanded intervals per space).
  */
 export function stringifySpaces(arr: unknown[]): string {
   const pretty = JSON.stringify(arr, null, 2)
-  return pretty.replace(
-    /"coordinates": \{\s+"lat": ([^,]+),\s+"lng": ([^\n]+?)\s+\}/g,
-    '"coordinates": { "lat": $1, "lng": $2 }',
+  return (
+    pretty
+      .replace(
+        /"coordinates": \{\s+"lat": ([^,]+),\s+"lng": ([^\n]+?)\s+\}/g,
+        '"coordinates": { "lat": $1, "lng": $2 }',
+      )
+      // { "open": "08:00", "close": "23:30" } onto one line
+      .replace(/\{\s+"open": ("[^"]+"),\s+"close": ("[^"]+")\s+\}/g, '{ "open": $1, "close": $2 }')
+      // a weekday's non-empty interval array onto one line
+      .replace(/\[\s+(\{ "open":[\s\S]*?\})\s+\]/g, (_m, inner: string) => {
+        return `[${inner.replace(/,\s+/g, ', ')}]`
+      })
   )
 }
 

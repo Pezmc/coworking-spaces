@@ -21,6 +21,43 @@ export interface ICoordinates {
 
 export type VerifiedFilter = (typeof VERIFIED_OPTIONS)[number]
 
+// Structured opening hours --------------------------------------------------
+// `openingHours` used to be a free-form string parsed at filter time; one
+// non-conforming entry (a trailing parenthetical) silently dropped a venue
+// from every time filter. Hours are now structured data — the source of truth —
+// and the human-readable string is derived from them (see utils/hoursBasic.ts).
+
+export const DAYS_OF_WEEK = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+] as const
+
+export type DayOfWeek = (typeof DAYS_OF_WEEK)[number]
+
+/**
+ * One open→close interval on a single day, as 24-hour "HH:MM" (00:00–24:00).
+ * If `close` is at or before `open`, the interval runs past midnight into the
+ * next day (e.g. `{ open: "15:00", close: "01:00" }` is open until 01:00 the
+ * following morning). A `close` of "00:00" or "24:00" means exactly midnight
+ * and does not spill into the next day.
+ */
+export interface IOpeningInterval {
+  open: string
+  close: string
+}
+
+/**
+ * A full week of opening hours. Every day key is present; an empty array means
+ * closed that day. A space's `hours: null` means hours are unknown (not yet
+ * researched) — distinct from "known and closed every day".
+ */
+export type WeeklyHours = Record<DayOfWeek, IOpeningInterval[]>
+
 export interface ICoworkingSpace {
   // Basic info
   name: string
@@ -38,7 +75,12 @@ export interface ICoworkingSpace {
 
   // Free-form detail fields
   description: string // general description of the space, shows on card
-  openingHours: string // when open
+
+  // Opening hours: structured source of truth (null = unknown). The display
+  // string is derived via formatHours(); hoursNote carries any human caveat
+  // that doesn't fit the weekly grid (e.g. "occasional Sunday brunch").
+  hours: WeeklyHours | null
+  hoursNote?: string
 
   // Descriptive fields for standardised options
   atmosphereNotes: string // detail on the vibe/feeling/noise (noiseLevel)

@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { type ICoworkingSpace, OUTLET_LABELS, OUTLET_DESCRIPTIONS } from '../types/space'
 import { slugify } from '../utils/slug'
+import { formatHours } from '../utils/hoursBasic'
 import { buildUpdateSpaceUrl } from '../utils/issueUrl'
 import { useVisitedSpaces } from '../composables/useVisitedSpaces'
 import SpaceSummary from './SpaceSummary.vue'
@@ -14,6 +15,7 @@ const props = defineProps<Props>()
 
 const expanded = ref(false)
 const updateUrl = computed(() => buildUpdateSpaceUrl(props.space))
+const hoursText = computed(() => formatHours(props.space.hours))
 
 const { isVisited } = useVisitedSpaces()
 const visited = computed(() => isVisited(props.space.name))
@@ -147,13 +149,14 @@ const photoGradient = computed(() => {
           <p class="text-ink m-0">{{ space.foodNotes }}</p>
         </div>
 
-        <div v-if="space.openingHours">
+        <div v-if="hoursText || space.hoursNote">
           <h4
             class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
           >
             Hours
           </h4>
-          <p class="text-ink m-0 font-mono text-xs not-italic">{{ space.openingHours }}</p>
+          <p v-if="hoursText" class="text-ink m-0 font-mono text-xs not-italic">{{ hoursText }}</p>
+          <p v-if="space.hoursNote" class="text-muted m-0 mt-0.5 text-xs">{{ space.hoursNote }}</p>
         </div>
 
         <div v-if="space.verified" class="border-rule-soft mt-3 border-t pt-3">

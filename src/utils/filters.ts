@@ -23,7 +23,7 @@
 //   active under the old `Object.values(rest).some(v => v !== 'all')`.
 
 import type { ICoworkingSpace, IFilterState } from '../types/space'
-import { isOpenAt, parseOpeningHours } from './hoursBasic'
+import { isOpenAt, buildSchedule } from './hoursBasic'
 
 // Valid minutes-since-midnight range for an openAt value (any time of day).
 // The chip menu only offers 06:00–23:00, but NL parsing can produce any minute,
@@ -77,7 +77,7 @@ export function brusselsParts(now: Date): { day: number; minutes: number } {
   }
 }
 
-/** "1020" → "17:00", "570" → "09:30". 24h, matches the openingHours data format. */
+/** "1020" → "17:00", "570" → "09:30". 24h, matches the "HH:MM" hours format. */
 export function formatMinutes(minutes: number): string {
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
@@ -100,7 +100,7 @@ export function matchesFilters(space: ICoworkingSpace, f: IFilterState, now: Dat
     return false
 
   if (f.openNow || f.openAt !== null) {
-    const schedule = parseOpeningHours(space.openingHours)
+    const schedule = buildSchedule(space.hours)
     const { day, minutes } = brusselsParts(now)
     // === true excludes the ~21% of spaces whose hours are unknown (null) —
     // consistent with how "Open now" already behaves.

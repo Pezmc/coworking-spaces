@@ -1,7 +1,9 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
+import { validateWeeklyHours } from '../src/utils/hoursBasic'
 
 const YELLOW = '\x1b[33m'
+const RED = '\x1b[31m'
 const RESET = '\x1b[0m'
 
 interface IValidationWarning {
@@ -10,7 +12,12 @@ interface IValidationWarning {
   issue: string
 }
 
+// Coordinate / name / address problems are advisory (warn, exit 0) — the
+// historical behaviour. Structured-hours problems are HARD ERRORS (exit 1):
+// invalid or incomplete hours silently drop a venue from time filters or
+// render a misleading schedule, so the build must fail rather than ship them.
 const warnings: IValidationWarning[] = []
+const errors: IValidationWarning[] = []
 
 for (const space of spaces) {
   const spaceId = space.name ? slugify(space.name) : 'unnamed'
@@ -70,6 +77,11 @@ for (const space of spaces) {
       issue: 'Missing Google Maps URL',
     })
   }
+
+  // Structured opening hours must be a valid WeeklyHours object or null.
+  for (const issue of validateWeeklyHours((space as { hours?: unknown }).hours)) {
+    errors.push({ spaceId, spaceName: name, issue })
+  }
 }
 
 if (warnings.length > 0) {
@@ -78,6 +90,15 @@ if (warnings.length > 0) {
     console.warn(`${YELLOW}  • ${warning.spaceName} (${warning.spaceId}): ${warning.issue}${RESET}`)
   }
   console.warn('')
+}
+
+if (errors.length > 0) {
+  console.error(`\n${RED}✖ Space data validation errors (build blocked):${RESET}\n`)
+  for (const error of errors) {
+    console.error(`${RED}  • ${error.spaceName} (${error.spaceId}): ${error.issue}${RESET}`)
+  }
+  console.error('')
+  process.exit(1)
 }
 
 process.exit(0)

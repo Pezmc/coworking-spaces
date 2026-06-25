@@ -27,7 +27,21 @@ Just fill out the template and we'll add it for you!
 | `googleMapsUrl` | Direct link to Google Maps (required) |
 | `coordinates` | GPS coordinates `{ "lat": number, "lng": number }` (required) |
 | `description` | General description of the space (shows on card preview) |
-| `openingHours` | Operating hours (e.g., "Mon-Fri 08:30-18:00") |
+| `hours` | Structured opening hours, or `null` if unknown (see below) |
+| `hoursNote` | Optional free-text caveat that doesn't fit the grid (e.g. "Occasional Sunday brunch") |
+
+#### Opening hours (`hours`)
+
+An object with all seven weekday keys (`monday`…`sunday`); each is an array of
+`{ "open": "HH:MM", "close": "HH:MM" }` intervals in 24-hour time. An empty
+array `[]` means closed that day. Use `null` for the whole field when hours are
+unknown. The human-readable string shown on the card is generated from this — no
+need to write it out. Two rules worth knowing:
+
+- **After midnight:** set `close` to the post-midnight time (e.g. `"01:00"`) and
+  it is attributed to the next morning. Use `"24:00"` for "open until midnight".
+- **Split shifts:** add more than one interval to a day, e.g.
+  `[{ "open": "09:00", "close": "12:00" }, { "open": "14:00", "close": "18:00" }]`.
 
 ### Noise Level & Atmosphere
 
@@ -109,7 +123,15 @@ Just fill out the template and we'll add it for you!
   "seatingType": "mixed",
   "hasOutlets": "some",
   "description": "Staff are laptop-friendly, no time limits. Great natural light.",
-  "openingHours": "Mon-Fri 08:30-18:00, Sat 09:00-17:00",
+  "hours": {
+    "monday": [{ "open": "08:30", "close": "18:00" }],
+    "tuesday": [{ "open": "08:30", "close": "18:00" }],
+    "wednesday": [{ "open": "08:30", "close": "18:00" }],
+    "thursday": [{ "open": "08:30", "close": "18:00" }],
+    "friday": [{ "open": "08:30", "close": "18:00" }],
+    "saturday": [{ "open": "09:00", "close": "17:00" }],
+    "sunday": []
+  },
   "atmosphereNotes": "Bright and airy with good natural light. Chill music, gets busier around lunch",
   "wifiNotes": "150 Mbps down, 50 Mbps up",
   "climateNotes": "Good AC, can get chilly near the vents",

@@ -1,4 +1,5 @@
 import type { ICoworkingSpace } from '../types/space'
+import { formatHours } from './hoursBasic'
 
 const GITHUB_REPO = 'Pezmc/coworking-spaces'
 
@@ -29,8 +30,10 @@ export function buildUpdateSpaceUrl(
     params.set('description', space.description)
   }
 
-  if (space.openingHours) {
-    params.set('opening-hours', space.openingHours)
+  // Prefill the free-text hours field from the structured data + any note.
+  const hoursValue = [formatHours(space.hours), space.hoursNote].filter(Boolean).join(' — ')
+  if (hoursValue) {
+    params.set('opening-hours', hoursValue)
   }
 
   if (space.atmosphereNotes) {
