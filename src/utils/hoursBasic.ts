@@ -80,7 +80,7 @@ export function buildSchedule(hours: WeeklyHours | null): DaySchedule | null {
       if (end <= start) {
         // Wraps past midnight: [start, 24:00] today, [00:00, end] tomorrow.
         schedule[idx]!.push({ start, end: MINUTES_PER_DAY })
-        if (end > 0) schedule[(idx + 1) % 7]!.push({ start: 0, end })
+        if (end > 0) schedule[(idx + 1) % DAYS_OF_WEEK.length]!.push({ start: 0, end })
       } else {
         schedule[idx]!.push({ start, end })
       }

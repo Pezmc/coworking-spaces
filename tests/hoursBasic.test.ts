@@ -12,12 +12,12 @@ import { DAYS_OF_WEEK, type IOpeningInterval, type WeeklyHours } from '../src/ty
 const DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 } as const
 
 function at(dow: keyof typeof DOW, hh: number, mm = 0): Date {
-  const d = new Date('2026-04-19T00:00:00Z')
-  const current = d.getUTCDay()
-  const target = DOW[dow]
-  d.setUTCDate(d.getUTCDate() + ((target - current + 7) % 7))
-  d.setHours(hh, mm, 0, 0)
-  return d
+  // Build entirely in LOCAL time so getDay()/getHours() (what isOpen reads) match
+  // intent on any machine timezone. A UTC anchor + local setHours() would land on
+  // the previous weekday under UTC-negative offsets (e.g. America/*).
+  const base = new Date(2026, 3, 19, 0, 0, 0, 0) // local midnight; week-Apr 2026
+  const offset = (DOW[dow] - base.getDay() + 7) % 7
+  return new Date(2026, 3, 19 + offset, hh, mm, 0, 0)
 }
 
 /** Build a full WeeklyHours from a partial; unspecified days are closed ([]). */
@@ -105,6 +105,13 @@ describe('buildSchedule', () => {
     const s = buildSchedule(wh({ sunday: [{ open: '20:00', close: '02:00' }] }))!
     expect(s[DOW.Sun]).toEqual([{ start: 1200, end: 1440 }])
     expect(s[DOW.Mon]).toEqual([{ start: 0, end: 120 }])
+  })
+
+  it('treats close === open as a full 24h wrap into the next day', () => {
+    // close <= open is the overnight trigger; the boundary (equal) means 24h.
+    const s = buildSchedule(wh({ monday: [{ open: '09:00', close: '09:00' }] }))!
+    expect(s[DOW.Mon]).toEqual([{ start: 540, end: 1440 }])
+    expect(s[DOW.Tue]).toEqual([{ start: 0, end: 540 }])
   })
 })
 
@@ -225,6 +232,18 @@ describe('formatHours', () => {
     // formatHours takes only the structured grid; bar Stan's caveat lives in hoursNote.
     expect(formatHours(wh({ monday: [{ open: '08:00', close: '23:30' }] }))).not.toContain('brunch')
   })
+
+  it('renders an overnight interval with its post-midnight close (Café Entrepot-style)', () => {
+    expect(formatHours(wh({ monday: [{ open: '15:00', close: '01:00' }] }))).toBe(
+      'Mon 15:00–01:00, Tue–Sun closed',
+    )
+  })
+
+  it('renders a midnight close verbatim (STUKcafé-style 00:00)', () => {
+    expect(formatHours(wh({ monday: [{ open: '10:00', close: '00:00' }] }))).toBe(
+      'Mon 10:00–00:00, Tue–Sun closed',
+    )
+  })
 })
 
 describe('validateWeeklyHours', () => {
@@ -257,5 +276,13 @@ describe('validateWeeklyHours', () => {
   })
   it('accepts close "24:00" (open until midnight)', () => {
     expect(validateWeeklyHours(wh({ monday: [{ open: '08:00', close: '24:00' }] }))).toEqual([])
+  })
+  it('flags a malformed close time', () => {
+    const bad = wh({ monday: [{ open: '09:00', close: '25:99' }] })
+    expect(validateWeeklyHours(bad).some((e) => e.includes('close'))).toBe(true)
+  })
+  it('flags a non-object interval element', () => {
+    const bad = { ...wh({}), monday: [null] } as unknown
+    expect(validateWeeklyHours(bad).some((e) => e.includes('open, close'))).toBe(true)
   })
 })
