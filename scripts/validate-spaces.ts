@@ -1,6 +1,7 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
 import { validateEnumValues } from './space-validator'
 
 const YELLOW = '\x1b[33m'
@@ -82,6 +83,19 @@ for (const space of spaces) {
   // Structured opening hours must be a valid WeeklyHours object or null.
   for (const issue of validateWeeklyHours((space as { hours?: unknown }).hours)) {
     errors.push({ spaceId, spaceName: name, issue })
+  }
+
+  // wifiSpeedMbps valid or null; wifiSpeed must be null when a measurement is present.
+  const wifiMbps = (space as { wifiSpeedMbps?: unknown }).wifiSpeedMbps
+  for (const issue of validateWifiSpeedMbps(wifiMbps)) {
+    errors.push({ spaceId, spaceName: name, issue })
+  }
+  if (wifiMbps != null && (space as { wifiSpeed?: unknown }).wifiSpeed !== null) {
+    errors.push({
+      spaceId,
+      spaceName: name,
+      issue: 'wifiSpeed must be null when wifiSpeedMbps is set',
+    })
   }
 
   // Enum fields must hold a valid value or null (unknown). A stray string like

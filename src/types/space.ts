@@ -60,6 +60,13 @@ export interface IOpeningInterval {
  */
 export type WeeklyHours = Record<DayOfWeek, IOpeningInterval[]>
 
+// A measured wi-fi speed test in Mbps; up may exceed down.
+export interface IWifiSpeedMbps {
+  down: number
+  up: number
+  latencyMs?: number
+}
+
 export interface ICoworkingSpace {
   // Basic info
   name: string
@@ -71,7 +78,9 @@ export interface ICoworkingSpace {
   // researched (mirrors `hours: null`) — distinct from any concrete value.
   // foodAndDrinkAvailability is always determinable, so it has no null state.
   noiseLevel: NoiseLevel | null
+  // null when wifiSpeedMbps is set (derived) or genuinely unknown; a stored bucket otherwise.
   wifiSpeed: WifiSpeed | null
+  wifiSpeedMbps: IWifiSpeedMbps | null // measured speed test; null = unmeasured
   hasAC: HasAC | null
   foodAndDrinkAvailability: FoodAndDrinkAvailability
   seatingType: SeatingType | null

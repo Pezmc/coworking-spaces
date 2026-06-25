@@ -34,6 +34,7 @@ function space(overrides: Partial<ICoworkingSpace> = {}): ICoworkingSpace {
     coordinates: { lat: 0, lng: 0 },
     noiseLevel: 'quiet',
     wifiSpeed: 'fast',
+    wifiSpeedMbps: null,
     hasAC: 'yes',
     foodAndDrinkAvailability: 'full',
     seatingType: 'mixed',
@@ -192,6 +193,21 @@ describe('matchesFilters', () => {
       expect(
         matchesFilters(space({ wifiSpeed: 'fast' }), { ...NONE, wifiSpeed: 'unknown' }, MON),
       ).toBe(false)
+    })
+  })
+
+  // A measurement overrides the stored bucket: filtering uses the derived speed,
+  // not wifiSpeed (which is null on measured venues anyway).
+  describe('wifiSpeed derived from a measurement', () => {
+    const measured = space({ wifiSpeed: null, wifiSpeedMbps: { down: 400, up: 120 } })
+    it('matches the derived bucket (400↓ → fast)', () => {
+      expect(matchesFilters(measured, { ...NONE, wifiSpeed: 'fast' }, MON)).toBe(true)
+    })
+    it('does not match a different bucket', () => {
+      expect(matchesFilters(measured, { ...NONE, wifiSpeed: 'slow' }, MON)).toBe(false)
+    })
+    it('a measured venue is not "unknown"', () => {
+      expect(matchesFilters(measured, { ...NONE, wifiSpeed: 'unknown' }, MON)).toBe(false)
     })
   })
 

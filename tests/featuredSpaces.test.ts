@@ -10,6 +10,7 @@ function mkSpace(overrides: Partial<ICoworkingSpace> & { name: string }): ICowor
     coordinates: { lat: 0, lng: 0 },
     noiseLevel: 'medium',
     wifiSpeed: 'medium',
+    wifiSpeedMbps: null,
     hasAC: 'yes',
     foodAndDrinkAvailability: 'light',
     seatingType: 'mixed',

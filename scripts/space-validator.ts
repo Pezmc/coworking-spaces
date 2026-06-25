@@ -9,6 +9,7 @@ import {
   type ICoworkingSpace,
 } from '../src/types/space'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
+import { validateWifiSpeedMbps } from '../src/utils/wifiSpeed'
 
 // Allowed concrete values per enum field. "Unknown / not yet researched" is NOT
 // a member of any of these — it's represented by `null` on the space. So this
@@ -49,6 +50,7 @@ export const KNOWN_SPACE_KEYS: readonly (keyof ICoworkingSpace)[] = [
   'coordinates',
   'noiseLevel',
   'wifiSpeed',
+  'wifiSpeedMbps',
   'hasAC',
   'foodAndDrinkAvailability',
   'seatingType',
@@ -92,6 +94,7 @@ export const IMMUTABLE_FIELDS = [
   'description',
   'hours',
   'hoursNote',
+  'wifiSpeedMbps',
   'atmosphereNotes',
   'wifiNotes',
   'climateNotes',
@@ -250,6 +253,18 @@ export function validateSpaceShape(candidate: unknown, label: string): IValidati
     })
   }
 
+  // wifiSpeedMbps valid or null; wifiSpeed must be null when measured (derived).
+  for (const reason of validateWifiSpeedMbps(s.wifiSpeedMbps)) {
+    errors.push({ spaceName: label, field: 'wifiSpeedMbps', reason })
+  }
+  if (s.wifiSpeedMbps != null && s.wifiSpeed !== null) {
+    errors.push({
+      spaceName: label,
+      field: 'wifiSpeed',
+      reason: 'must be null when wifiSpeedMbps is set (it is derived)',
+    })
+  }
+
   if (typeof s.verified !== 'boolean') {
     errors.push({
       spaceName: label,
@@ -347,6 +362,10 @@ export function stringifySpaces(arr: unknown[]): string {
       // a weekday's non-empty interval array onto one line
       .replace(/\[\s+(\{ "open":[\s\S]*?\})\s+\]/g, (_m, inner: string) => {
         return `[${inner.replace(/,\s+/g, ', ')}]`
+      })
+      // wifiSpeedMbps { "down": 400, "up": 120 } onto one line (null stays null)
+      .replace(/"wifiSpeedMbps": \{\s+([\s\S]*?)\s+\}/g, (_m, inner: string) => {
+        return `"wifiSpeedMbps": { ${inner.replace(/\s+/g, ' ').trim()} }`
       })
   )
 }

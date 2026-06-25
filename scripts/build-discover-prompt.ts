@@ -21,7 +21,8 @@ const example = all.find((s) => s.verified) ?? all[0]
 const rubric = `FIELD RUBRICS (use EXACT string values):
 
 - noiseLevel: "quiet" | "medium" | "loud" (avoid null for new spaces)
-- wifiSpeed: "slow" | "medium" | "fast" | null
+- wifiSpeedMbps: speed test { "down": number, "up": number, "latencyMs"?: number } in Mbps, or null if unmeasured.
+- wifiSpeed: "slow" | "medium" | "fast", or null when unknown OR when wifiSpeedMbps is set (it is derived from the measurement).
 - hasAC: "yes" | "no" | null
 - foodAndDrinkAvailability: "none" | "light" | "full"
 - seatingType: "individual" | "mixed" | "group" (avoid null for new spaces)
