@@ -20,12 +20,12 @@ const example = all.find((s) => s.verified) ?? all[0]
 
 const rubric = `FIELD RUBRICS (use EXACT string values):
 
-- noiseLevel: "quiet" | "medium" | "loud" (avoid "unknown" for new spaces)
-- wifiSpeed: "slow" | "medium" | "fast" | "unknown"
-- hasAC: "yes" | "no" | "unknown"
+- noiseLevel: "quiet" | "medium" | "loud" (avoid null for new spaces)
+- wifiSpeed: "slow" | "medium" | "fast" | null
+- hasAC: "yes" | "no" | null
 - foodAndDrinkAvailability: "none" | "light" | "full"
-- seatingType: "individual" | "mixed" | "group"
-- hasOutlets: "few" | "some" | "many" | "unknown"
+- seatingType: "individual" | "mixed" | "group" (avoid null for new spaces)
+- hasOutlets: "few" | "some" | "many" | null
 - hours: object with keys monday..sunday (all seven required), each an array of
   { "open": "HH:MM", "close": "HH:MM" } in 24-hour time. Use [] for a day the
   venue is closed. If a venue closes after midnight, set close to the
@@ -51,7 +51,7 @@ HARD CONSTRAINTS:
   addresses ARE allowed.
 - Every space object MUST include every field shown in the example below.
 - Set "verified": false on every new entry.
-- Fill fields with high-confidence values. Only use "unknown" on wifiSpeed, hasAC,
+- Fill fields with high-confidence values. Only use null on wifiSpeed, hasAC,
   hasOutlets if no public evidence exists; noiseLevel, seatingType, and
   foodAndDrinkAvailability should be filled based on reviews / site photos /
   menu pages.

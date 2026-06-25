@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { IFeaturedPick } from '../utils/featuredSpaces'
-import { NOISE_LEVEL_LABELS, WIFI_SPEED_LABELS, FOOD_LABELS } from '../types/space'
+import { noiseLevelLabel, wifiSpeedLabel, FOOD_LABELS } from '../types/space'
 import AppIcon from './AppIcon.vue'
 
 interface Props {
@@ -32,11 +32,11 @@ const pills = computed<Pill[]>(() => {
         : s.noiseLevel === 'loud'
           ? 'volume-loud'
           : 'volume-mid',
-    label: NOISE_LEVEL_LABELS[s.noiseLevel],
+    label: noiseLevelLabel(s.noiseLevel),
   })
   out.push({
-    icon: s.wifiSpeed === 'unknown' ? 'wifi-off' : 'wifi',
-    label: `${WIFI_SPEED_LABELS[s.wifiSpeed]} wifi`,
+    icon: s.wifiSpeed == null ? 'wifi-off' : 'wifi',
+    label: `${wifiSpeedLabel(s.wifiSpeed)} wifi`,
   })
   if (s.foodAndDrinkAvailability !== 'none') {
     out.push({ icon: 'utensils', label: FOOD_LABELS[s.foodAndDrinkAvailability] })

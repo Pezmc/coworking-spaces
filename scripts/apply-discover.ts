@@ -126,8 +126,8 @@ for (let i = 0; i < parsed.length; i++) {
   // Persist only known fields; LLM noise (sourceUrls, confidence, etc.) gets dropped.
   const cleanSpace = pickKnownSpaceFields(c as Record<string, unknown>)
   const notes: string[] = []
-  if (cleanSpace.noiseLevel === 'unknown') notes.push('noiseLevel=unknown')
-  if (cleanSpace.seatingType === 'unknown') notes.push('seatingType=unknown')
+  if (cleanSpace.noiseLevel === null) notes.push('noiseLevel=unknown')
+  if (cleanSpace.seatingType === null) notes.push('seatingType=unknown')
   existingNorms.add(normalizeName(cleanSpace.name))
   candidates.push({ space: cleanSpace, notes })
 }

@@ -43,6 +43,12 @@ need to write it out. Two rules worth knowing:
 - **Split shifts:** add more than one interval to a day, e.g.
   `[{ "open": "09:00", "close": "12:00" }, { "open": "14:00", "close": "18:00" }]`.
 
+> **Unknown values:** any standardized field below may be JSON `null` when the
+> attribute has not been researched yet — the same convention `hours` uses, and
+> the card shows "Unknown". Write `null`, not the string `"unknown"`, or the data
+> check rejects it. `foodAndDrinkAvailability` is the exception: it is always one
+> of its listed values.
+
 ### Noise Level & Atmosphere
 
 | Value | Description |
@@ -50,6 +56,7 @@ need to write it out. Two rules worth knowing:
 | `quiet` | Library-like atmosphere – minimal background noise, whispered conversations |
 | `medium` | Café ambiance – background chatter and music at moderate volume |
 | `loud` | Lively environment – loud music, busy conversations, energetic vibe |
+| `null` | Noise level has not been assessed yet |
 
 - **atmosphereNotes**: Describe the vibe/feeling/noise level in more detail
 
@@ -60,7 +67,7 @@ need to write it out. Two rules worth knowing:
 | `slow` | Under 25 Mbps – suitable for browsing and email |
 | `medium` | 25–100 Mbps – good for video calls and general work |
 | `fast` | Over 100 Mbps – great for large uploads and multiple devices |
-| `unknown` | WiFi speed has not been tested yet |
+| `null` | WiFi speed has not been tested yet |
 
 - **wifiNotes**: Actual speed test results if available
 
@@ -72,7 +79,7 @@ need to write it out. Two rules worth knowing:
 |-------|-------------|
 | `yes` | Air conditioning available – stays cool in summer |
 | `no` | No air conditioning – may be warm on hot days |
-| `unknown` | Climate control has not been checked yet |
+| `null` | Climate control has not been checked yet |
 
 - **climateNotes**: AC quality, heating, temperature notes
 
@@ -94,6 +101,7 @@ need to write it out. Two rules worth knowing:
 | `individual` | Mostly 1–2 person tables – best for solo work |
 | `mixed` | Variety of table sizes – options for both solo and group work |
 | `group` | Primarily large tables (4+ people) – communal seating |
+| `null` | Seating layout has not been recorded yet |
 
 - **seatingNotes**: Physical layout, table arrangements
 
@@ -104,7 +112,7 @@ need to write it out. Two rules worth knowing:
 | `few` | 1–2 outlets in the space – arrive early to claim one |
 | `some` | Several outlets available – most seats have access |
 | `many` | Outlets at every table or seat – no worries about power |
-| `unknown` | Outlet availability has not been checked yet |
+| `null` | Outlet availability has not been checked yet |
 
 - **outletNotes**: Details about power outlet locations and availability
 

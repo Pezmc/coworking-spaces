@@ -50,7 +50,7 @@ const bySpaceName = new Map(allSpaces.map((s) => [s.name, s]))
 interface IAcceptedChange {
   spaceName: string
   field: EnumFieldName
-  oldValue: string
+  oldValue: string | null
   newValue: string
 }
 
@@ -114,23 +114,23 @@ for (let i = 0; i < parsed.length; i++) {
     }
   }
 
-  // Non-verified: enum fields may only transition "unknown" -> allowed enum value.
+  // Non-verified: enum fields may only transition null (unknown) -> allowed value.
   for (const field of ENUM_FIELD_NAMES) {
-    const before = (current as Record<string, unknown>)[field] as string
-    const after = (candidate as Record<string, unknown>)[field] as string
+    const before = (current as Record<string, unknown>)[field] as string | null
+    const after = (candidate as Record<string, unknown>)[field] as string | null
     if (before === after) continue
-    if (before !== 'unknown') {
+    if (before !== null) {
       rejected.push({
         spaceName: current.name,
         field,
-        reason: `non-unknown field would change (${before} -> ${after})`,
+        reason: `already-set field would change (${before} -> ${after})`,
         oldValue: before,
         newValue: after,
       })
       continue
     }
     const allowed = ENUM_FIELDS[field] as readonly string[]
-    if (!allowed.includes(after)) {
+    if (after === null || !allowed.includes(after)) {
       rejected.push({
         spaceName: current.name,
         field,

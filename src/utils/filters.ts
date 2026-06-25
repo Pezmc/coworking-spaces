@@ -85,17 +85,27 @@ export function formatMinutes(minutes: number): string {
 }
 
 /**
+ * One enum dimension's match test. `'all'` imposes no constraint; the `'unknown'`
+ * UI token matches only spaces whose stored value is `null` (not yet researched);
+ * any concrete token is an exact-value match.
+ */
+function matchesEnum<T extends string>(value: T | null, filter: T | 'unknown' | 'all'): boolean {
+  if (filter === 'all') return true
+  if (filter === 'unknown') return value === null
+  return value === filter
+}
+
+/**
  * Does a space match every active filter? AND across all dimensions.
  * Opening hours are parsed only when a time filter is active (perf).
  */
 export function matchesFilters(space: ICoworkingSpace, f: IFilterState, now: Date): boolean {
-  if (f.noiseLevel !== 'all' && space.noiseLevel !== f.noiseLevel) return false
-  if (f.wifiSpeed !== 'all' && space.wifiSpeed !== f.wifiSpeed) return false
-  if (f.hasAC !== 'all' && space.hasAC !== f.hasAC) return false
-  if (f.foodAvailability !== 'all' && space.foodAndDrinkAvailability !== f.foodAvailability)
-    return false
-  if (f.seatingType !== 'all' && space.seatingType !== f.seatingType) return false
-  if (f.hasOutlets !== 'all' && space.hasOutlets !== f.hasOutlets) return false
+  if (!matchesEnum(space.noiseLevel, f.noiseLevel)) return false
+  if (!matchesEnum(space.wifiSpeed, f.wifiSpeed)) return false
+  if (!matchesEnum(space.hasAC, f.hasAC)) return false
+  if (!matchesEnum(space.foodAndDrinkAvailability, f.foodAvailability)) return false
+  if (!matchesEnum(space.seatingType, f.seatingType)) return false
+  if (!matchesEnum(space.hasOutlets, f.hasOutlets)) return false
   if (f.verified !== 'all' && (f.verified === 'verified' ? !space.verified : space.verified))
     return false
 

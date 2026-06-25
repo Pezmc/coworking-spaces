@@ -1,6 +1,7 @@
 import spaces from '../src/data/spaces.json'
 import { slugify } from '../src/utils/slug'
 import { validateWeeklyHours } from '../src/utils/hoursBasic'
+import { validateEnumValues } from './space-validator'
 
 const YELLOW = '\x1b[33m'
 const RED = '\x1b[31m'
@@ -81,6 +82,12 @@ for (const space of spaces) {
   // Structured opening hours must be a valid WeeklyHours object or null.
   for (const issue of validateWeeklyHours((space as { hours?: unknown }).hours)) {
     errors.push({ spaceId, spaceName: name, issue })
+  }
+
+  // Enum fields must hold a valid value or null (unknown). A stray string like
+  // "unknown" would render an empty UI pill, so block the build rather than ship it.
+  for (const e of validateEnumValues(space as unknown as Record<string, unknown>)) {
+    errors.push({ spaceId, spaceName: name, issue: `${e.field}: ${e.reason}` })
   }
 }
 
