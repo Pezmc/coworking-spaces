@@ -78,6 +78,14 @@ describe('parseOpenAt — URL validation (user-editable input)', () => {
     expect(parseOpenAt('  ')).toBeNull()
     expect(parseOpenAt(undefined)).toBeNull()
   })
+  it('rejects Number() hex/exponent/sign quirks → null', () => {
+    expect(parseOpenAt('0xFF')).toBeNull()
+    expect(parseOpenAt('1e3')).toBeNull()
+    expect(parseOpenAt('+12')).toBeNull()
+  })
+  it('does not crash on a repeated-param array (?openAt=600&openAt=700) → null', () => {
+    expect(parseOpenAt(['600', '700'])).toBeNull()
+  })
 })
 
 describe('serializeOpenAt', () => {

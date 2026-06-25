@@ -130,10 +130,16 @@ export function hasActiveFilters(f: IFilterState): boolean {
  * non-integer, and out-of-range to null — a tampered ?openAt never sets a
  * broken filter.
  */
-export function parseOpenAt(raw: string | undefined | null): number | null {
-  if (raw === undefined || raw === null || raw.trim() === '') return null
-  const n = Number(raw)
-  if (!Number.isInteger(n) || n < OPEN_AT_MIN || n > OPEN_AT_MAX) return null
+export function parseOpenAt(raw: string | string[] | undefined | null): number | null {
+  // useUrlSearchParams hands back a string[] for a repeated ?openAt=…&openAt=… —
+  // guard the non-string case so a tampered/shared URL can't crash startup.
+  if (typeof raw !== 'string') return null
+  const trimmed = raw.trim()
+  // Plain decimal digits only — rejects '', 'banana', '0xFF', '1e3', '+1', '12.5', '-1'
+  // (Number() would otherwise quietly accept hex/exponent/sign forms).
+  if (!/^\d+$/.test(trimmed)) return null
+  const n = Number(trimmed)
+  if (n < OPEN_AT_MIN || n > OPEN_AT_MAX) return null
   return n
 }
 
