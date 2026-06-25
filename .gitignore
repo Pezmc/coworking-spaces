@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Bun-only project: bun.lock is the single source of truth. Never commit a
+# foreign package-manager lockfile — they silently drift from bun.lock (which
+# is exactly how vite/tailwind versions diverged before). See PR #34.
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
 # Stray TS/Vue compile output — the build sets noEmit, so vue-tsc should never
 # write .js next to sources; this is a backstop if emit is ever re-enabled.
 src/**/*.js
