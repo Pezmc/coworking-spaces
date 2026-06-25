@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Stray TS/Vue compile output — the build sets noEmit, so vue-tsc should never
+# write .js next to sources; this is a backstop if emit is ever re-enabled.
+src/**/*.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
