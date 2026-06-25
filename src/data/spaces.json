@@ -750,12 +750,13 @@
     "openingHours": "Mon 08:00-18:00, Tue closed, Wed-Fri 08:00-18:00, Sat 09:00-18:00, Sun 10:00-17:00",
     "atmosphereNotes": "",
     "wifiNotes": "",
-    "climateNotes": "Has AC",
+    "climateNotes": "Has AC, but it has broken down during extreme heat before — the café has closed early on exceptionally hot days.",
     "foodNotes": "Belgian chocolate, pralines, pastries, breakfast and lunch, chocolate fondue.",
     "drinkNotes": "Hot chocolate, coffee, tea, cold drinks.",
     "seatingNotes": "",
     "outletNotes": "",
-    "verified": false
+    "verified": false,
+    "imageUrl": "/photos/chocolatte.jpg"
   },
   {
     "name": "De Hoorn",
