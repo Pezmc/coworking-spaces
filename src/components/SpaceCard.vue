@@ -149,13 +149,13 @@ const photoGradient = computed(() => {
           <p class="text-ink m-0">{{ space.foodNotes }}</p>
         </div>
 
-        <div v-if="hoursText">
+        <div v-if="hoursText || space.hoursNote">
           <h4
             class="text-faint m-0 mb-0.5 font-sans text-[10px] font-medium tracking-[0.14em] uppercase not-italic"
           >
             Hours
           </h4>
-          <p class="text-ink m-0 font-mono text-xs not-italic">{{ hoursText }}</p>
+          <p v-if="hoursText" class="text-ink m-0 font-mono text-xs not-italic">{{ hoursText }}</p>
           <p v-if="space.hoursNote" class="text-muted m-0 mt-0.5 text-xs">{{ space.hoursNote }}</p>
         </div>
 

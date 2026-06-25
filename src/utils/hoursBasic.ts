@@ -33,12 +33,13 @@ const DAY_ABBR: Record<DayOfWeek, string> = {
 }
 
 /**
- * "HH:MM" → minutes since midnight (0–1440). Accepts "00:00"–"24:00". Returns
- * null on any malformed value so bad data is caught by validation rather than
- * silently treated as midnight.
+ * "HH:MM" → minutes since midnight (0–1440). Strict two-digit hour and minute
+ * ("00:00"–"24:00"); "9:00" is rejected so it can't ship and then render as a
+ * separate day-group from "09:00" in formatHours. Returns null on any malformed
+ * value so bad data is caught by validation rather than treated as midnight.
  */
 export function clockToMinutes(s: string): number | null {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(s.trim())
+  const m = /^(\d{2}):(\d{2})$/.exec(s.trim())
   if (!m || m[1] === undefined || m[2] === undefined) return null
   const h = parseInt(m[1], 10)
   const mm = parseInt(m[2], 10)
@@ -175,8 +176,12 @@ export function validateWeeklyHours(hours: unknown): string[] {
         return
       }
       const { open, close } = iv as Record<string, unknown>
-      if (typeof open !== 'string' || clockToMinutes(open) === null) {
+      const openMin = typeof open === 'string' ? clockToMinutes(open) : null
+      if (openMin === null) {
         errors.push(`hours.${day}[${i}].open is not a valid "HH:MM" time`)
+      } else if (openMin >= MINUTES_PER_DAY) {
+        // "24:00" is end-of-day midnight — only meaningful as a close.
+        errors.push(`hours.${day}[${i}].open cannot be "24:00" — use a real opening time`)
       }
       if (typeof close !== 'string' || clockToMinutes(close) === null) {
         errors.push(`hours.${day}[${i}].close is not a valid "HH:MM" time`)

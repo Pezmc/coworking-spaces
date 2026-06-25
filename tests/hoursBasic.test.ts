@@ -43,6 +43,10 @@ describe('clockToMinutes', () => {
     expect(clockToMinutes('24:01')).toBeNull()
     expect(clockToMinutes('noon')).toBeNull()
   })
+  it('requires a two-digit hour ("9:00" is rejected, "09:00" is not)', () => {
+    expect(clockToMinutes('9:00')).toBeNull()
+    expect(clockToMinutes('09:00')).toBe(540)
+  })
 })
 
 describe('buildSchedule', () => {
@@ -246,5 +250,12 @@ describe('validateWeeklyHours', () => {
   it('flags an unexpected key', () => {
     const extra = { ...wh({}), funday: [] } as Record<string, unknown>
     expect(validateWeeklyHours(extra).some((e) => e.includes('funday'))).toBe(true)
+  })
+  it('rejects open "24:00" (only valid as a close)', () => {
+    const bad = wh({ monday: [{ open: '24:00', close: '02:00' }] })
+    expect(validateWeeklyHours(bad).some((e) => e.includes('open'))).toBe(true)
+  })
+  it('accepts close "24:00" (open until midnight)', () => {
+    expect(validateWeeklyHours(wh({ monday: [{ open: '08:00', close: '24:00' }] }))).toEqual([])
   })
 })
