@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { ICoworkingSpace, IFilterState, ISortState } from '../types/space'
 import SpaceCard from './SpaceCard.vue'
 import { slugify } from '../utils/slug'
-import { parseOpeningHours, isOpen } from '../utils/hoursBasic'
+import { matchesFilters, formatMinutes } from '../utils/filters'
 
 interface Props {
   spaces: ICoworkingSpace[]
@@ -16,9 +16,9 @@ const props = defineProps<Props>()
 const WIFI_SPEED_ORDER = { unknown: 0, slow: 1, medium: 2, fast: 3 }
 const NOISE_LEVEL_ORDER = { quiet: 0, medium: 1, loud: 2 }
 
-const isOnlyOpenNowActive = computed(() => {
+// True when no "More filters" panel selection is active (a time filter may still be on).
+const noPanelFiltersActive = computed(() => {
   const f = props.filters
-  if (!f.openNow) return false
   return (
     f.noiseLevel === 'all' &&
     f.wifiSpeed === 'all' &&
@@ -30,38 +30,13 @@ const isOnlyOpenNowActive = computed(() => {
   )
 })
 
-const filteredAndSortedSpaces = computed(() => {
-  let result = [...props.spaces]
+const openAtLabel = computed(() =>
+  props.filters.openAt !== null ? formatMinutes(props.filters.openAt) : null,
+)
 
-  // Apply filters
-  if (props.filters.noiseLevel !== 'all') {
-    result = result.filter((s) => s.noiseLevel === props.filters.noiseLevel)
-  }
-  if (props.filters.wifiSpeed !== 'all') {
-    result = result.filter((s) => s.wifiSpeed === props.filters.wifiSpeed)
-  }
-  if (props.filters.hasAC !== 'all') {
-    result = result.filter((s) => s.hasAC === props.filters.hasAC)
-  }
-  if (props.filters.foodAvailability !== 'all') {
-    result = result.filter((s) => s.foodAndDrinkAvailability === props.filters.foodAvailability)
-  }
-  if (props.filters.seatingType !== 'all') {
-    result = result.filter((s) => s.seatingType === props.filters.seatingType)
-  }
-  if (props.filters.hasOutlets !== 'all') {
-    result = result.filter((s) => s.hasOutlets === props.filters.hasOutlets)
-  }
-  if (props.filters.verified === 'verified') {
-    result = result.filter((s) => s.verified)
-  }
-  if (props.filters.verified === 'unverified') {
-    result = result.filter((s) => !s.verified)
-  }
-  if (props.filters.openNow) {
-    const now = new Date()
-    result = result.filter((s) => isOpen(parseOpeningHours(s.openingHours), now) === true)
-  }
+const filteredAndSortedSpaces = computed(() => {
+  const now = new Date()
+  const result = props.spaces.filter((s) => matchesFilters(s, props.filters, now))
 
   // Apply sorting
   const direction = props.sort.direction === 'asc' ? 1 : -1
@@ -90,7 +65,24 @@ const filteredAndSortedSpaces = computed(() => {
       v-if="filteredAndSortedSpaces.length === 0"
       class="border-rule border-y px-2 py-10 text-center"
     >
-      <template v-if="isOnlyOpenNowActive">
+      <template v-if="openAtLabel && noPanelFiltersActive">
+        <p class="font-display text-navy m-0 mb-2 text-xl italic">
+          Nothing's open at
+          <span class="font-mono text-[0.95em] not-italic">{{ openAtLabel }}</span
+          >.
+        </p>
+        <p class="text-muted m-0 font-sans text-sm">
+          Leuven's café hours are all over the place. Try an earlier time, or clear it.
+        </p>
+      </template>
+      <template v-else-if="openAtLabel">
+        <p class="font-display text-navy m-0 mb-2 text-xl italic">
+          No spots open at
+          <span class="font-mono text-[0.95em] not-italic">{{ openAtLabel }}</span> match.
+        </p>
+        <p class="text-muted m-0 font-sans text-sm">Loosen a filter or pick another time.</p>
+      </template>
+      <template v-else-if="props.filters.openNow && noPanelFiltersActive">
         <p class="font-display text-navy m-0 mb-2 text-xl italic">Nothing's open right now.</p>
         <p class="text-muted m-0 font-sans text-sm">
           Leuven keeps odd café hours. Try again after lunch, or clear the filter.

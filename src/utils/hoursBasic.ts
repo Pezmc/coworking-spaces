@@ -95,16 +95,28 @@ export function parseOpeningHours(raw: string): DaySchedule | null {
   return schedule
 }
 
-export function isOpen(schedule: DaySchedule | null, at: Date): boolean | null {
+/**
+ * Pure time-of-day open check, decoupled from `Date`.
+ *
+ *   minutes >= start && minutes < end   ← END-EXCLUSIVE
+ *   opens 17:00 → open at 1020 ✓   closes 17:00 → NOT open at 1020 ✗
+ *
+ * Returns `null` when hours are unknown (unparseable), `false` on a day with
+ * no ranges, otherwise whether `minutes` falls inside any range for `day`.
+ */
+export function isOpenAt(
+  schedule: DaySchedule | null,
+  day: number,
+  minutes: number,
+): boolean | null {
   if (!schedule) return null
-  const day = at.getDay()
-  const minutes = at.getHours() * 60 + at.getMinutes()
   const ranges = schedule[day]
   if (!ranges || ranges.length === 0) return false
-  for (const r of ranges) {
-    if (minutes >= r.start && minutes < r.end) return true
-  }
-  return false
+  return ranges.some((r) => minutes >= r.start && minutes < r.end)
+}
+
+export function isOpen(schedule: DaySchedule | null, at: Date): boolean | null {
+  return isOpenAt(schedule, at.getDay(), at.getHours() * 60 + at.getMinutes())
 }
 
 export const __TEST_ONLY__ = { DAYS, DAY_INDEX, normalizeDashes, parseHHMM, parseDayList }

@@ -19,6 +19,7 @@ import {
   type SortField,
   type VerifiedFilter,
 } from '../types/space'
+import { hasActiveFilters as anyPanelFilterActive } from '../utils/filters'
 
 const VERIFIED_LABELS: Record<VerifiedFilter, string> = {
   all: 'All spaces',
@@ -54,6 +55,8 @@ function updateSort(field: SortField) {
 }
 
 function resetFilters() {
+  // "Clear filters" resets the panel selects only — the toolbar When? cluster
+  // (openNow / openAt) is preserved, same as openNow always was.
   emit('update:filters', {
     noiseLevel: 'all',
     wifiSpeed: 'all',
@@ -63,13 +66,11 @@ function resetFilters() {
     hasOutlets: 'all',
     verified: 'all',
     openNow: props.filters.openNow,
+    openAt: props.filters.openAt,
   })
 }
 
-const hasActiveFilters = computed(() => {
-  const { openNow: _ignored, ...rest } = props.filters
-  return Object.values(rest).some((v) => v !== 'all')
-})
+const hasActiveFilters = computed(() => anyPanelFilterActive(props.filters))
 
 const sortOptions: { field: SortField; label: string }[] = [
   { field: 'name', label: 'Name' },
