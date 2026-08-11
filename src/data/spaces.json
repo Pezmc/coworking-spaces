@@ -1063,5 +1063,30 @@
     "outletNotes": "Only 3 power outlets.",
     "verified": false,
     "imageUrl": "/photos/timory.jpg"
+  },
+  {
+    "name": "Lloyd Coffee Eatery",
+    "address": "Diestsestraat 103-105, 3000 Leuven",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lloyd%20Coffee%20Eatery%2C%20Diestsestraat%20103%2C%203000%20Leuven",
+    "coordinates": { "lat": 50.8806044, "lng": 4.706503 },
+    "noiseLevel": null,
+    "wifiSpeed": null,
+    "wifiSpeedMbps": null,
+    "hasAC": "yes",
+    "foodAndDrinkAvailability": "full",
+    "seatingType": null,
+    "hasOutlets": null,
+    "description": "Leuven branch of the Belgian all-day brunch chain, on the Diestsestraat shopping street. Large glass frontage and food served all day.",
+    "hours": null,
+    "hoursNote": "Open 7 days a week; exact opening hours not confirmed yet",
+    "atmosphereNotes": "",
+    "wifiNotes": "",
+    "climateNotes": "Reported to have air conditioning.",
+    "foodNotes": "Brunch all day: bagels, pancakes, toasts, burgers, salads.",
+    "drinkNotes": "Specialty coffee, matcha and lattes, fresh juices, smoothies and milkshakes.",
+    "seatingNotes": "",
+    "outletNotes": "",
+    "verified": false,
+    "imageUrl": "/photos/lloyd-coffee-eatery.jpg"
   }
 ]
